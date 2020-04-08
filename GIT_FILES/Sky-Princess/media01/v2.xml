@@ -10,7 +10,7 @@
 		url="jdbc:mysql://dbvip/exm?useUnicode=true&amp;characterEncoding=UTF-8"
 		maxActive="100" 
 		maxIdle="30" 
-		maxWait="10000" 
+		maxWait="34000" 
 		validationQuery="SELECT 1" />
 
 	<Resource name="services/SearchService"
