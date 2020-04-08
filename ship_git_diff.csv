@@ -1,2 +1,2 @@
 SHIP NAME, FILE NAME, SERVER NAME, SHIP VALUES, GIT VALUES, DECISION
-Sky-Princess, ha.cf, app01, keepalive 500ms;deadtime 10, keepalive 600ms;deadtime 20
+Sky-Princess, ha.cf, app01, keepalive 600ms;deadtime 20, keepalive 500ms;deadtime 10
