@@ -1,3 +1,3 @@
 SHIP NAME, FILE NAME, SERVER NAME, SHIP VALUES, GIT VALUES, DECISION
 Sky-Princess, ha.cf, app01, deadtime 10;initdead 30, deadtime 15;initdead 40
-Sky-Princess, v2.xml, media01, 		maxWait="10000" , 		maxWait="34000" 
+Sky-Princess, v2.xml, media01, maxWait="10000" , maxWait="34000" 
