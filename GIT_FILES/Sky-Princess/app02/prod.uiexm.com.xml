@@ -1,0 +1,23 @@
+<Host name="prod.uiexm.com" 
+ appBase="/var/lib/tomcat7/hosts/prod.uiexm.com/webapps"
+ unpackWARs="true" autoDeploy="false" deployXML="false">
+ <Alias>app01</Alias>
+ <Alias>app02</Alias>
+ <Alias>admin.yp.ocean.com</Alias>
+ <Alias>xicms-exm-svc.yp.ocean.com</Alias>
+ <Alias>remote-xicms-exm-svc.yp.ocean.com</Alias>
+ <Alias>client.yp.ocean.com</Alias>
+ <Alias>admin</Alias>
+ <Alias>client</Alias>
+ <Logger className="org.apache.catalina.logger.FileLogger"
+         directory="/var/log/tomcat7/admin.yp.ocean.com"
+         prefix="error"
+         suffix=".log"
+         timestamp="true"/>
+ <Valve className="org.apache.catalina.valves.AccessLogValve"
+        directory="/var/log/tomcat7/admin.yp.ocean.com"
+        prefix="access."
+        suffix=".log"
+        pattern="common"
+        resolveHosts="false"/>
+</Host>
