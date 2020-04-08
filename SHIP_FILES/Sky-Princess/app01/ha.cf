@@ -3,8 +3,8 @@ use_logd no
 logfile /var/log/ha.log
 autojoin none
 
-keepalive 600ms
-deadtime 20
+keepalive 500ms
+deadtime 10
 warntime 5
 initdead 30
 auto_failback off 
