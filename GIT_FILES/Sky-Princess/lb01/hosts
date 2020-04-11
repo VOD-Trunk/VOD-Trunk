@@ -1,19 +1,19 @@
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 
-#swank license server (Sachin Garg)
+
 10.125.56.154 ocean.swankmp.net
 
-#temporary host entry - see John Cary
+
 10.127.136.32 xicms-exm-svc.xis.ocean.com
 
-#app01
-#10.25.224.21 master cachepeer
-#10.25.224.20 slave cachehost
 
-#app02
-#10.25.224.20 master cachepeer
-#10.25.224.21 slave cachehost
+
+
+
+
+
+
 
 
 
@@ -67,7 +67,7 @@
 127.0.0.1 www.worldtimeserver.com
 127.0.0.1 www.bing.com
 127.0.0.1 multiscreen.samsung.com
-# New entries to block for the new Samsungs
+
 127.0.0.1 srv.giraffic.com
 127.0.0.1 ntp.ubuntu.com
 127.0.0.1 www.worldtime.com

@@ -1,0 +1,74 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+
+
+
+
+
+
+
+
+
+
+10.25.224.254      core.kp.ocean.com core
+
+10.25.224.20       app01.kp.ocean.com app01
+10.25.224.21       app02.kp.ocean.com app02
+
+10.25.224.10       media01.kp.ocean.com media01
+10.25.224.11       media02.kp.ocean.com media02
+
+10.25.224.120      lb01.kp.ocean.com lb01
+10.25.224.121      lb02.kp.ocean.com lb02
+
+10.25.224.124      client.kp.ocean.com client
+10.25.224.124      app.kp.ocean.com app
+10.25.224.124      api.kp.ocean.com api
+10.25.224.124      admin.kp.ocean.com admin
+10.25.224.124      lb.kp.ocean.com lb
+10.25.224.124      xicms-exm-svc.kp.ocean.com xicms-exm-svc
+10.25.224.12       media.kp.ocean.com media
+10.25.224.13       media.kp.ocean.com media
+10.25.224.23       dbvip.kp.ocean.com dbvip
+
+10.25.224.12       procentric.local
+
+10.25.226.10   media01-nfs
+10.25.226.11   media02-nfs
+10.25.226.20   app01-nfs
+10.25.226.21   app02-nfs
+
+10.25.227.20    app01-private
+10.25.227.21    app02-private
+10.25.224.20 pool.ntp.org
+10.25.224.21 pool.ntp.org
+
+10.25.224.30 barix01.kp.ocean.com barix01
+10.25.224.31 barix02.kp.ocean.com barix02
+10.25.224.32 barix03.kp.ocean.com barix03
+10.25.224.33 barix04.kp.ocean.com barix04
+10.25.224.34 barix05.kp.ocean.com barix05
+10.25.224.35 barix06.kp.ocean.com barix06
+10.25.224.36 barix07.kp.ocean.com barix07
+10.25.224.37 barix08.kp.ocean.com barix08
+
+127.0.0.1 ns11.whois.co.kr
+127.0.0.1 www.samsung.com
+127.0.0.1 dpu.samsungelectronics.com
+127.0.0.1 cdn.samsungcloudsolution.com
+127.0.0.1 time.samsungcloudsolution.com
+127.0.0.1 www.worldtimeserver.com
+127.0.0.1 www.bing.com
+127.0.0.1 multiscreen.samsung.com
+
+127.0.0.1 srv.giraffic.com
+127.0.0.1 ntp.ubuntu.com
+127.0.0.1 www.worldtime.com
+127.0.0.1 www.samsungrm.net
+
+10.25.224.12 procentric.local
+
+
+10.120.184.154 ocean.swankmp.net
+

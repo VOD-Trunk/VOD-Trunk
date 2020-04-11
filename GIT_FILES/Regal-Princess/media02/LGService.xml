@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service>
+<setup>
+<versionNumber>8</versionNumber>
+<modelName>43UV766V-UA</modelName>
+<priority>NORMAL</priority>
+<content>
+<type>EPK_FIRMWARE</type>
+<subversionNumber>8</subversionNumber>

@@ -4,9 +4,9 @@ logfile /var/log/ha.log
 autojoin none
 
 keepalive 500ms
-deadtime 15
+deadtime 10
 warntime 5
-initdead 40
+initdead 30
 auto_failback off 
 
 node app01.yp.ocean.com

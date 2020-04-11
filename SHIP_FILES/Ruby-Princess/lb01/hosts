@@ -1,0 +1,72 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+
+
+
+
+
+
+
+
+
+10.25.224.1      core.ru.ocean.com core
+
+10.25.224.20       app01.ru.ocean.com app01
+10.25.224.21       app02.ru.ocean.com app02
+
+10.25.224.10       media01.ru.ocean.com media01
+10.25.224.11       media02.ru.ocean.com media02
+
+10.25.224.120      lb01.ru.ocean.com lb01
+10.25.224.121      lb02.ru.ocean.com lb02
+
+10.25.224.124      client.ru.ocean.com client
+10.25.224.124      app.ru.ocean.com app
+10.25.224.124      api.ru.ocean.com api
+10.25.224.124      admin.ru.ocean.com admin
+10.25.224.124      xicms-exm-svc.ru.ocean.com xicms-exm-svc
+10.25.224.124      lb.ru.ocean.com lb
+10.25.224.12       media.ru.ocean.com media
+10.25.224.13       media.ru.ocean.com media
+10.25.224.23       dbvip.ru.ocean.com dbvip
+10.25.225.22       mute.ru.ocean.com mute
+
+10.25.224.12       procentric.local procentric
+
+172.16.50.10   media01-nfs
+172.16.50.11   media02-nfs
+172.16.50.20   app01-nfs
+172.16.50.21   app02-nfs
+172.16.51.20	app01-private
+172.16.51.21	app02-private
+
+
+
+
+
+
+
+
+
+
+
+127.0.0.1 ns11.whois.co.kr
+127.0.0.1 www.samsung.com
+127.0.0.1 dpu.samsungelectronics.com
+127.0.0.1 cdn.samsungcloudsolution.com
+127.0.0.1 time.samsungcloudsolution.com
+127.0.0.1 www.worldtimeserver.com
+127.0.0.1 www.bing.com
+127.0.0.1 multiscreen.samsung.com
+
+127.0.0.1 srv.giraffic.com
+127.0.0.1 ntp.ubuntu.com
+127.0.0.1 www.worldtime.com
+127.0.0.1 www.samsungrm.net
+
+10.123.122.13 artifactory.ru.ocean.com
+
+
+10.123.122.154 ocean.swankmp.net
+

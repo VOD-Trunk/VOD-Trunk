@@ -1,0 +1,77 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+
+
+
+
+
+
+
+
+10.100.0.254      core.spvod.cruises.princess.com core
+
+10.100.0.20       app01.spvod.cruises.princess.com app01
+10.100.0.21       app02.spvod.cruises.princess.com app02
+
+10.100.0.10       media01.spvod.cruises.princess.com media01
+10.100.0.11       media02.spvod.cruises.princess.com media02
+
+10.100.0.120      lb01.spvod.cruises.princess.com lb01
+10.100.0.121      lb02.spvod.cruises.princess.com lb02
+
+
+10.100.0.124     cm.spvod.cruises.princess.com cm
+10.100.0.124      client.spvod.cruises.princess.com client
+10.100.0.124      app.spvod.cruises.princess.com app
+10.100.0.124      api.spvod.cruises.princess.com api
+10.100.0.124      admin.spvod.cruises.princess.com admin
+10.100.0.124      lb.spvod.cruises.princess.com lb
+10.100.0.12       media.spvod.cruises.princess.com media
+10.100.0.13       media.spvod.cruises.princess.com media
+10.100.0.23       dbvip.spvod.cruises.princess.com dbvip
+10.100.1.20       mute.spvod.cruises.princess.com mute
+
+192.168.72.10   media01-nfs.spvod.cruises.princess.com media01-nfs
+192.168.72.11   media02-nfs.spvod.cruises.princess.com media02-nfs
+192.168.72.20   app01-nfs.spvod.cruises.princess.com app01-nfs
+192.168.72.21   app02-nfs.spvod.cruises.princess.com app02-nfs
+192.168.74.20   app01private.spvod.cruises.princess.com app01private
+192.168.74.21   app02private.spvod.cruises.princess.com app02private
+
+10.100.0.12 procentric.local procentric
+
+
+10.100.0.40     makito.spvod.cruises.princess.com makito
+10.100.0.124    maps.spvod.cruises.princess.com maps
+192.168.55.240  pool.ntp.org pool
+10.100.0.2      sw01.spvod.cruises.princess.com sw01
+10.100.0.41     makito01.spvod.cruises.princess.com makito01
+
+
+10.100.0.30     barix01.spvod.cruises.princess.com barix01
+10.100.0.31     barix02.spvod.cruises.princess.com barix02
+10.100.0.32     barix03.spvod.cruises.princess.com barix03
+10.100.0.33     barix04.spvod.cruises.princess.com barix04
+10.100.0.34     barix05.spvod.cruises.princess.com barix05
+10.100.0.35     barix06.spvod.cruises.princess.com barix06
+10.100.0.36     barix07.spvod.cruises.princess.com barix07
+10.100.0.37     barix08.spvod.cruises.princess.com barix08
+
+
+127.0.0.1 ns11.whois.co.kr
+127.0.0.1 www.samsung.com
+127.0.0.1 dpu.samsungelectronics.com
+127.0.0.1 cdn.samsungcloudsolution.com
+127.0.0.1 time.samsungcloudsolution.com
+127.0.0.1 www.worldtimeserver.com
+127.0.0.1 www.bing.com
+127.0.0.1 multiscreen.samsung.com
+
+127.0.0.1 srv.giraffic.com
+127.0.0.1 ntp.ubuntu.com
+127.0.0.1 www.worldtime.com
+127.0.0.1 www.samsungrm.net
+127.0.0.1 services.mywellness.com
+127.0.0.1 config.connectedpdf.com
+127.0.0.1 eam.mywellness.com
