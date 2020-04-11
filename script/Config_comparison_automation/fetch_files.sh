@@ -11,26 +11,21 @@ do
     HOSTNAME=`echo $line | cut -d ',' -f 2`
 	ship=`echo $line | cut -d ',' -f 1`
 	echo "Fetching files from $ship"
-	if [ 1 == 2 ]
-	then
-	echo ${PASS} | sudo sshpass -p ${PASS} ssh -l ${USERNAME} ${HOSTNAME} '/home/config_files/fetch_files.sh'
-	fi
+	echo $HOSTNAME
+	sshpass -p ${PASS} ssh ${USERNAME}@${HOSTNAME} '/home/config_files/fetch_files.sh'
 	servers="app01 app02 media01 media02 lb01 lb02"
 	for server in $servers
 	do
-		if [ 1 == 2 ]
-		then
 		sudo rm -f ${config_file_path_local}/${ship}/${server}/*
-		echo ${PASS} | sudo sshpass -p ${PASS} scp -r ${USERNAME}@${HOSTNAME}:/home/config_files/$server ${config_file_path_local}/${ship}
-		fi
+		sshpass -p ${PASS} scp -r ${USERNAME}@${HOSTNAME}:/home/config_files/$server ${config_file_path_local}/${ship}
 		echo "Server name : $server"
 		cd /home/abhishek/deepam/VOD-Trunk
 		git checkout develop
-		if [ 1 == 2 ]
-		then
-		echo ${PASS} | sudo rm -rf ${git_path}/SHIP_FILES/${ship}/${server}
-		cp -r ${config_file_path_local}/${ship}/${server} ./ship
-		fi
+		git pull origin develop
+
+		echo ${PASS} | sudo rm -f ${git_path}/SHIP_FILES/${ship}/${server}/*
+		cp -r ${config_file_path_local}/${ship}/${server} ${git_path}/SHIP_FILES/${ship}
+
 		for file in `ls ${git_path}/SHIP_FILES/${ship}/${server}`
 		do
 			a="${git_path}/SHIP_FILES/${ship}/${server}/${file}"
@@ -43,7 +38,8 @@ do
 				echo "${ship}, ${file}, ${server}, $ship_file_values, $master_file_values" >>$diff_path
 			fi
 		done
-		git add .
-		git commit -m "updated files commited"
-    done
+    	done
 done
+    git add .
+    git commit -m "Updated files commited on `date`"
+    git push origin develop
