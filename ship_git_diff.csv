@@ -1,3 +1,6 @@
 SHIP NAME, FILE NAME, SERVER NAME, SHIP VALUES, GIT VALUES, DECISION
-Sky-Princess, ha.cf, app01, deadtime 10;initdead 30, deadtime 15;initdead 40
-Sky-Princess, v2.xml, media01, maxWait="10000" , maxWait="34000"
+EUDM, my.cnf, app01, sort_buffer_size        = 16M, sort_buffer_size        = 8M
+EUDM, nacos, app01, mode auto, mode manual
+Grand-Princess, haproxy.cfg, lb01, timeout client          10m;timeout http-keep-alive 20s, timeout client          5m;timeout http-keep-alive 15s
+Crown-Princess, ha.cf, media01, keepalive 100ms;deadtime 60;warntime 6, keepalive 500ms;deadtime 10;warntime 5
+Crown-Princess, httpd.conf, media01, Timeout 65, Timeout 60
