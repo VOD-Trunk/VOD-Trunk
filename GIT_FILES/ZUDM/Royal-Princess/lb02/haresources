@@ -1,0 +1,4 @@
+lb01.rp.ocean.com IPaddr::10.25.224.124 haproxy
+lb01.rp.ocean.com IPaddr::10.25.224.122
+lb02.rp.ocean.com IPaddr::10.25.224.123
+lb01.rp.ocean.com IPaddr::10.10.69.45

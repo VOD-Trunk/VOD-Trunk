@@ -1,0 +1,57 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+10.25.224.124	xicms-exm-svc.di.ocean.com xicms-exm-svc
+10.25.224.124	admin.di.ocean.com admin.divod.cruises.princess.com admin
+10.25.224.124	api.di.ocean.com api.divod.cruises.princess.com api
+10.25.224.124	app.di.ocean.com app.divod.cruises.princess.com app
+10.25.224.124	client.di.ocean.com client.divod.cruises.princess.com client
+10.25.224.20	app01.di.ocean.com app01
+192.168.74.20	app01-private.di.ocean.com app01-private
+192.168.72.20	app01-nfs.di.ocean.com app01-nfs
+10.25.224.21	app02.di.ocean.com app02
+192.168.74.21	app02-private.di.ocean.com app02-private
+192.168.72.21	app02-nfs.di.ocean.com app02-nfs
+10.25.224.30	barix01.di.ocean.com barix01
+10.25.224.31	barix02.di.ocean.com barix02
+10.25.224.32	barix03.di.ocean.com barix03
+10.25.224.33	barix04.di.ocean.com barix04
+10.25.224.34	barix05.di.ocean.com barix05
+10.25.224.35	barix06.di.ocean.com barix06
+10.25.224.36	barix07.di.ocean.com barix07
+10.25.224.37	barix08.di.ocean.com barix08
+10.25.224.124	cm.di.ocean.com cm
+10.25.224.23	dbvip.di.ocean.com dbvip
+10.25.224.120	lb01.di.ocean.com lb01
+10.25.224.121	lb02.di.ocean.com lb02
+10.25.224.122	dnsvip1.di.ocean.com dnsvip1
+10.25.224.123	dnsvip2.di.ocean.com dnsvip2
+10.25.224.40	makito.di.ocean.com makito
+10.25.224.124	maps.di.ocean.com maps
+10.25.224.12	media.di.ocean.com media.divod.cruises.princess.com media
+10.25.224.13	media.di.ocean.com media.divod.cruises.princess.com media
+10.25.224.10	media01.di.ocean.com media01
+192.168.72.10	media01-nfs.di.ocean.com media01-nfs
+10.25.224.11	media02.di.ocean.com media02
+192.168.72.11	media02-nfs.di.ocean.com media02-nfs
+10.25.224.22	mute.di.ocean.com mute
+
+10.25.224.2	sw01.di.ocean.com sw01
+10.25.224.3	sw02.di.ocean.com sw01
+10.25.224.12     procentric.local procentric
+10.25.224.41	makito01.di.ocean.com makito01
+54.228.180.99	uie.headlandmedia.com
+
+
+127.0.0.1       ns11.whois.co.kr
+127.0.0.1       www.samsung.com
+127.0.0.1       dpu.samsungelectronics.com
+127.0.0.1       cdn.samsungcloudsolution.com
+127.0.0.1       time.samsungcloudsolution.com
+127.0.0.1       www.worldtimeserver.com
+127.0.0.1       www.bing.com
+127.0.0.1       multiscreen.samsung.com
+127.0.0.1       srv.giraffic.com
+127.0.0.1       ntp.ubuntu.com
+127.0.0.1       www.worldtime.com
+127.0.0.1       www.samsungrm.net
+127.0.0.1       pool.ntp.org

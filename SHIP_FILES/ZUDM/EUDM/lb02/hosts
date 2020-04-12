@@ -1,0 +1,68 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+
+
+
+
+
+
+
+
+
+
+10.26.1.254      core.iptv.eudmdomain.hal.com core
+
+10.26.1.20       app01.iptv.eudmdomain.hal.com app01
+10.26.1.21       app02.iptv.eudmdomain.hal.com app02
+
+10.26.1.10       media01.iptv.eudmdomain.hal.com media01
+10.26.1.11       media02.iptv.eudmdomain.hal.com media02
+
+10.26.1.120      lb01.iptv.eudmdomain.hal.com lb01
+10.26.1.121      lb02.iptv.eudmdomain.hal.com lb02
+
+10.26.1.124      client.iptv.eudmdomain.hal.com client
+10.26.1.124      app.iptv.eudmdomain.hal.com app
+10.26.1.124      api.iptv.eudmdomain.hal.com api
+10.26.1.124      admin.iptv.eudmdomain.hal.com admin
+10.26.1.124      lb.iptv.eudmdomain.hal.com lb
+10.26.1.12       media.iptv.eudmdomain.hal.com media
+10.26.1.13       media.iptv.eudmdomain.hal.com media
+10.26.1.23       dbvip.iptv.eudmdomain.hal.com dbvip
+10.26.2.22       mute.iptv.eudmdomain.hal.com mute
+
+192.168.72.10   media01-nfs
+192.168.72.11   media02-nfs
+192.168.72.20   app01-nfs
+192.168.72.21   app02-nfs
+
+192.168.74.20	app01-private
+192.168.74.21	app02-private
+
+10.26.1.30 barix01.iptv.eudmdomain.hal.com barix01
+10.26.1.31 barix02.iptv.eudmdomain.hal.com barix02
+10.26.1.32 barix03.iptv.eudmdomain.hal.com barix03
+10.26.1.33 barix04.iptv.eudmdomain.hal.com barix04
+10.26.1.34 barix05.iptv.eudmdomain.hal.com barix05
+10.26.1.35 barix06.iptv.eudmdomain.hal.com barix06
+10.26.1.36 barix07.iptv.eudmdomain.hal.com barix07
+10.26.1.37 barix08.iptv.eudmdomain.hal.com barix08
+
+127.0.0.1	ns11.whois.co.kr
+127.0.0.1	www.samsung.com
+10.26.1.12       procentric.local
+127.0.0.1 dpu.samsungelectronics.com 
+127.0.0.1 cdn.samsungcloudsolution.com 
+127.0.0.1 time.samsungcloudsolution.com 
+127.0.0.1 www.worldtimeserver.com 
+127.0.0.1 www.bing.com 
+127.0.0.1 multiscreen.samsung.com 
+
+127.0.0.1 srv.giraffic.com 
+127.0.0.1 ntp.ubuntu.com 
+127.0.0.1 www.worldtime.com 
+127.0.0.1 www.samsungrm.net 
+127.0.0.1 services.mywellness.com 
+127.0.0.1 config.connectedpdf.com 
+127.0.0.1 eam.mywellness.com

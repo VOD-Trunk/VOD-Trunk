@@ -1,0 +1,18 @@
+
+root = /nfs/m1
+root = ssh://media02//nfs/m2
+
+
+
+log = true
+logfile = /var/log/unison.log
+
+
+path = *
+
+
+ignore = Path mod_proxy
+ignore = Path tmp
+ignore = Path maptiles
+ignore = Path v2/tmp
+

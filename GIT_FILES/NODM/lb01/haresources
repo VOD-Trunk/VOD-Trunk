@@ -1,0 +1,4 @@
+lb01.iptv.nodmdomain.hal.com IPaddr::10.25.224.124 haproxy
+lb01.iptv.nodmdomain.hal.com IPaddr::10.25.224.122
+lb02.iptv.nodmdomain.hal.com IPaddr::10.25.224.123
+lb01.iptv.nodmdomain.hal.com IPaddr::10.125.5.148

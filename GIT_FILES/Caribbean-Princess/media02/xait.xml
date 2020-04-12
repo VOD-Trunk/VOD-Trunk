@@ -1,32 +1,32 @@
 <XAIT>
-<versionNumber>30</versionNumber>
-<AbstractService>
-<svcName>Pro:Centric Application</svcName>
-<svcId>0x1204</svcId>
-<isAutoSelect>true</isAutoSelect>
-<ApplicationList>
-<Application>
-<appName>UIE Test</appName>
-<applicationIdentifier>
-<orgId>1</orgId>
-<appId>1</appId>
-</applicationIdentifier>
-<applicationDescriptor>
-<type>Hcap-h</type>
-<controlCode>AUTOSTART</controlCode>
-<visibility>NOT_VISIBLE_USERS</visibility>
-<priority>255</priority>
-<version>30</version>
-</applicationDescriptor>
-<HcapDescriptor>
-<url>http://10.25.224.125/procentric/application/app-bso-caribbean.zip</url>
-<applicationStructure>
-<baseDirectory>/</baseDirectory>
-<classpathExtension>/</classpathExtension>
-<initialClass>index.html</initialClass>
-</applicationStructure>
-</HcapDescriptor>
-</Application>
-</ApplicationList>
-</AbstractService>
+    <versionNumber>30</versionNumber>
+    <AbstractService>
+        <svcName>Pro:Centric Application</svcName>
+        <svcId>0x1204</svcId>
+        <isAutoSelect>true</isAutoSelect>
+        <ApplicationList>
+            <Application>
+                <appName>UIE Test</appName>
+                <applicationIdentifier>
+                    <orgId>1</orgId>
+                    <appId>1</appId>
+                </applicationIdentifier>
+                <applicationDescriptor>
+                    <type>Hcap-h</type>
+                    <controlCode>AUTOSTART</controlCode>
+                    <visibility>NOT_VISIBLE_USERS</visibility>
+                    <priority>255</priority>
+                    <version>30</version>
+                </applicationDescriptor>
+                <HcapDescriptor>
+                   <url>http://10.25.224.125/procentric/application/app-bso-caribbean.zip</url>
+                	<applicationStructure>
+                        	<baseDirectory>/</baseDirectory>
+                        	<classpathExtension>/</classpathExtension>
+                        <initialClass>index.html</initialClass>
+                    </applicationStructure>
+                </HcapDescriptor>
+            </Application>
+        </ApplicationList>
+    </AbstractService>
 </XAIT>

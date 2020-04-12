@@ -1,0 +1,49 @@
+<Context>
+	<!-- DATABASE 													-->
+	<Resource 
+		name="jdbc/exm" 
+		auth="Container" 
+		type="javax.sql.DataSource" 
+		driverClassName="com.mysql.jdbc.Driver"
+		username="exm" 
+		password="uie123" 
+		url="jdbc:mysql://dbvip/exm?useUnicode=true&amp;characterEncoding=UTF-8"
+		maxActive="100" 
+		maxIdle="30" 
+		maxWait="10000" 
+		validationQuery="SELECT 1" />
+
+	<Resource name="services/SearchService"
+        auth="Container"
+        type="com.uievolution.service.ServiceParams"
+        factory="com.uievolution.service.ServiceParameterFactory"
+        index_directory="/nfs/uploads/v2/search"
+	LOCK_SERVICE="LOCK"
+    />
+    
+	<Resource name="services/WowzaService"
+        auth="Container"
+        type="com.uievolution.service.ServiceParams"
+        factory="com.uievolution.service.ServiceParameterFactory"
+	wowzaurl="http://10.100.0.10:8086/uie"
+        multicast="true"
+        concat="true"
+        encode="true"
+    />
+
+	<!-- UPLOAD SETTINGS											-->
+	<Environment name="UPLOAD_DIR" value="/nfs/uploads/v2" type="java.lang.String" override="false" />
+	<Environment name="UPLOAD_TMP" value="/nfs/uploads/v2/tmp" type="java.lang.String" override="false" />
+	<Environment name="UPLOAD_PATH" value="/uploads/v2" type="java.lang.String" override="false" />
+	<Environment name="WOWZA_PATH" value="/uploads" type="java.lang.String" override="false" />
+	<Environment name="WOWZA_URL" value="http://media.iptv.nodmdomain.hal.com:1935/vod" type="java.lang.String" override="false" />
+
+	<Environment name="CALLBACK_SERVER" value="http://app01/v2" type="java.lang.String" override="false" />
+
+	<!-- SETTINGS FOR BACKGROUND TASKS 								-->
+	<Environment name="com.uievolution.exm.tasks.Enabled" value="true" type="java.lang.Boolean" override="false" />
+	<Environment name="com.uievolution.exm.tasks.analytics.ThreadCount" value="1" type="java.lang.Integer" override="false" />
+	<Environment name="com.uievolution.exm.tasks.analytics.JobSize" value="200" type="java.lang.Integer" override="false" />
+	<Environment name="com.uievolution.exm.tasks.analytics.ThreadDelay" value="30000" type="java.lang.Integer" override="false" />
+	
+</Context>

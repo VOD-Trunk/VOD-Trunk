@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <service>
-<setup>
-<versionNumber>10</versionNumber>
-<modelName>43UV766V-UA</modelName>
-<priority>NORMAL</priority>
-<content>
-<type>EPK_FIRMWARE</type>
-<subversionNumber>10</subversionNumber>
-<data>starfish-atsc-secured-m16photel-drd4id-55-03.05.40-prodkey_nsu_V3_SECURED.epk</data>
-<frequency>0</frequency>
-<programNum>0</programNum>
-<cTag>0</cTag>
-</content>
-<content>
-<type>PTC_FIRMWARE</type>
-<subversionNumber>10</subversionNumber>
-<data>xxUV766V_v1.00.023.txt</data>
-<frequency>0</frequency>
-<programNum>0</programNum>
-<cTag>0</cTag>
-</content>
-<content>
-<type>CH_MAP</type>
-<subversionNumber>10</subversionNumber>
-<data>startchannel131.tlx</data>
-<frequency>0</frequency>
-<programNum>0</programNum>
-<cTag>0</cTag>
-</content>
-</setup>
+   <setup>
+      <versionNumber>10</versionNumber>
+      <modelName>43UV766V-UA</modelName>
+      <priority>NORMAL</priority>
+      <content>
+         <type>EPK_FIRMWARE</type>
+         <subversionNumber>10</subversionNumber>
+         <data>starfish-atsc-secured-m16photel-drd4id-55-03.05.40-prodkey_nsu_V3_SECURED.epk</data>
+         <frequency>0</frequency>
+         <programNum>0</programNum>
+         <cTag>0</cTag>
+      </content>
+	  	  	<content>
+			<type>PTC_FIRMWARE</type>
+			<subversionNumber>10</subversionNumber>
+			<data>xxUV766V_v1.00.023.txt</data>
+			<frequency>0</frequency>
+			<programNum>0</programNum>
+			<cTag>0</cTag>
+		</content>
+		<content>
+			<type>CH_MAP</type>
+			<subversionNumber>10</subversionNumber>
+			<data>startchannel131.tlx</data>
+			<frequency>0</frequency>
+			<programNum>0</programNum>
+			<cTag>0</cTag>
+		</content>
+   </setup>
 </service>

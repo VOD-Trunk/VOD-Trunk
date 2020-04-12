@@ -1,0 +1,29 @@
+<Host name="prod.uiexm.com" 
+appBase="/var/lib/tomcat7/hosts/prod.uiexm.com/webapps"
+unpackWARs="true" autoDeploy="false" deployXML="false">
+<Alias>app01</Alias>
+<Alias>app02</Alias>
+<Alias>xicms-exm-svc.gp.ocean.com</Alias>
+<Alias>remote-xicms-exm-svc.gp.ocean.com</Alias>
+<Alias>admin.gp.ocean.com</Alias> 
+<Alias>client.gp.ocean.com</Alias>
+<Alias>admin.gpvod2.cruises.princess.com</Alias>
+<Alias>client.gpvod2.cruises.princess.com</Alias>
+<Alias>admin.gpvod.cruises.princess.com</Alias>
+<Alias>client.gpvod.cruises.princess.com</Alias>
+<Alias>app.gpvod.cruises.princess.com</Alias>
+<Alias>api.gpvod.cruises.princess.com</Alias>
+<Alias>admin</Alias>
+<Alias>client</Alias>
+<Logger className="org.apache.catalina.logger.FileLogger"
+directory="/var/log/tomcat7/admin.gpvod2.cruises.princess.com"
+prefix="error"
+suffix=".log"
+timestamp="true"/>
+<Valve className="org.apache.catalina.valves.AccessLogValve"
+directory="/var/log/tomcat7/admin.gpvod2.cruises.princess.com"
+prefix="access."
+suffix=".log"
+pattern="common"
+resolveHosts="false"/>
+</Host>

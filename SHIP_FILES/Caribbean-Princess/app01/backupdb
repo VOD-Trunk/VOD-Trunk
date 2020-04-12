@@ -1,48 +1,48 @@
-#!/bin/bash
+
 source ~/.bashrc
 export PATH="$PATH:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/home/netsvcs/bin"
-# Backup script for Experience Manager databases.
 
-# Set backup file name:
+
+
 BACKPATH=/home/netsvcs/sqlback
 BACKPATH_REMOTE=/nfs/m2/oldsqlbackup/sqlbackapp01
 BACKFILE=`date +"%Y-%m-%d-%H.sql"`
 
-# Remove any backups older than 30 days:
-#if [ "$(find ${BACKPATH}/ -type f | wc -l)" -gt "5"  ] && [ -n "$(find ${BACKPATH}/ -type f -mtime +30)" ]; then
-# find ${BACKPATH}/ -type f -mtime +30 -print0 | xargs -0 rm
-#fi
 
-# Move files older than 10 days to NFS Folder 
+
+
+
+
+
 if [ "$(find ${BACKPATH}/ -type f | wc -l)" -gt "5"  ] && [ -n "$(find ${BACKPATH}/ -type f -mtime +10)" ]; then
- find ${BACKPATH}/ -type f -mtime +10 | while read file
- do	
-	echo "Moving file $file to ${BACKPATH_REMOTE}"
- 	mv $file ${BACKPATH_REMOTE}/
- done
+find ${BACKPATH}/ -type f -mtime +10 | while read file
+do	
+echo "Moving file $file to ${BACKPATH_REMOTE}"
+mv $file ${BACKPATH_REMOTE}/
+done
 fi
 
-# Remove any backups older than 30 days:
+
 if [ "$(find ${BACKPATH_REMOTE}/ -type f | wc -l)" -gt "5"  ] && [ -n "$(find ${BACKPATH_REMOTE}/ -type f -mtime +40)" ]; then
- find ${BACKPATH_REMOTE}/ -type f -mtime +40 -print0 | xargs -0 rm
+find ${BACKPATH_REMOTE}/ -type f -mtime +40 -print0 | xargs -0 rm
 fi
 
-# Check for presence of VIP
+
 if [ -z "$(ifconfig | grep $(grep dbvip /etc/hosts | cut -d " " -f 1))" ]; then
- echo "DBVIP not on this machine, skipping."
- exit 0
+echo "DBVIP not on this machine, skipping."
+exit 0
 fi
 
-# Create database dumps for listed databases, with login credentials.
+
 /usr/bin/mysqldump -u netsvcs -p'not4dev!' -h dbvip \
-        --opt --skip-lock-tables --single-transaction --routines \
-        --databases exm leaderboard \
-        | gzip -c > ${BACKPATH}/${BACKFILE}-$(hostname -s).gz
+--opt --skip-lock-tables --single-transaction --routines \
+--databases exm leaderboard \
+| gzip -c > ${BACKPATH}/${BACKFILE}-$(hostname -s).gz
 
-# Replicate the backups and any deletions to app02:
-#rsync -a --delete ${BACKPATH}/ netsvcs@master:${BACKPATH}
 
-#Replicate new files to other server:
-# Commented on 2019-12-20 By Tiago Durante
-# This doesn't seem to be working since this command requests passwd. 
+
+
+
+
+
 /usr/bin/rsync -a ${BACKPATH}/ netsvcs@master:${BACKPATH}

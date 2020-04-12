@@ -1,0 +1,27 @@
+udpport 694
+use_logd no
+logfile /var/log/ha.log
+autojoin none
+
+keepalive 500ms
+deadtime 10
+warntime 5
+initdead 30
+auto_failback on
+
+node media01.ru.ocean.com
+ucast bond0 10.25.224.10
+ucast bond0 10.25.224.10
+node media02.ru.ocean.com
+ucast bond0 10.25.224.11
+ucast bond0 10.25.224.11
+
+ping 10.25.224.1
+respawn hacluster /usr/lib64/heartbeat/ipfail
+apiauth ipfail gid=haclient uid=hacluster
+deadping 15
+
+respawn hacluster /usr/lib64/heartbeat/dopd
+apiauth dopd gid=haclient uid=hacluster
+
+crm no

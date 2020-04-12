@@ -1,0 +1,71 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+
+
+
+
+
+
+
+
+
+
+
+10.25.224.254      core.iptv.nodmdomain.hal.com core
+
+10.25.224.20       app01.iptv.nodmdomain.hal.com app01
+10.25.224.21       app02.iptv.nodmdomain.hal.com app02
+
+10.25.224.10       media01.iptv.nodmdomain.hal.com media01
+10.25.224.11       media02.iptv.nodmdomain.hal.com media02
+
+10.25.224.120      lb01.iptv.nodmdomain.hal.com lb01
+10.25.224.121      lb02.iptv.nodmdomain.hal.com lb02
+
+10.25.224.124      client.iptv.nodmdomain.hal.com client
+10.25.224.124      app.iptv.nodmdomain.hal.com app
+10.25.224.124      api.iptv.nodmdomain.hal.com api
+10.25.224.124      admin.iptv.nodmdomain.hal.com admin
+10.25.224.124      lb.iptv.nodmdomain.hal.com lb
+10.25.224.124      xicms-exm-svc.iptv.nodmdomain.hal.com xicms-exm-svc
+10.25.224.12       media.iptv.nodmdomain.hal.com media
+10.25.224.13       media.iptv.nodmdomain.hal.com media
+10.25.224.23       dbvip.iptv.nodmdomain.hal.com dbvip
+
+10.25.224.12       procentric.local
+
+10.25.226.10   media01-nfs
+10.25.226.11   media02-nfs
+10.25.226.20   app01-nfs
+10.25.226.21   app02-nfs
+
+10.25.227.20    app01-private
+10.25.227.21    app02-private
+10.25.224.20 pool.ntp.org
+10.25.224.21 pool.ntp.org
+
+10.25.224.31 barix01.iptv.nodmdomain.hal.com barix01
+10.25.224.32 barix02.iptv.nodmdomain.hal.com barix02
+10.25.224.33 barix03.iptv.nodmdomain.hal.com barix03
+10.25.224.34 barix04.iptv.nodmdomain.hal.com barix04
+10.25.224.35 barix05.iptv.nodmdomain.hal.com barix05
+10.25.224.36 barix06.iptv.nodmdomain.hal.com barix06
+10.25.224.37 barix07.iptv.nodmdomain.hal.com barix07
+10.25.224.38 barix08.iptv.nodmdomain.hal.com barix08
+
+127.0.0.1 ns11.whois.co.kr
+127.0.0.1 www.samsung.com
+127.0.0.1 dpu.samsungelectronics.com
+127.0.0.1 cdn.samsungcloudsolution.com
+127.0.0.1 time.samsungcloudsolution.com
+127.0.0.1 www.worldtimeserver.com
+127.0.0.1 www.bing.com
+127.0.0.1 multiscreen.samsung.com
+
+127.0.0.1 srv.giraffic.com
+127.0.0.1 ntp.ubuntu.com
+127.0.0.1 www.worldtime.com
+127.0.0.1 www.samsungrm.net
+
+10.25.224.12 procentric.local

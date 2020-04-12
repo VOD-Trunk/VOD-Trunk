@@ -1,0 +1,3 @@
+lb01.cbvod.cruises.princess.com IPaddr::10.25.224.122
+lb02.cbvod.cruises.princess.com IPaddr::10.25.224.124 haproxy
+lb02.cbvod.cruises.princess.com IPaddr::10.25.224.123
