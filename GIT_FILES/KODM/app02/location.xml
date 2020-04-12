@@ -1,0 +1,32 @@
+<Context>
+<Resource 
+name="jdbc/exm" 
+auth="Container" 
+type="javax.sql.DataSource" 
+driverClassName="com.mysql.jdbc.Driver"
+username="exm" 
+password="uie123" 
+url="jdbc:mysql://dbvip/exm?useUnicode=true&amp;characterEncoding=UTF-8"
+maxActive="100" 
+maxIdle="30" 
+maxWait="10000" 
+validationQuery="SELECT 1" 
+validationInterval="20000"
+testOnBorrow="true"
+/>
+
+<Resource name="location/LocationService"
+auth="Container"
+type="com.uievolution.service.ServiceParams"
+factory="com.uievolution.service.ServiceParameterFactory"
+WEATHER_URL="http://api.openweathermap.org"
+WEATHER_FORECAST_NUMBER_DAYS="10"
+WEATHER_DELETE_NUMBER_HOURS="24"
+WEATHER_API_KEY="c548c296085586b47ab8ceaafc55979a"
+DATABASE_SERVICE="DB"
+TIME_URL="http://client.iptv.kodmdomain.hal.com:8000/v2/public/time?tz=onprem"
+SHIP_TIME_REFRESH_DELAY="300"
+/>
+
+<Environment name="LOCATION_UPDATE_FREQUENCY" value="30" type="java.lang.Integer" override="false" />	
+

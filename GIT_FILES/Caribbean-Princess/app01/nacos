@@ -1,0 +1,4 @@
+check process nacos with pidfile /var/run/nacos.pid
+start program = "/etc/init.d/nacos start"
+stop program = "/etc/init.d/nacos stop"
+mode manual
