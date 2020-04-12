@@ -40,6 +40,13 @@ do
 		done
     	done
 done
-    git add .
-    git commit -m "Updated files commited on `date`"
-    git push origin develop
+
+line_count=`wc -l $diff_path`
+if [ $line_count -gt 1 ]
+then
+	echo "https://github.com/VOD-Trunk/VOD-Trunk/blob/develop/ship_git_diff.csv" | sendmail abhishek.chadha@hsc.com
+fi
+
+git add .
+git commit -m "Updated files commited on `date`"
+git push origin develop
