@@ -1,4 +1,0 @@
-check program storage with path /usr/local/bin/storage-ck.sh
-with timeout 120 seconds
-
-if status = 1 for 1 cycle then exec "/usr/local/bin/storage-ha.sh"

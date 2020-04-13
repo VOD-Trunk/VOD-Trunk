@@ -2,13 +2,13 @@
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 
 
+#app01
+#10.26.1.21 master cachepeer
+#10.26.1.20 slave cachehost
 
-
-
-
-
-
-
+#app02
+#10.26.1.20 master cachepeer
+#10.26.1.21 slave cachehost
 
 
 
@@ -30,8 +30,8 @@
 10.26.1.124      lb.iptv.wedmdomain.hal.com lb
 10.26.1.12       media.iptv.wedmdomain.hal.com media
 10.26.1.13       media.iptv.wedmdomain.hal.com media
-
-
+#10.26.1.12       media.iptv.wedmdomain.hal.com media media.britanniavod.carnivaluk.com
+#10.26.1.13       media.iptv.wedmdomain.hal.com media media.britanniavod.carnivaluk.com
 10.26.1.23       dbvip.iptv.wedmdomain.hal.com dbvip
 
 192.168.72.10   media01-nfs

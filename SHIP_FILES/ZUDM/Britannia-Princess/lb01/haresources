@@ -1,3 +1,0 @@
-lb01.britanniavod.carnivaluk.com IPaddr::10.0.0.124 haproxy 
-lb01.britanniavod.carnivaluk.com IPaddr::10.0.0.122
-lb02.britanniavod.carnivaluk.com IPaddr::10.0.0.123

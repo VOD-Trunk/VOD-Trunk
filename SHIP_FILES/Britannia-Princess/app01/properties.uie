@@ -23,5 +23,5 @@ com.exm.nacos.handlers.GeolocationNacosHandler.OutputMode=overwrite
 com.exm.nacos.handlers.GeolocationNacosHandler.ReportFrequencyInMs=60000
 com.exm.nacos.handlers.HeadingNacosHandler.SeparateHeadingParsing=true
 
-
+#Optional - To swap timezone + and - values:
 com.exm.nacos.handlers.TimeNacosHandler.FLIPTIMEZONE=true

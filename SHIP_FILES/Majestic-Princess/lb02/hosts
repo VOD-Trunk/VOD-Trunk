@@ -3,13 +3,13 @@
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 
 
+#app01
+#10.25.224.21 master cachepeer
+#10.25.224.20 slave cachehost
 
-
-
-
-
-
-
+#app02
+#10.25.224.20 master cachepeer
+#10.25.224.21 slave cachehost
 
 
 
@@ -41,8 +41,8 @@
 10.25.224.124      lb.mjvod.cruises.princess.com lb
 10.25.224.12       media.mjvod.cruises.princess.com media
 10.25.224.13       media.mjvod.cruises.princess.com media
-
-
+#10.25.224.12       media.mjvod.cruises.princess.com media media.britanniavod.carnivaluk.com
+#10.25.224.13       media.mjvod.cruises.princess.com media media.britanniavod.carnivaluk.com
 10.25.224.23       dbvip.mjvod.cruises.princess.com dbvip dbvip.mj.ocean.com
 10.25.224.124      client.mj.ocean.com client
 10.25.224.124      app.mj.ocean.com app

@@ -2,13 +2,13 @@
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 
 
+#app01
+#10.26.1.21 master cachepeer
+#10.26.1.20 slave cachehost
 
-
-
-
-
-
-
+#app02
+#10.26.1.20 master cachepeer
+#10.26.1.21 slave cachehost
 
 10.26.1.12       procentric.local
 

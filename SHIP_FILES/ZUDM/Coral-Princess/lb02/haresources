@@ -1,4 +1,0 @@
-lb01.co.ocean.com IPaddr::10.25.224.124 haproxy
-lb01.co.ocean.com IPaddr::10.25.224.122
-lb02.co.ocean.com IPaddr::10.25.224.123
-lb01.co.ocean.com IPaddr::10.120.69.154

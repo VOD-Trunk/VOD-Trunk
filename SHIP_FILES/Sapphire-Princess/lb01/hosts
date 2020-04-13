@@ -2,13 +2,13 @@
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 
 
+#app01
+#10.100.0.21 master cachepeer
+#10.100.0.20 slave cachehost
 
-
-
-
-
-
-
+#app02
+#10.100.0.20 master cachepeer
+#10.100.0.21 slave cachehost
 
 
 
@@ -49,8 +49,8 @@
 10.100.0.36 barix07.savod.cruises.princess.com barix07
 10.100.0.37 barix08.savod.cruises.princess.com barix08
 
-
-10.100.0.12 procentric.local 
+# 10.100.0.125 procentric.local # Small 4way LACP box
+10.100.0.12 procentric.local # Media01 VIP - We moved procentric to media for failover redundancy
 10.100.0.12 Type_DNS_Entry
 
 127.0.0.1	ns11.whois.co.kr
@@ -67,4 +67,4 @@
 127.0.0.1       www.samsungrm.net
 127.0.0.1       pool.ntp.org
 127.0.0.1       time.nist.gov
-
+# 127.0.0.1	lgtvonline.lge.com
