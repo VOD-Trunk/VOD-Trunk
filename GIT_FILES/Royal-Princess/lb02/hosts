@@ -2,16 +2,16 @@
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 
 
-
+#swank license server (Sachin Garg)
 10.123.56.154 ocean.swankmp.net
 
+#app01
+#10.25.224.21 master cachepeer
+#10.25.224.20 slave cachehost
 
-
-
-
-
-
-
+#app02
+#10.25.224.20 master cachepeer
+#10.25.224.21 slave cachehost
 
 10.123.57.193	oceanview.rp.ocean.com
 

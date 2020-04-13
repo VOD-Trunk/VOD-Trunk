@@ -1,18 +1,18 @@
-
+# Roots of the synchronization
 root = /nfs/m1
 root = ssh://media02//nfs/m2
 
-
+#backup = Name *
 
 log = true
 logfile = /var/log/unison.log
 
-
+# Paths to syncronize
 path = *
 
-
+# Paths to ignore
 ignore = Path mod_proxy
 ignore = Path tmp
 ignore = Path maptiles
 ignore = Path v2/tmp
-
+# ignore = Path v1-old-m1

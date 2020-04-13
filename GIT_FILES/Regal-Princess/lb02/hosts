@@ -1,13 +1,13 @@
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 
+#app01
+#10.25.224.21 master cachepeer
+#10.25.224.20 slave cachehost
 
-
-
-
-
-
-
+#app02
+#10.25.224.20 master cachepeer
+#10.25.224.21 slave cachehost
 
 10.25.224.254      core.gpvod2.cruises.princess.com core
 
@@ -67,6 +67,6 @@
 10.122.251.91   xiorchestrate-xos-svc.gp.ocean.com
 10.25.224.124 xicms-exm-svc.gp.ocean.com
 
-
+#swank license server (Sachin Garg)
 10.122.250.154 ocean.swankmp.net
 

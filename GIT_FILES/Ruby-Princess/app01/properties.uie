@@ -1,5 +1,5 @@
-
-
+#Automatically Generated
+#Wed Mar 02 08:13:13 PST 2016
 com.exm.nacos.LOGLEVEL=DEBUG
 com.exm.nacos.handlers.VelocityNacosHandler.SERVER=http://xicms-exm-svc.ru.ocean.com/location/private/velocity
 com.exm.nacos.handlers.Authentication.URL=http://xicms-exm-svc.ru.ocean.com/v2/private/auth

@@ -1,22 +1,22 @@
-
-
+#Automatically Generated
+#Thu Feb 26 12:51:43 PST 2015
 com.exm.nacos.PORT=4001
 
-
+#Authentication - required
 com.exm.nacos.handlers.Authentication.URL=http://admin.iptv.eudmdomain.hal.com/v2/private/auth
 com.exm.nacos.handlers.Authentication.USER=nacos@uievolution.com
 com.exm.nacos.handlers.Authentication.PASSWORD=!uie1234
 
-
+#Set ship time
 com.exm.nacos.handlers.TimeNacosHandler.SERVER=
 com.exm.nacos.handlers.TimeTcpHandler.SERVER=http://admin.iptv.eudmdomain.hal.com/v2/private/time
 com.exm.nacos.handlers.TimeNacosHandler.FLIPTIMEZONE=true
 
-
+#Location related updates
 com.exm.nacos.handlers.HeadingNacosHandler.SERVER=http://admin.iptv.eudmdomain.hal.com/location/private/heading
 com.exm.nacos.handlers.VelocityNacosHandler.SERVER=http://admin.iptv.eudmdomain.hal.com/location/private/velocity
 com.exm.nacos.handlers.GeolocationNacosHandler.SERVER=http://admin.iptv.eudmdomain.hal.com/location/private/location
 
-
+#Optional - to increase the logging level, remove if you are not using
 com.exm.nacos.LOGLEVEL=DEBUG
 

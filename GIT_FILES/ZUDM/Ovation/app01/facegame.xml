@@ -1,9 +1,0 @@
-<Context>
-    <Environment name="FidelioClient" value="Fidelio" type="java.lang.String" override="false" />
-    <Environment name="LoyaltyMembershipConfig" value="/etc/tomcat7/Catalina/prod.uiexm.com/loyalty.json" type="java.lang.String" override="false" />
-    <Environment name="FidelioURL" value="http://10.118.0.241/FCWebServices/FCWebServices.asmx" type="java.lang.String" override="false" />
-    <Environment name="FidelioUserID" value="moapp" type="java.lang.String" override="false" />
-    <Environment name="FidelioPassword" value="1a1b636543d89e3f5364869cb113b74e" type="java.lang.String" override="false" />
-    <Environment name="LeaderboardURL" value="http://admin.iptv.ovadomain.hal.com/leaderboard/" type="java.lang.String" override="false" />
-    <Environment name="ExmURL" value="http://admin.iptv.ovadomain.hal.com/v2/" type="java.lang.String" override="false" />
-</Context>

@@ -16,7 +16,7 @@ node app02.britanniavod.carnivaluk.com
 ucast bond0 10.0.0.21
 ucast bond0 10.0.0.21
 
-
+# Ping immediate cisco switch to verify network connectivity.
 ping 10.0.0.1
 respawn hacluster /usr/lib64/heartbeat/ipfail
 apiauth ipfail gid=haclient uid=hacluster

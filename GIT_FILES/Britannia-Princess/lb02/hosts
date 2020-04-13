@@ -2,13 +2,13 @@
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 
 
+#app01
+#10.0.0.21 master cachepeer
+#10.0.0.20 slave cachehost
 
-
-
-
-
-
-
+#app02
+#10.0.0.20 master cachepeer
+#10.0.0.21 slave cachehost
 
 
 
@@ -47,9 +47,9 @@
 10.0.0.33 barix04.britanniavod.carnivaluk.com barix04
 
 127.0.0.1 ns11.whois.co.kr
-
-
-
-
+#10.0.0.124 www.worldtimeserver.com
+#10.0.0.124 pool.ntp.org
+#10.0.0.124 www.samsungrm.net
+#10.0.0.124 test.samsungrm.net
 127.0.0.1 www.samsung.com
-
+#10.0.0.124 multiscreen.samsung.com

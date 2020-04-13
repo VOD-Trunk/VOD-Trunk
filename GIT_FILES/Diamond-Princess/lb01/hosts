@@ -34,13 +34,13 @@
 10.25.224.11	media02.di.ocean.com media02
 192.168.72.11	media02-nfs.di.ocean.com media02-nfs
 10.25.224.22	mute.di.ocean.com mute
-
+#192.168.55.240	pool.ntp.org pool
 10.25.224.2	sw01.di.ocean.com sw01
 10.25.224.3	sw02.di.ocean.com sw01
 10.25.224.12     procentric.local procentric
 10.25.224.41	makito01.di.ocean.com makito01
 54.228.180.99	uie.headlandmedia.com
-
+#194.200.176.136	uie.headlandmedia.com
 
 127.0.0.1       ns11.whois.co.kr
 127.0.0.1       www.samsung.com
