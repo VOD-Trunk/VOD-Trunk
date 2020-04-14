@@ -30,9 +30,10 @@ then
 			
 			git checkout master
 			git pull origin master
+			git checkout develop $git_path/GIT_FILES/$ship/$server/$file
 			git add .
 			git commit -m "Updating $ship master GIT files with updated values on $ship"
-			git checkout develop $git_path/GIT_FILES/$ship/$server/$file
+			
 		fi
 	done
 
