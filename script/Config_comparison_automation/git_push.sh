@@ -1,7 +1,11 @@
 #!/bin/bash
 git_path='/home/abhishek/deepam/VOD-Trunk'
 diff_path='/home/abhishek/deepam/VOD-Trunk/ship_git_diff.csv'
+cd $git_path
+git checkout develop
+git pull origin develop
 line_count=`wc -l $diff_path | cut -d ' ' -f 1`
+echo "Line count : $line_count"
 if [ $line_count -gt 1 ]
 then
 	echo "Reading the csv file for decisions"
@@ -14,7 +18,7 @@ then
 		file=`echo $line | cut -d ',' -f 2`
 		server=`echo $line | cut -d ',' -f 3`
 		decision=`echo $line | cut -d ',' -f 6`
-		if [ "$decision" == "YES" ] || [ "$decision" == "yes" ] || [ "$decision" == "Yes" ] || [ "$decision" == " YES" ] || [ "$decision" == " yes" ]
+		if [ "$decision" == "YES" ] || [ "$decision" == "yes" ] || [ "$decision" == "Yes" ] || [ "$decision" == " YES" ]
 		then
 			echo "Diff found at $ship $server $file $decision"
 			cd $git_path
