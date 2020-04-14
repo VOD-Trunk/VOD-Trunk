@@ -1,5 +1,5 @@
 SHIP NAME,FILE NAME,SERVER NAME,SHIP VALUES,GIT VALUES,DECISION
-KODM,location.xml,app01,		maxActive="100" ;		maxIdle="30" ,		maxActive="200" ;		maxIdle="60" 
+KODM,location.xml,app01,		maxActive="100" ;		maxIdle="30" ,		maxActive="200" ;		maxIdle="60",YES
 KODM,nacos,app01,mode manual,mode auto
 KODM,httpd.conf,media01,MaxKeepAliveRequests 100;KeepAliveTimeout 15,MaxKeepAliveRequests 200;KeepAliveTimeout 35,YES
 KODM,WowzaUnmute,media01,start program = "/usr/bin/curl -so /dev/null http://localhost:8086/uie?action=unmute",
