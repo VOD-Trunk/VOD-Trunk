@@ -1,7 +1,7 @@
 #!/bin/bash
 git_path='/home/abhishek/deepam/VOD-Trunk'
 diff_path='/home/abhishek/deepam/VOD-Trunk/ship_git_diff.csv'
-line_count=`wc -l $diff_path`
+line_count=`wc -l $diff_path | cut -d ' ' -f 1`
 if [ $line_count -gt 1 ]
 then
 	echo "Reading the csv file for decisions"
