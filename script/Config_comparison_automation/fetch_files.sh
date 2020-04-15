@@ -1,4 +1,11 @@
 #!/bin/bash
+#################################################
+# Config file comparison automation: Final      #
+# Author : ABHISHEK CHADHA                      #
+# Date : 4/15/2020                              #
+#                                               #
+#################################################
+
 git_path='/home/abhishek/deepam/VOD-Trunk'
 temp='/home/abhishek/Config_Automation/temp.txt'
 diff_path='/home/abhishek/deepam/VOD-Trunk/ship_git_diff.csv'
@@ -20,20 +27,21 @@ do
 	echo "Copying files from all six servers to /home/config_files in app01 server of $ship"
 	echo "======================================================================================================================="
 	echo
-	
+
 	#Run the script fetch_files.sh on respective servers and move to next hostname if ssh takes more than 20 seconds.
-	sshpass -p ${PASS} ssh -o ConnectTimeout=20 ${USERNAME}@${HOSTNAME} '/home/config_files/fetch_files.sh' 2>/dev/null
+	sshpass -p ${PASS} ssh -o ConnectTimeout=20 ${USERNAME}@${HOSTNAME} 'cd /home/config_files/ && rm -f config_files.tar.gz && ./fetch_files.sh && tar -czf config_files.tar.gz app01 app02 media01 media02 lb01 lb02' 2>/dev/null
 	e=$?
 	if [ "$e" != "0" ]
 	then
 		continue
 	fi
-	
-	echo "Copying files app01 of $ship to local GIT path."
+
+	echo "Copying files from app01 of $ship to local GIT path."
 	echo "======================================================================================================================="
 	echo
 	#Copy the consolidated config files from server to local git path.
-	sshpass -p ${PASS} scp -r ${USERNAME}@${HOSTNAME}:/home/config_files/* ${git_path}/SHIP_FILES/${ship}
+	sshpass -p ${PASS} scp ${USERNAME}@${HOSTNAME}:/home/config_files/config_files.tar.gz ${git_path}/SHIP_FILES/${ship}
+	cd ${git_path}/SHIP_FILES/${ship} && tar -xzf config_files.tar.gz && rm -f config_files.tar.gz
 	echo "Comparing files just fetched from ship with corresponding file in GIT."
 	echo "======================================================================================================================="
 	echo
@@ -75,6 +83,7 @@ echo "Pushing the ship files and diff file in GIT."
 echo "======================================================================================================================="
 echo
 
+cd ${git_path}
 git add .
 git commit -m "Updated files commited on `date`"
 git push origin develop
