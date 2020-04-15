@@ -35,6 +35,6 @@
 	<!-- SETTINGS FOR BACKGROUND TASKS -->
 	<Environment name="com.uievolution.exm.plugin.location.tasks.Enabled" value="true" type="java.lang.Boolean" override="false" />
 	<Environment name="com.uievolution.exm.plugin.location.tasks.ForecastRefresh" value="14400" type="java.lang.Integer" override="false" />
-	<Environment name="com.uievolution.exm.plugin.location.tasks.LocalRefresh" value="900000" type="java.lang.Integer" override="false" />
+	<Environment name="com.uievolution.exm.plugin.location.tasks.LocalRefresh" value="1000000" type="java.lang.Integer" override="false" />
 </Context>
 
