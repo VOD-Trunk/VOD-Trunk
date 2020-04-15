@@ -1,3 +1,2 @@
 SHIP NAME,FILE NAME,SERVER NAME,SHIP VALUES,GIT VALUES,DECISION
-KODM,nacos,app01,mode manual,mode auto,Yes
 KODM,WowzaUnmute,media01,start program = "/usr/bin/curl -so /dev/null http://localhost:8086/uie?action=unmute",
