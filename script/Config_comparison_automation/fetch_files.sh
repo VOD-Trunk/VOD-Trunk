@@ -24,6 +24,10 @@ for line in `cat $ip`
 do
     HOSTNAME=`echo $line | cut -d ',' -f 2`
 	ship=`echo $line | cut -d ',' -f 1`
+	echo
+	echo
+	echo
+	echo
 	echo "Copying files from all six servers to /home/config_files in app01 server of $ship"
 	echo "======================================================================================================================="
 	echo
@@ -42,7 +46,7 @@ do
 	#Copy the consolidated config files from server to local git path.
 	sshpass -p ${PASS} scp ${USERNAME}@${HOSTNAME}:/home/config_files/config_files.tar.gz ${git_path}/SHIP_FILES/${ship}
 	cd ${git_path}/SHIP_FILES/${ship} && tar -xzf config_files.tar.gz && rm -f config_files.tar.gz
-	echo "Comparing files just fetched from ship with corresponding file in GIT."
+	echo "Comparing $ship files with corresponding $ship files in GIT."
 	echo "======================================================================================================================="
 	echo
 	#compare SHIP files just copied with GIT files pulled from GIT.
@@ -62,7 +66,7 @@ do
 			fi
 		done
 	done
-	echo "Please find the differences in $diff_path"
+	echo "Logged all the differences in $diff_path"
 	echo "======================================================================================================================="
 	echo
 done
