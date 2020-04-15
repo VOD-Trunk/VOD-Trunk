@@ -17,7 +17,7 @@ node lb02.cbvod.cruises.princess.com
 ucast bond0 10.25.224.121
 ucast bond0 10.25.224.121
 
-
+# Ping immediate cisco switch to verify network connectivity.
 ping 10.25.224.1
 respawn hacluster /usr/lib64/heartbeat/ipfail
 apiauth ipfail gid=haclient uid=hacluster

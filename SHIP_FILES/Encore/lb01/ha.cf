@@ -17,7 +17,7 @@ node lb02.iptv.encdomain.hal.com
 ucast bond0 10.25.129.121
 ucast bond0 10.25.129.121
 
-
+# Ping immediate cisco switch to verify network connectivity.
 ping 10.25.129.1
 respawn hacluster /usr/lib64/heartbeat/ipfail
 apiauth ipfail gid=haclient uid=hacluster
