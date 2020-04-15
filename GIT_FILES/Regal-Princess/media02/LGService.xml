@@ -1,25 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <service>
    <setup>
-      <versionNumber>8</versionNumber>
+      <versionNumber>9</versionNumber>
       <modelName>43UV766V-UA</modelName>
       <priority>NORMAL</priority>
       <content>
          <type>EPK_FIRMWARE</type>
-         <subversionNumber>8</subversionNumber>
+         <subversionNumber>9</subversionNumber>
 <!--         <data>starfish-atsc-secured-m16photel-drd4id-286-03.02.46-prodkey_nsu_V3_SECURED.epk</data> -->
 <!--         <data>starfish-atsc-secured-m16photel-drd4id-55-03.05.40-prodkey_nsu_V3_SECURED.epk</data>  -->
       <!--   <data>starfish-atsc-secured-m16photel-drd4id-79-03.07.80-prodkey_nsu_V3_SECURED.epk</data> -->
 <!--	<data>starfish-atsc-secured-m16photel-drd4id-1233-08.12.33-prodkey_usb_V3_SECURED.epk</data> -->
 <!--       <data>starfish-atsc-secured-m16photel-drd4id-1258-08.12.58-prodkey_usb_V3_SECURED.epk</data>-->
-	<data>starfish-atsc-secured-m16photel-drd4id-1269-08.12.69-prodkey_usb_V3_SECURED.epk</data>
+<!--	<data>starfish-atsc-secured-m16photel-drd4id-1269-08.12.69-prodkey_usb_V3_SECURED.epk</data>-->
+	<data>starfish-atsc-secured-m16photel-drd4id-1281-08.12.81-prodkey_usb_V3_SECURED.epk</data>
          <frequency>0</frequency>
          <programNum>0</programNum>
          <cTag>0</cTag>
       </content>
                         <content>
                         <type>PTC_FIRMWARE</type>
-                        <subversionNumber>7</subversionNumber>
+                        <subversionNumber>9</subversionNumber>
 <!--                    <data>xxUV766V_v1.00.019.txt</data> -->
                       <!--  <data>xxUV766V_v1.00.023.txt</data>  -->
                         <data>43UV766V_v1.00.023.txt</data>
@@ -29,7 +30,7 @@
                 </content>
                 <content>
                         <type>CH_MAP</type>
-                        <subversionNumber>7</subversionNumber>
+                        <subversionNumber>9</subversionNumber>
                         <data>regal_dom.tlx</data>
                         <frequency>0</frequency>
                         <programNum>0</programNum>
