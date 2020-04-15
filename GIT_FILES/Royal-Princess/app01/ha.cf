@@ -4,8 +4,8 @@ logfile /var/log/ha.log
 autojoin none
 
 keepalive 1000ms
-deadtime 10
-warntime 5
+deadtime 30
+warntime 10
 initdead 30
 auto_failback off 
 
