@@ -1,3 +1,238 @@
+On Royal-Princess, difference found between app01:haresources and app02:haresources
+On Royal-Princess, difference found between app01:my.cnf and app02:my.cnf
+On Royal-Princess, difference found between app01:properties.uie and app02:properties.uie
+On Royal-Princess, File 'unison' not found in app02 but present in app01.
+On Royal-Princess, difference found between app01:v2-admin.conf and app02:v2-admin.conf
+On Royal-Princess, difference found between app01:v2.xml and app02:v2.xml
+On Royal-Princess, File 'default.prf' not found in media02 but present in media01.
+On Royal-Princess, difference found between media01:httpd.conf and media02:httpd.conf
+On Royal-Princess, difference found between media01:media.conf and media02:media.conf
+On Royal-Princess, difference found between media01:procentric.conf and media02:procentric.conf
+On Royal-Princess, File 'unison' not found in media02 but present in media01.
+On Royal-Princess, difference found between lb01:haproxy.cfg and lb02:haproxy.cfg
+On Royal-Princess, difference found between lb01:hosts and lb02:hosts
+On Sun-Princess, difference found between app01:currentupdate.sh and app02:currentupdate.sh
+On Sun-Princess, File 'default.prf' not found in app02 but present in app01.
+On Sun-Princess, difference found between app01:forecastupdate.sh and app02:forecastupdate.sh
+On Sun-Princess, difference found between app01:my.cnf and app02:my.cnf
+On Sun-Princess, difference found between app01:properties.uie and app02:properties.uie
+On Sun-Princess, File 'unison' not found in app02 but present in app01.
+On Sun-Princess, difference found between app01:v2-client.conf and app02:v2-client.conf
+On Sun-Princess, difference found between app01:v2.xml and app02:v2.xml
+On Sun-Princess, File 'default.prf' not found in media02 but present in media01.
+On Sun-Princess, difference found between media01:httpd.conf and media02:httpd.conf
+On Sun-Princess, difference found between media01:storage-ha and media02:storage-ha
+On Sun-Princess, File 'unison' not found in media02 but present in media01.
+On Sun-Princess, difference found between media01:vhosts.conf and media02:vhosts.conf
+On Sun-Princess, difference found between lb01:haresources and lb02:haresources
+On Sun-Princess, difference found between lb01:hosts and lb02:hosts
+On Sky-Princess, difference found between app01:my.cnf and app02:my.cnf
+On Sky-Princess, difference found between app01:prod.uiexm.com.xml and app02:prod.uiexm.com.xml
+On Sky-Princess, difference found between app01:properties.uie and app02:properties.uie
+On Sky-Princess, File 'unison' not found in app02 but present in app01.
+On Sky-Princess, difference found between app01:v2.xml and app02:v2.xml
+On Sky-Princess, difference found between media01:Application.xml and media02:Application.xml
+On Sky-Princess, File 'default.prf' not found in media02 but present in media01.
+On Sky-Princess, difference found between media01:ha.cf and media02:ha.cf
+On Sky-Princess, difference found between media01:httpd.conf and media02:httpd.conf
+On Sky-Princess, difference found between media01:media.conf and media02:media.conf
+On Sky-Princess, File 'ssl.conf' not found in media02 but present in media01.
+On Sky-Princess, difference found between media01:storage-ha and media02:storage-ha
+On Sky-Princess, File 'unison' not found in media02 but present in media01.
+On Sky-Princess, difference found between lb01:ha.cf and lb02:ha.cf
+On Sky-Princess, difference found between lb01:haproxy.cfg and lb02:haproxy.cfg
+On Sky-Princess, difference found between lb01:hosts and lb02:hosts
+On Sapphire-Princess, difference found between app01:my.cnf and app02:my.cnf
+On Sapphire-Princess, difference found between app01:properties.uie and app02:properties.uie
+On Sapphire-Princess, File 'ship' not found in app02 but present in app01.
+On Sapphire-Princess, File 'unison' not found in app02 but present in app01.
+On Sapphire-Princess, difference found between app01:v2.xml and app02:v2.xml
+On Sapphire-Princess, File 'default.prf' not found in media02 but present in media01.
+On Sapphire-Princess, difference found between media01:httpd.conf and media02:httpd.conf
+On Sapphire-Princess, difference found between media01:storage-ha and media02:storage-ha
+On Sapphire-Princess, File 'unison' not found in media02 but present in media01.
+On Sapphire-Princess, difference found between lb01:haproxy.cfg and lb02:haproxy.cfg
+Could not ssh to Majestic-Princess : 10.124.178.51
+On Ruby-Princess, File 'default.prf' not found in app02 but present in app01.
+On Ruby-Princess, difference found between app01:facegame.xml and app02:facegame.xml
+On Ruby-Princess, difference found between app01:my.cnf and app02:my.cnf
+On Ruby-Princess, difference found between app01:prod.uiexm.com.xml and app02:prod.uiexm.com.xml
+On Ruby-Princess, difference found between app01:properties.uie and app02:properties.uie
+On Ruby-Princess, File 'unison' not found in app02 but present in app01.
+On Ruby-Princess, difference found between app01:v2-admin.conf and app02:v2-admin.conf
+On Ruby-Princess, difference found between app01:v2.xml and app02:v2.xml
+On Ruby-Princess, File 'default.prf' not found in media02 but present in media01.
+On Ruby-Princess, difference found between media01:httpd.conf and media02:httpd.conf
+On Ruby-Princess, difference found between media01:media.conf and media02:media.conf
+On Ruby-Princess, difference found between media01:procentric.conf and media02:procentric.conf
+On Ruby-Princess, File 'unison' not found in media02 but present in media01.
+On Ruby-Princess, difference found between media01:vhosts.conf and media02:vhosts.conf
+On Ruby-Princess, difference found between lb01:haproxy.cfg and lb02:haproxy.cfg
+On Ruby-Princess, difference found between lb01:hosts and lb02:hosts
+On Grand-Princess, difference found between app01:ha.cf and app02:ha.cf
+On Grand-Princess, difference found between app01:my.cnf and app02:my.cnf
+On Grand-Princess, difference found between app01:properties.uie and app02:properties.uie
+On Grand-Princess, File 'unison' not found in app02 but present in app01.
+On Grand-Princess, difference found between app01:v2.xml and app02:v2.xml
+On Grand-Princess, File 'default.prf' not found in media02 but present in media01.
+On Grand-Princess, difference found between media01:httpd.conf and media02:httpd.conf
+On Grand-Princess, difference found between media01:media.conf and media02:media.conf
+On Grand-Princess, difference found between media01:Server.xml and media02:Server.xml
+On Grand-Princess, File 'unison' not found in media02 but present in media01.
+On Grand-Princess, difference found between media01:vhosts.conf and media02:vhosts.conf
+On Grand-Princess, difference found between lb01:haproxy.cfg and lb02:haproxy.cfg
+On Crown-Princess, difference found between app01:currentupdate.sh and app02:currentupdate.sh
+On Crown-Princess, difference found between app01:forecastupdate.sh and app02:forecastupdate.sh
+On Crown-Princess, difference found between app01:my.cnf and app02:my.cnf
+On Crown-Princess, difference found between app01:properties.uie and app02:properties.uie
+On Crown-Princess, File 'unison' not found in app02 but present in app01.
+On Crown-Princess, difference found between app01:v2-admin.conf and app02:v2-admin.conf
+On Crown-Princess, difference found between app01:v2-client.conf and app02:v2-client.conf
+On Crown-Princess, difference found between app01:v2.xml and app02:v2.xml
+On Crown-Princess, File 'default.prf' not found in media02 but present in media01.
+On Crown-Princess, difference found between media01:httpd.conf and media02:httpd.conf
+On Crown-Princess, difference found between media01:media.conf and media02:media.conf
+On Crown-Princess, File 'ssl.conf' not found in media02 but present in media01.
+On Crown-Princess, difference found between media01:storage-ha and media02:storage-ha
+On Crown-Princess, File 'unison' not found in media02 but present in media01.
+On Crown-Princess, difference found between media01:vhosts.conf and media02:vhosts.conf
+On Crown-Princess, difference found between lb01:haproxy.cfg and lb02:haproxy.cfg
+On Crown-Princess, difference found between lb01:hosts and lb02:hosts
+On Regal-Princess, difference found between app01:backupdb and app02:backupdb
+On Regal-Princess, difference found between app01:my.cnf and app02:my.cnf
+On Regal-Princess, difference found between app01:properties.uie and app02:properties.uie
+On Regal-Princess, File 'unison' not found in app02 but present in app01.
+On Regal-Princess, difference found between app01:v2-log4j.xml and app02:v2-log4j.xml
+On Regal-Princess, difference found between app01:v2.xml and app02:v2.xml
+On Regal-Princess, File 'Application.xml' not found in media02 but present in media01.
+On Regal-Princess, File 'default.prf' not found in media02 but present in media01.
+On Regal-Princess, difference found between media01:ha.cf and media02:ha.cf
+On Regal-Princess, difference found between media01:haresources and media02:haresources
+On Regal-Princess, difference found between media01:httpd.conf and media02:httpd.conf
+On Regal-Princess, difference found between media01:procentric.conf and media02:procentric.conf
+On Regal-Princess, difference found between media01:prod.uiexm.com.xml and media02:prod.uiexm.com.xml
+On Regal-Princess, difference found between media01:Server.xml and media02:Server.xml
+On Regal-Princess, difference found between media01:ssl.conf and media02:ssl.conf
+On Regal-Princess, difference found between media01:storage-ha and media02:storage-ha
+On Regal-Princess, File 'unison' not found in media02 but present in media01.
+On Regal-Princess, difference found between media01:v2.xml and media02:v2.xml
+On Regal-Princess, difference found between media01:vhosts.conf and media02:vhosts.conf
+On Regal-Princess, difference found between lb01:hosts and lb02:hosts
+On Caribbean-Princess, difference found between app01:backupdb and app02:backupdb
+On Caribbean-Princess, File 'default.prf' not found in app02 but present in app01.
+On Caribbean-Princess, difference found between app01:httpd.conf and app02:httpd.conf
+On Caribbean-Princess, difference found between app01:my.cnf and app02:my.cnf
+On Caribbean-Princess, difference found between app01:properties.uie and app02:properties.uie
+On Caribbean-Princess, File 'unison' not found in app02 but present in app01.
+On Caribbean-Princess, difference found between app01:v2.xml and app02:v2.xml
+On Caribbean-Princess, File 'default.prf' not found in media02 but present in media01.
+On Caribbean-Princess, difference found between media01:ha.cf and media02:ha.cf
+On Caribbean-Princess, difference found between media01:httpd.conf and media02:httpd.conf
+On Caribbean-Princess, difference found between media01:media.conf and media02:media.conf
+On Caribbean-Princess, File 'unison' not found in media02 but present in media01.
+On Caribbean-Princess, difference found between lb01:haproxy.cfg and lb02:haproxy.cfg
+On Britannia-Princess, File 'default.prf' not found in app02 but present in app01.
+On Britannia-Princess, difference found between app01:my.cnf and app02:my.cnf
+On Britannia-Princess, difference found between app01:prod.uiexm.com.xml and app02:prod.uiexm.com.xml
+On Britannia-Princess, difference found between app01:server.xml and app02:server.xml
+On Britannia-Princess, difference found between app01:v2-admin.conf and app02:v2-admin.conf
+On Britannia-Princess, difference found between app01:v2-client.conf and app02:v2-client.conf
+On Britannia-Princess, File 'default.prf' not found in media02 but present in media01.
+On Britannia-Princess, difference found between media01:haresources and media02:haresources
+On Britannia-Princess, difference found between media01:httpd.conf and media02:httpd.conf
+On Britannia-Princess, difference found between media01:WowzaUnmute and media02:WowzaUnmute
+On Britannia-Princess, difference found between lb01:haproxy.cfg and lb02:haproxy.cfg
+On Diamond-Princess, difference found between app01:currentupdate.sh and app02:currentupdate.sh
+On Diamond-Princess, difference found between app01:forecastupdate.sh and app02:forecastupdate.sh
+On Diamond-Princess, difference found between app01:haresources and app02:haresources
+On Diamond-Princess, difference found between app01:location.xml and app02:location.xml
+On Diamond-Princess, difference found between app01:my.cnf and app02:my.cnf
+On Diamond-Princess, difference found between app01:properties.uie and app02:properties.uie
+On Diamond-Princess, File 'unison' not found in app02 but present in app01.
+On Diamond-Princess, difference found between app01:v2.xml and app02:v2.xml
+On Diamond-Princess, File 'default.prf' not found in media02 but present in media01.
+On Diamond-Princess, difference found between media01:httpd.conf and media02:httpd.conf
+On Diamond-Princess, difference found between media01:procentric.conf and media02:procentric.conf
+On Diamond-Princess, File 'unison' not found in media02 but present in media01.
+On Emerald-Princess, difference found between app01:currentupdate.sh and app02:currentupdate.sh
+On Emerald-Princess, difference found between app01:forecastupdate.sh and app02:forecastupdate.sh
+On Emerald-Princess, difference found between app01:ha.cf and app02:ha.cf
+On Emerald-Princess, difference found between app01:my.cnf and app02:my.cnf
+On Emerald-Princess, difference found between app01:properties.uie and app02:properties.uie
+On Emerald-Princess, difference found between app01:storage-ha and app02:storage-ha
+On Emerald-Princess, File 'unison' not found in app02 but present in app01.
+On Emerald-Princess, difference found between app01:v2-admin.conf and app02:v2-admin.conf
+On Emerald-Princess, difference found between app01:v2-client.conf and app02:v2-client.conf
+On Emerald-Princess, difference found between app01:v2.xml and app02:v2.xml
+On Emerald-Princess, File 'default.prf' not found in media02 but present in media01.
+On Emerald-Princess, difference found between media01:httpd.conf and media02:httpd.conf
+On Emerald-Princess, File 'ssl.conf' not found in media02 but present in media01.
+On Emerald-Princess, difference found between media01:storage-ha and media02:storage-ha
+On Emerald-Princess, File 'unison' not found in media02 but present in media01.
+On Emerald-Princess, difference found between lb01:haproxy.cfg and lb02:haproxy.cfg
+On Coral-Princess, difference found between app01:ha.cf and app02:ha.cf
+On Coral-Princess, difference found between app01:location.xml and app02:location.xml
+On Coral-Princess, difference found between app01:my.cnf and app02:my.cnf
+On Coral-Princess, difference found between app01:properties.uie and app02:properties.uie
+On Coral-Princess, File 'unison' not found in app02 but present in app01.
+On Coral-Princess, difference found between app01:v2.xml and app02:v2.xml
+On Coral-Princess, File 'default.prf' not found in media02 but present in media01.
+On Coral-Princess, difference found between media01:httpd.conf and media02:httpd.conf
+On Coral-Princess, difference found between media01:procentric.conf and media02:procentric.conf
+On Coral-Princess, File 'ssl.conf' not found in media02 but present in media01.
+On Coral-Princess, difference found between media01:storage-ha and media02:storage-ha
+On Coral-Princess, File 'unison' not found in media02 but present in media01.
+On Coral-Princess, difference found between media01:vhosts.conf and media02:vhosts.conf
+On Coral-Princess, difference found between lb01:haproxy.cfg and lb02:haproxy.cfg
+On KODM, File 'currentupdate.sh' not found in app02 but present in app01.
+On KODM, File 'default.prf' not found in app02 but present in app01.
+On KODM, File 'forecastupdate.sh' not found in app02 but present in app01.
+On KODM, difference found between app01:ha.cf and app02:ha.cf
+On KODM, difference found between app01:my.cnf and app02:my.cnf
+On KODM, difference found between app01:properties.uie and app02:properties.uie
+On KODM, File 'unison' not found in app02 but present in app01.
+On KODM, difference found between app01:v2-client.conf and app02:v2-client.conf
+On KODM, File 'default.prf' not found in media02 but present in media01.
+On KODM, difference found between media01:httpd.conf and media02:httpd.conf
+On KODM, difference found between media01:procentric.conf and media02:procentric.conf
+On KODM, difference found between media01:storage-ha.sh and media02:storage-ha.sh
+On KODM, File 'unison' not found in media02 but present in media01.
+On KODM, difference found between lb01:hosts and lb02:hosts
+On NADM, difference found between app01:backupdb and app02:backupdb
+On NADM, File 'default.prf' not found in app02 but present in app01.
+On NADM, difference found between app01:ha.cf and app02:ha.cf
+On NADM, difference found between app01:my.cnf and app02:my.cnf
+On NADM, difference found between app01:prod.uiexm.com.xml and app02:prod.uiexm.com.xml
+On NADM, difference found between app01:properties.uie and app02:properties.uie
+On NADM, difference found between app01:v2-admin.conf and app02:v2-admin.conf
+On NADM, difference found between app01:v2.xml and app02:v2.xml
+On NADM, File 'default.prf' not found in media02 but present in media01.
+On NADM, difference found between media01:ha.cf and media02:ha.cf
+On NADM, difference found between media01:httpd.conf and media02:httpd.conf
+On NADM, difference found between media01:procentric.conf and media02:procentric.conf
+On NADM, File 'unison' not found in media02 but present in media01.
+On NADM, difference found between media01:vhosts.conf and media02:vhosts.conf
+On EUDM, difference found between app01:backupdb and app02:backupdb
+On EUDM, File 'currentupdate.sh' not found in app02 but present in app01.
+On EUDM, File 'default.prf' not found in app02 but present in app01.
+On EUDM, File 'forecastupdate.sh' not found in app02 but present in app01.
+On EUDM, difference found between app01:my.cnf and app02:my.cnf
+On EUDM, difference found between app01:properties.uie and app02:properties.uie
+On EUDM, File 'unison' not found in app02 but present in app01.
+On EUDM, difference found between app01:v2.xml and app02:v2.xml
+On EUDM, File 'default.prf' not found in media02 but present in media01.
+On EUDM, difference found between media01:httpd.conf and media02:httpd.conf
+On EUDM, difference found between media01:procentric.conf and media02:procentric.conf
+On EUDM, difference found between media01:storage-ha.sh and media02:storage-ha.sh
+On EUDM, File 'unison' not found in media02 but present in media01.
+On EUDM, difference found between lb01:hosts and lb02:hosts
+On WEDM, difference found between app01:currentupdate.sh and app02:currentupdate.sh
+On WEDM, File 'default.prf' not found in app02 but present in app01.
+On WEDM, difference found between app01:forecastupdate.sh and app02:forecastupdate.sh
+On WEDM, difference found between app01:hal-shutdown.sh and app02:hal-shutdown.sh
+On WEDM, difference found between app01:my.cnf and app02:my.cnf
+On WEDM, difference found between app01:properties.uie and app02:properties.uie
+On WEDM, File 'unison' not found in app02 but present in app01.
 On WEDM, difference found between app01:v2.xml and app02:v2.xml
 On WEDM, File 'default.prf' not found in media02 but present in media01.
 On WEDM, difference found between media01:ha.cf and media02:ha.cf
@@ -5,8 +240,70 @@ On WEDM, difference found between media01:httpd.conf and media02:httpd.conf
 On WEDM, difference found between media01:procentric.conf and media02:procentric.conf
 On WEDM, File 'unison' not found in media02 but present in media01.
 Could not ssh to NSDM : 10.115.114.52
-Could not ssh to Ovation : 10.118.50.52
-Could not ssh to Encore : 10.117.242.52
-Could not ssh to Odyssey : 10.117.50.52
-Could not ssh to NODM : 10.114.114.50
-Could not ssh to VODM : 10.112.242.50
+On Ovation, difference found between app01:excursions.xml and app02:excursions.xml
+On Ovation, difference found between app01:facegame.xml and app02:facegame.xml
+On Ovation, difference found between app01:my.cnf and app02:my.cnf
+On Ovation, difference found between app01:properties.uie and app02:properties.uie
+On Ovation, File 'unison' not found in app02 but present in app01.
+On Ovation, difference found between app01:v2.xml and app02:v2.xml
+On Ovation, File 'default.prf' not found in media02 but present in media01.
+On Ovation, difference found between media01:httpd.conf and media02:httpd.conf
+On Ovation, difference found between media01:procentric.conf and media02:procentric.conf
+On Ovation, difference found between media01:storage-ha and media02:storage-ha
+On Ovation, File 'unison' not found in media02 but present in media01.
+On Ovation, difference found between media01:vhosts.conf and media02:vhosts.conf
+On Encore, File 'default.prf' not found in app02 but present in app01.
+On Encore, difference found between app01:my.cnf and app02:my.cnf
+On Encore, difference found between app01:properties.uie and app02:properties.uie
+On Encore, File 'unison' not found in app02 but present in app01.
+On Encore, difference found between app01:v2-admin.conf and app02:v2-admin.conf
+On Encore, difference found between app01:v2-client.conf and app02:v2-client.conf
+On Encore, difference found between app01:v2.xml and app02:v2.xml
+On Encore, File 'default.prf' not found in media02 but present in media01.
+On Encore, difference found between media01:httpd.conf and media02:httpd.conf
+On Encore, difference found between media01:procentric.conf and media02:procentric.conf
+On Encore, File 'unison' not found in media02 but present in media01.
+On Encore, difference found between lb01:hosts and lb02:hosts
+On Odyssey, difference found between app01:haresources and app02:haresources
+On Odyssey, difference found between app01:my.cnf and app02:my.cnf
+On Odyssey, difference found between app01:properties.uie and app02:properties.uie
+On Odyssey, File 'unison' not found in app02 but present in app01.
+On Odyssey, difference found between app01:v2.xml and app02:v2.xml
+On Odyssey, File 'default.prf' not found in media02 but present in media01.
+On Odyssey, difference found between media01:httpd.conf and media02:httpd.conf
+On Odyssey, difference found between media01:procentric.conf and media02:procentric.conf
+On Odyssey, File 'ssl.conf' not found in media02 but present in media01.
+On Odyssey, difference found between media01:storage-ha and media02:storage-ha
+On Odyssey, File 'unison' not found in media02 but present in media01.
+On Odyssey, difference found between media01:vhosts.conf and media02:vhosts.conf
+On Odyssey, difference found between lb01:haproxy.cfg and lb02:haproxy.cfg
+On NODM, difference found between app01:location.xml and app02:location.xml
+On NODM, difference found between app01:my.cnf and app02:my.cnf
+On NODM, difference found between app01:properties.uie and app02:properties.uie
+On NODM, File 'unison' not found in app02 but present in app01.
+On NODM, difference found between app01:v2-admin.conf and app02:v2-admin.conf
+On NODM, difference found between app01:v2-client.conf and app02:v2-client.conf
+On NODM, difference found between app01:v2.xml and app02:v2.xml
+On NODM, File 'default.prf' not found in media02 but present in media01.
+On NODM, difference found between media01:ha.cf and media02:ha.cf
+On NODM, difference found between media01:httpd.conf and media02:httpd.conf
+On NODM, File 'ssl.conf' not found in media02 but present in media01.
+On NODM, difference found between media01:storage-ha and media02:storage-ha
+On NODM, File 'unison' not found in media02 but present in media01.
+On NODM, difference found between media01:vhosts.conf and media02:vhosts.conf
+On NODM, difference found between lb01:ha.cf and lb02:ha.cf
+On NODM, difference found between lb01:haresources and lb02:haresources
+On VODM, difference found between app01:excursions.xml and app02:excursions.xml
+On VODM, difference found between app01:httpd.conf and app02:httpd.conf
+On VODM, difference found between app01:my.cnf and app02:my.cnf
+On VODM, difference found between app01:properties.uie and app02:properties.uie
+On VODM, File 'unison' not found in app02 but present in app01.
+On VODM, File 'default.prf' not found in media02 but present in media01.
+On VODM, difference found between media01:ha.cf and media02:ha.cf
+On VODM, difference found between media01:httpd.conf and media02:httpd.conf
+On VODM, File 'ssl.conf' not found in media02 but present in media01.
+On VODM, difference found between media01:storage-ha and media02:storage-ha
+On VODM, File 'unison' not found in media02 but present in media01.
+On VODM, difference found between media01:vhosts.conf and media02:vhosts.conf
+On VODM, difference found between lb01:ha.cf and lb02:ha.cf
+On VODM, difference found between lb01:haresources and lb02:haresources
