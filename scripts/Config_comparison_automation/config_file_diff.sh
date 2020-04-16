@@ -9,20 +9,22 @@
 git_path='/home/abhishek/deepam/VOD-Trunk'
 temp='/home/abhishek/Config_Automation/temp.txt'
 diff_path='/home/abhishek/deepam/VOD-Trunk/ship_git_diff.csv'
+logs='/home/abhishek/deepam/VOD-Trunk/logs'
 ip='/home/abhishek/Config_Automation/ip.txt'
 USERNAME=root
-PASS="not4dev!"
+PASS="*******"
 echo "SHIP NAME,FILE NAME,SERVER NAME,SHIP VALUES,GIT VALUES,DECISION" >$diff_path
 echo "Pulling files from GIT"
 echo
 cd ${git_path}
 git checkout develop
 git pull origin develop
+rm -f $logs
 echo "======================================================================================================================="
 echo
 for line in `cat $ip`
 do
-    HOSTNAME=`echo $line | cut -d ',' -f 2`
+	HOSTNAME=`echo $line | cut -d ',' -f 2`
 	ship=`echo $line | cut -d ',' -f 1`
 	echo
 	echo
@@ -37,7 +39,8 @@ do
 	e=$?
 	if [ "$e" != "0" ]
 	then
-		continue
+			echo "Could not ssh to $ship : $HOSTNAME" >> $logs
+			continue
 	fi
 
 	echo "Copying files from app01 of $ship to local GIT path."
@@ -55,14 +58,101 @@ do
 	do
 		for file in `ls ${git_path}/SHIP_FILES/${ship}/${server}`
 		do
+			#Comparing files between the two servers on same ship to find differences.
+			if [ "$server" == "app01" ]
+			then
+				x="${git_path}/SHIP_FILES/${ship}/app01/${file}"
+				y="${git_path}/SHIP_FILES/${ship}/app02/${file}"
+				if [ ! -f "$x" ] && [ -f "$y" ]
+				then
+					echo "On $ship, File '${file}' not found in app01 but present in app02." >> $logs
+				fi
+
+				if [ -f "$x" ] && [ ! -f "$y" ]
+				then
+					echo "On $ship, File '${file}' not found in app02 but present in app01." >> $logs
+				fi
+
+				if [ -f "$x" ] && [ -f "$y" ]
+				then
+					diff $x $y > $temp
+					if [ -s $temp ]
+					then
+						echo "On $ship, difference found between app01:$file and app02:$file" >> $logs
+					fi
+				fi
+			fi
+
+			if [ "$server" == "media01" ]
+			then
+				x="${git_path}/SHIP_FILES/${ship}/media01/${file}"
+				y="${git_path}/SHIP_FILES/${ship}/media02/${file}"
+				if [ ! -f "$x" ] && [ -f "$y" ]
+				then
+					echo "On $ship, File '${file}' not found in media01 but present in media02." >> $logs
+				fi
+
+				if [ -f "$x" ] && [ ! -f "$y" ]
+				then
+					echo "On $ship, File '${file}' not found in media02 but present in media01." >> $logs
+				fi
+
+				if [ -f "$x" ] && [ -f "$y" ]
+				then
+					diff $x $y > $temp
+					if [ -s $temp ]
+					then
+						echo "On $ship, difference found between media01:$file and media02:$file" >> $logs
+					fi
+				fi
+			fi
+
+			if [ "$server" == "lb01" ]
+			then
+				x="${git_path}/SHIP_FILES/${ship}/lb01/${file}"
+				y="${git_path}/SHIP_FILES/${ship}/lb02/${file}"
+				if [ ! -f "$x" ] && [ -f "$y" ]
+				then
+					echo "On $ship, File '${file}' not found in lb01 but present in lb02." >> $logs
+				fi
+
+				if [ -f "$x" ] && [ ! -f "$y" ]
+				then
+					echo "On $ship, File '${file}' not found in lb02 but present in lb01." >> $logs
+				fi
+
+				if [ -f "$x" ] && [ -f "$y" ]
+				then
+					diff $x $y > $temp
+					if [ -s $temp ]
+					then
+						echo "On $ship, difference found between lb01:$file and lb02:$file" >> $logs
+					fi
+				fi
+			fi
+
+			#Comparing current files on ship with corresponding file in GIT.
 			a="${git_path}/SHIP_FILES/${ship}/${server}/${file}"
 			b="${git_path}/GIT_FILES/${ship}/${server}/${file}"
-			diff $a $b > $temp
-			if [ -s $temp ]
+
+			if [ ! -f "$a" ] && [ -f "$b" ]
 			then
-				ship_file_values=`grep "<" $temp | cut -c 3- | sed ':a;N;$!ba;s/\n/;/g'`
-				master_file_values=`grep ">" $temp | cut -c 3- | sed ':a;N;$!ba;s/\n/;/g'`
-				echo "${ship},${file},${server},$ship_file_values,$master_file_values">>$diff_path
+				echo "On $ship, File '${file}' not found in Ship_Current_Files but present in Ship_Configuration_Files." >> $logs
+			fi
+
+			if [ ! -f "$b" ] && [ -f "$a" ]
+			then
+				echo "On $ship, File '${file}' not found in Ship_Configuration_Files but present in Ship_Current_Files." >> $logs
+			fi
+			if [ -f "$b" ] && [ -f "$a" ]
+			then
+				diff $a $b > $temp
+				if [ -s $temp ]
+				then
+					ship_file_values=`grep "<" $temp | cut -c 3- | sed ':a;N;$!ba;s/\n/;/g'`
+					master_file_values=`grep ">" $temp | cut -c 3- | sed ':a;N;$!ba;s/\n/;/g'`
+					echo "${ship},${file},${server},$ship_file_values,$master_file_values">>$diff_path
+				fi
 			fi
 		done
 	done
@@ -79,7 +169,7 @@ then
 line_count=`wc -l $diff_path`
 if [ $line_count -gt 1 ]
 then
-	echo "https://github.com/VOD-Trunk/VOD-Trunk/blob/develop/ship_git_diff.csv" | sendmail abhishek.chadha@hsc.com
+    echo "https://github.com/VOD-Trunk/VOD-Trunk/blob/develop/ship_git_diff.csv" | sendmail abhishek.chadha@hsc.com
 fi
 fi
 
