@@ -1,0 +1,7 @@
+On KODM, difference found between app01:v2-client.conf and app02:v2-client.conf
+On KODM, File 'default.prf' not found in media02 but present in media01.
+On KODM, difference found between media01:httpd.conf and media02:httpd.conf
+On KODM, difference found between media01:procentric.conf and media02:procentric.conf
+On KODM, difference found between media01:storage-ha.sh and media02:storage-ha.sh
+On KODM, File 'unison' not found in media02 but present in media01.
+On KODM, difference found between lb01:hosts and lb02:hosts
