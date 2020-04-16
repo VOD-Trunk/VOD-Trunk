@@ -1,7 +1,12 @@
-On KODM, difference found between app01:v2-client.conf and app02:v2-client.conf
-On KODM, File 'default.prf' not found in media02 but present in media01.
-On KODM, difference found between media01:httpd.conf and media02:httpd.conf
-On KODM, difference found between media01:procentric.conf and media02:procentric.conf
-On KODM, difference found between media01:storage-ha.sh and media02:storage-ha.sh
-On KODM, File 'unison' not found in media02 but present in media01.
-On KODM, difference found between lb01:hosts and lb02:hosts
+On WEDM, difference found between app01:v2.xml and app02:v2.xml
+On WEDM, File 'default.prf' not found in media02 but present in media01.
+On WEDM, difference found between media01:ha.cf and media02:ha.cf
+On WEDM, difference found between media01:httpd.conf and media02:httpd.conf
+On WEDM, difference found between media01:procentric.conf and media02:procentric.conf
+On WEDM, File 'unison' not found in media02 but present in media01.
+Could not ssh to NSDM : 10.115.114.52
+Could not ssh to Ovation : 10.118.50.52
+Could not ssh to Encore : 10.117.242.52
+Could not ssh to Odyssey : 10.117.50.52
+Could not ssh to NODM : 10.114.114.50
+Could not ssh to VODM : 10.112.242.50
