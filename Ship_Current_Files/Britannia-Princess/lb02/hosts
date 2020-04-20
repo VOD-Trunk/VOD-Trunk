@@ -1,0 +1,55 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+
+#app01
+#10.0.0.21 master cachepeer
+#10.0.0.20 slave cachehost
+
+#app02
+#10.0.0.20 master cachepeer
+#10.0.0.21 slave cachehost
+
+
+
+10.0.0.254      core.britanniavod.carnivaluk.com core
+
+10.0.0.20       app01.britanniavod.carnivaluk.com app01
+10.0.0.21       app02.britanniavod.carnivaluk.com app02
+
+10.0.0.10       media01.britanniavod.carnivaluk.com media01
+10.0.0.11       media02.britanniavod.carnivaluk.com media02
+
+10.0.0.120      lb01.britanniavod.carnivaluk.com lb01
+10.0.0.121      lb02.britanniavod.carnivaluk.com lb02
+
+10.0.0.124      client.britanniavod.carnivaluk.com client
+10.0.0.124      app.britanniavod.carnivaluk.com app
+10.0.0.124      api.britanniavod.carnivaluk.com api
+10.0.0.124      admin.britanniavod.carnivaluk.com admin
+10.0.0.124      lb.britanniavod.carnivaluk.com lb
+10.0.0.12       media.britanniavod.carnivaluk.com media
+10.0.0.13       media.britanniavod.carnivaluk.com media
+10.0.0.22	mute.britanniavod.carnivaluk.com mute
+10.0.0.23       dbvip.britanniavod.carnivaluk.com dbvip
+
+192.168.72.10   media01-nfs
+192.168.72.11   media02-nfs
+192.168.72.20   app01-nfs
+192.168.72.21   app02-nfs
+
+192.168.74.20	app01-private
+192.168.74.21	app02-private
+
+10.0.0.30 barix01.britanniavod.carnivaluk.com barix01
+10.0.0.31 barix02.britanniavod.carnivaluk.com barix02
+10.0.0.32 barix03.britanniavod.carnivaluk.com barix03
+10.0.0.33 barix04.britanniavod.carnivaluk.com barix04
+
+127.0.0.1 ns11.whois.co.kr
+#10.0.0.124 www.worldtimeserver.com
+#10.0.0.124 pool.ntp.org
+#10.0.0.124 www.samsungrm.net
+#10.0.0.124 test.samsungrm.net
+127.0.0.1 www.samsung.com
+#10.0.0.124 multiscreen.samsung.com

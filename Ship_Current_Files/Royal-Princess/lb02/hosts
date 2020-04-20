@@ -1,0 +1,68 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+
+#swank license server (Sachin Garg)
+10.123.56.154 ocean.swankmp.net
+
+#app01
+#10.25.224.21 master cachepeer
+#10.25.224.20 slave cachehost
+
+#app02
+#10.25.224.20 master cachepeer
+#10.25.224.21 slave cachehost
+
+10.123.57.193	oceanview.rp.ocean.com
+
+10.25.224.1      core.rp.ocean.com core
+
+10.25.224.15       asus-router.rp.ocean.com asus-router
+10.25.224.20       app01.rp.ocean.com app01.rpvod.cruises.princess.com app01.rpvod2.cruises.princess.com app01
+10.25.224.21       app02.rp.ocean.com app02.rpvod.cruises.princess.com app02.rpvod2.cruises.princess.com app02
+10.25.225.20       app01-mute-iface.rp.ocean.com app01-mute-iface
+10.25.225.21       app02-mute-iface.rp.ocean.com app02-mute-iface
+10.25.225.22       mute-vip.rp.ocean.com mute-vip
+
+10.25.224.10       media01.rp.ocean.com media01
+10.25.224.11       media02.rp.ocean.com media02
+
+10.25.224.120      lb01.rp.ocean.com lb01
+10.25.224.121      lb02.rp.ocean.com lb02
+
+10.25.224.122      xevo-dns1-vip.rp.ocean.com xevo-dns1-vip
+10.25.224.123      xevo-dns2-vip.rp.ocean.com xevo-dns2-vip
+
+10.25.224.124      xicms-exm-svc.rp.ocean.com xicms-exm-svc
+10.25.224.124      client.rp.ocean.com client.rpvod.cruises.princess.com client.rpvod2.cruises.princess.com client
+10.25.224.124      app.rp.ocean.com app.rpvod.cruises.princess.com app.rpvod2.cruises.princess.com app
+10.25.224.124      api.rp.ocean.com api.rpvod.cruises.princess.com api.rpvod2.cruises.princess.com api
+10.25.224.124      admin.rp.ocean.com admin.rpvod.cruises.princess.com admin.rpvod2.cruises.princess.com admin
+10.25.224.124      lb.rp.ocean.com lb
+10.25.224.12       media.rp.ocean.com media.rpvod.cruises.princess.com media.rpvod2.cruises.princess.com media
+10.25.224.13       media.rp.ocean.com media.rpvod.cruises.princess.com media.rpvod2.cruises.princess.com media
+10.25.224.23       dbvip.rp.ocean.com dbvip
+10.25.224.180      sw1-5k-videlio.rp.ocean.com sw1-5k-videlio
+10.25.224.181      sw1-5k-videlio.rp.ocean.com sw1-5k-videlio
+
+10.25.133.10   media01-nfs
+10.25.133.11   media02-nfs
+10.25.133.20   app01-nfs
+10.25.133.21   app02-nfs
+
+10.25.134.20	app01-private
+10.25.134.21	app02-private
+
+10.25.224.30 barix01.rp.ocean.com barix01
+10.25.224.31 barix02.rp.ocean.com barix02
+10.25.224.32 barix03.rp.ocean.com barix03
+10.25.224.33 barix04.rp.ocean.com barix04
+10.25.224.34 barix05.rp.ocean.com barix05
+10.25.224.35 barix06.rp.ocean.com barix06
+10.25.224.36 barix07.rp.ocean.com barix07
+10.25.224.37 barix08.rp.ocean.com barix08
+
+10.25.224.12	procentric.local
+10.25.224.12	Type_DNS_Entry
+127.0.0.1	ns11.whois.co.kr
+127.0.0.1	www.samsung.com

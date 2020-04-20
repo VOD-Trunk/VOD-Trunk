@@ -1,0 +1,70 @@
+#!/bin/sh
+# processname: WowzaUnmute
+
+# Prerequisites:
+# Script needs to be executed by root
+
+start () {
+    echo -n "Starting WowzaUnmute..."
+
+    # Start daemon
+    /usr/bin/monit start localhost
+    #curl -so /dev/null http://localhost:8086/uie?action=unmute
+
+    RETVAL=$?
+    if [ $RETVAL = 0 ]
+    then
+        echo "done."
+    else
+        echo "failed. See error code for more information."
+    fi
+    return $RETVAL
+}
+
+stop () {
+    # Stop daemon
+    echo -n "Stopping WowzaUnmute..."
+
+    /usr/bin/monit stop localhost
+    #curl -so /dev/null http://localhost:8086/uie?action=mute
+
+    RETVAL=$?
+
+    if [ $RETVAL = 0 ]
+    then
+        echo "Done."
+    else
+        echo "Failed. See error code for more information."
+    fi
+    return $RETVAL
+}
+
+restart () {
+    # Stop daemon
+    echo -n "Restarting WowzaUnmute..."
+
+    stop
+    start
+}
+    
+
+case "$1" in
+    start)
+        start
+    ;;
+    status)
+        status
+    ;;
+    stop)
+        stop
+    ;;
+    restart)
+        restart
+    ;;
+    *)
+        echo $"Usage: WowzaUnmute {start|status|stop|restart}"
+        exit 3
+    ;;
+esac
+
+exit $RETVAL

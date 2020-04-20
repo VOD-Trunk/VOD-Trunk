@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+    <appender class="org.apache.log4j.DailyRollingFileAppender" name="CATALINA">
+        <param value="true" name="Append"/>
+        <param value="'.'yyyy-MM-dd'.log'" name="DatePattern"/>
+        <param value="UTF-8" name="Encoding"/>
+        <param value="/var/log/tomcat7/tomcat.out" name="File"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param value="%d [%t] %-5p %c- %m%n" name="ConversionPattern"/>
+        </layout>
+        <!--
+          Below is an example filter.  If uncommented as is, it prevents
+          *ANYTHING* from logging to /var/log/tomcat/catalina.
+          
+          We are unable to filter STDOUT & STDERR from going to catalina.console.
+          If that is growing too fast, manage it with logrotate.  The only
+          thing that should end up there are unhandled exceptions (like
+          ehcache not being serializable).
+        <filter class="org.apache.log4j.filter.ExpressionFilter">
+            <param name="expression" value="MSG LIKE .*"/>
+            <param name="acceptOnMatch" value="false"/>
+        </filter>
+        -->
+    </appender>
+    <appender class="org.apache.log4j.ConsoleAppender" name="CONSOLE">
+        <param value="UTF-8" name="Encoding"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param value="%d [%t] %-5p %c- %m%n" name="ConversionPattern"/>
+        </layout>
+    </appender>
+    <appender class="org.apache.log4j.DailyRollingFileAppender" name="HOST-MANAGER">
+        <param value="true" name="Append"/>
+        <param value="'.'yyyy-MM-dd'.log'" name="DatePattern"/>
+        <param value="UTF-8" name="Encoding"/>
+        <param value="/var/log/tomcat7/host-manager" name="File"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param value="%d [%t] %-5p %c- %m%n" name="ConversionPattern"/>
+        </layout>
+    </appender>
+    <appender class="org.apache.log4j.DailyRollingFileAppender" name="LOCALHOST">
+        <param value="true" name="Append"/>
+        <param value="'.'yyyy-MM-dd'.log'" name="DatePattern"/>
+        <param value="UTF-8" name="Encoding"/>
+        <param value="/var/log/tomcat7/localhost" name="File"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param value="%d [%t] %-5p %c- %m%n" name="ConversionPattern"/>
+        </layout>
+    </appender>
+    <appender class="org.apache.log4j.DailyRollingFileAppender" name="MANAGER">
+        <param value="true" name="Append"/>
+        <param value="'.'yyyy-MM-dd'.log'" name="DatePattern"/>
+        <param value="UTF-8" name="Encoding"/>
+        <param value="/var/log/tomcat7/manager" name="File"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param value="%d [%t] %-5p %c- %m%n" name="ConversionPattern"/>
+        </layout>
+    </appender>
+    <logger name="org.apache.catalina.core.ContainerBase.[Catalina].[localhost]">
+        <level value="info"/>
+        <appender-ref ref="LOCALHOST"/>
+    </logger>
+    <logger name="org.apache.catalina.core.ContainerBase.[Catalina].[localhost].[/host-manager]">
+        <level value="info"/>
+        <appender-ref ref="HOST-MANAGER"/>
+    </logger>
+    <logger name="org.apache.catalina.core.ContainerBase.[Catalina].[localhost].[/manager]">
+        <level value="info"/>
+        <appender-ref ref="MANAGER"/>
+    </logger>
+    <root>
+        <level value="info"/>
+        <appender-ref ref="CATALINA"/>
+    </root>
+</log4j:configuration>
+

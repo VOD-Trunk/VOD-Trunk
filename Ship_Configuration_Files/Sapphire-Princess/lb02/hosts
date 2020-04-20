@@ -1,0 +1,70 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+
+#app01
+#10.100.0.21 master cachepeer
+#10.100.0.20 slave cachehost
+
+#app02
+#10.100.0.20 master cachepeer
+#10.100.0.21 slave cachehost
+
+
+
+10.100.0.254      core.savod.cruises.princess.com core
+
+10.100.0.20       app01.savod.cruises.princess.com app01
+10.100.0.21       app02.savod.cruises.princess.com app02
+
+10.100.0.10       media01.savod.cruises.princess.com media01
+10.100.0.11       media02.savod.cruises.princess.com media02
+
+10.100.0.120      lb01.savod.cruises.princess.com lb01
+10.100.0.121      lb02.savod.cruises.princess.com lb02
+
+10.100.0.124      client.savod.cruises.princess.com client
+10.100.0.124      app.savod.cruises.princess.com app
+10.100.0.124      api.savod.cruises.princess.com api
+10.100.0.124      admin.savod.cruises.princess.com admin
+10.100.0.124      lb.savod.cruises.princess.com lb
+10.100.0.12       media.savod.cruises.princess.com media
+10.100.0.13       media.savod.cruises.princess.com media
+10.100.0.23       dbvip.savod.cruises.princess.com dbvip
+
+192.168.72.10   media01-nfs
+192.168.72.11   media02-nfs
+192.168.72.20   app01-nfs
+192.168.72.21   app02-nfs
+
+192.168.74.20	app01-private
+192.168.74.21	app02-private
+
+10.100.0.30 barix01.savod.cruises.princess.com barix01
+10.100.0.31 barix02.savod.cruises.princess.com barix02
+10.100.0.32 barix03.savod.cruises.princess.com barix03
+10.100.0.33 barix04.savod.cruises.princess.com barix04
+10.100.0.34 barix05.savod.cruises.princess.com barix05
+10.100.0.35 barix06.savod.cruises.princess.com barix06
+10.100.0.36 barix07.savod.cruises.princess.com barix07
+10.100.0.37 barix08.savod.cruises.princess.com barix08
+
+# 10.100.0.125 procentric.local # Small 4way LACP box
+10.100.0.12 procentric.local # Media01 VIP - We moved procentric to media for failover redundancy
+10.100.0.12 Type_DNS_Entry
+
+127.0.0.1	ns11.whois.co.kr
+127.0.0.1	www.samsung.com
+127.0.0.1       dpu.samsungelectronics.com
+127.0.0.1       cdn.samsungcloudsolution.com
+127.0.0.1       time.samsungcloudsolution.com
+127.0.0.1       www.worldtimeserver.com
+127.0.0.1       www.bing.com
+127.0.0.1       multiscreen.samsung.com
+127.0.0.1       srv.giraffic.com
+127.0.0.1       ntp.ubuntu.com
+127.0.0.1       www.worldtime.com
+127.0.0.1       www.samsungrm.net
+127.0.0.1       pool.ntp.org
+127.0.0.1       time.nist.gov
+# 127.0.0.1	lgtvonline.lge.com

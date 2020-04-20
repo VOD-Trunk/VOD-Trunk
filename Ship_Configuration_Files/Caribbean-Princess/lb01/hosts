@@ -1,0 +1,59 @@
+127.0.0.1 localhost localhost.localdomain 
+::1 localhost localhost.localdomain 
+ 
+#swank license server (Sachin Garg)
+10.120.56.154 ocean.swankmp.net
+
+ 
+#app01 
+#10.25.224.21 master cachepeer 
+#10.25.224.20 slave cachehost 
+ 
+#app02 
+#10.25.224.20 master cachepeer 
+#10.25.224.21 slave cachehost 
+ 
+ 
+ 
+10.25.224.254 core.cbvod.cruises.princess.com core core.cb.ocean.com
+ 
+10.25.224.20 app01.cbvod.cruises.princess.com app01 app01.cb.ocean.com
+10.25.224.21 app02.cbvod.cruises.princess.com app02 app02.cb.ocean.com
+ 
+10.25.224.10 media01.cbvod.cruises.princess.com media01 media01.cb.ocean.com
+10.25.224.11 media02.cbvod.cruises.princess.com media02 media02.cb.ocean.com
+ 
+10.25.224.120 lb01.cbvod.cruises.princess.com lb01 lb01.cb.ocean.com
+10.25.224.121 lb02.cbvod.cruises.princess.com lb02 lb02.cb.ocean.com
+ 
+10.25.224.124 client.cbvod.cruises.princess.com client client.cb.ocean.com
+10.25.224.124 app.cbvod.cruises.princess.com app app.cb.ocean.com
+10.25.224.124 api.cbvod.cruises.princess.com api api.cb.ocean.com
+10.25.224.124 admin.cbvod.cruises.princess.com admin admin.cb.ocean.com 
+10.25.224.124 xicms-exm-svc.cb.ocean.com xicms-exm-svc
+10.25.224.124 lb.cbvod.cruises.princess.com lb lb.cb.ocean.com
+10.25.224.12 media.cbvod.cruises.princess.com media media.cb.ocean.com
+10.25.224.13 media.cbvod.cruises.princess.com media media.cb.ocean.com
+10.25.224.23 dbvip.cbvod.cruises.princess.com dbvip dbvip.cb.ocean.com
+ 
+10.25.224.125 procentric.local procentric procentric.cb.ocean.com Type_DNS_Name
+ 
+10.25.225.10 media01-nfs
+10.25.225.11 media02-nfs
+10.25.225.20 app01-nfs
+10.25.225.21 app02-nfs
+ 
+10.25.226.20 app01-private
+10.25.226.21 app02-private
+ 
+10.25.224.30 barix01.cbvod.cruises.princess.com barix01 barix01.cb.ocean.com
+10.25.224.31 barix02.cbvod.cruises.princess.com barix02 barix02.cb.ocean.com
+10.25.224.32 barix03.cbvod.cruises.princess.com barix03 barix03.cb.ocean.com
+10.25.224.33 barix04.cbvod.cruises.princess.com barix04 barix04.cb.ocean.com
+10.25.224.34 barix05.cbvod.cruises.princess.com barix05 barix05.cb.ocean.com
+10.25.224.35 barix06.cbvod.cruises.princess.com barix06 barix06.cb.ocean.com
+10.25.224.36 barix07.cbvod.cruises.princess.com barix07 barix07.cb.ocean.com
+10.25.224.37 barix08.cbvod.cruises.princess.com barix08 barix08.cb.ocean.com
+ 
+127.0.0.1 ns11.whois.co.kr
+127.0.0.1 www.samsung.com

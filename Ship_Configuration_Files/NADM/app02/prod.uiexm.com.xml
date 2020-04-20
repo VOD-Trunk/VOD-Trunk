@@ -1,0 +1,21 @@
+<Host name="prod.uiexm.com" 
+ appBase="/var/lib/tomcat7/hosts/prod.uiexm.com/webapps"
+ unpackWARs="true" autoDeploy="true" deployXML="false">
+ <Alias>app01</Alias>
+ <Alias>app02</Alias>
+ <Alias>admin.nadmiptv.com</Alias>
+ <Alias>client.nadmiptv.com</Alias>
+ <Alias>admin.iptv.nadmdomain.hal.com</Alias>
+ <Alias>client.iptv.nadmdomain.hal.com</Alias>
+ <Logger className="org.apache.catalina.logger.FileLogger"
+         directory="/var/log/tomcat7/admin.nadmiptv.com"
+         prefix="error"
+         suffix=".log"
+         timestamp="true"/>
+ <Valve className="org.apache.catalina.valves.AccessLogValve"
+        directory="/var/log/tomcat7/admin.nadmiptv.com"
+        prefix="access."
+        suffix=".log"
+        pattern="common"
+        resolveHosts="false"/>
+</Host>

@@ -1,0 +1,13 @@
+# Roots of the synchronization
+root = /home/assets
+root = ssh://app02//home/assets
+
+log = true
+logfile = /var/log/unison.log
+
+# Paths to synchronize
+# path = *
+
+# Paths to ignore
+ignore = Path tmp
+ignore = Path maptiles

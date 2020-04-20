@@ -1,0 +1,29 @@
+udpport 694
+use_logd no
+logfile /var/log/ha.log
+autojoin none
+
+keepalive 1000ms
+deadtime 60
+warntime 10
+initdead 60
+auto_failback on 
+debug 1
+
+node lb01.savod.cruises.princess.com
+ucast bond0 10.100.0.120
+ucast bond0 10.100.0.120
+node lb02.savod.cruises.princess.com
+ucast bond0 10.100.0.121
+ucast bond0 10.100.0.121
+
+# Ping immediate cisco switch to verify network connectivity.
+ping 10.100.0.1
+respawn hacluster /usr/lib64/heartbeat/ipfail
+apiauth ipfail gid=haclient uid=hacluster
+deadping 30
+
+respawn hacluster /usr/lib64/heartbeat/dopd
+apiauth dopd gid=haclient uid=hacluster
+
+crm no
