@@ -1,6 +1,6 @@
 #!/bin/bash
-git_path='/home/abhishek/deepam/VOD-Trunk'
-diff_path='/home/abhishek/deepam/VOD-Trunk/ship_git_diff.csv'
+git_path=`grep git_path /home/vod/properties/path.txt | cut -d\' -f2`
+diff_path=`grep diff_path /home/vod/properties/path.txt | cut -d\' -f2`
 cd $git_path
 git checkout develop
 git pull origin develop
@@ -24,16 +24,15 @@ then
 			cd $git_path
 			git checkout develop
 			git pull origin develop
-			cp $git_path/SHIP_FILES/$ship/$server/$file $git_path/GIT_FILES/$ship/$server/$file
+			cp $git_path/Ship_Current_Files/$ship/$server/$file $git_path/Ship_Configuration_Files/$ship/$server/$file
 			git add .
 			git commit -m "Updating $ship GIT files with updated values on $ship"
 			
 			git checkout master
 			git pull origin master
-			git checkout develop $git_path/GIT_FILES/$ship/$server/$file
 			git add .
 			git commit -m "Updating $ship master GIT files with updated values on $ship"
-			
+			git checkout develop $git_path/Ship_Configuration_Files/$ship/$server/$file
 		fi
 	done
 
