@@ -1,0 +1,9 @@
+/var/log/mutedaemon.log
+/var/log/mutedaemon/mutedaemon.log {
+    daily
+    rotate 30
+    copytruncate
+    compress
+    missingok
+    notifempty
+}

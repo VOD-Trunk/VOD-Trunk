@@ -1,0 +1,3 @@
+#app01.di.ocean.com IPaddr::10.25.224.23 mutedaemond nacosd node-muted node-muted
+#app01.di.ocean.com IPaddr::10.25.224.23 node-muted
+app01.di.ocean.com IPaddr::10.25.224.23 IPaddr::10.25.225.22 mutedaemond nacosd node-muted

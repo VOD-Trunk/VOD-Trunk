@@ -1,0 +1,24 @@
+/var/log/mysqld.log {
+    weekly
+    dateext
+    rotate 8
+    compress
+    missingok
+    notifempty
+    create 640 mysql mysql
+    postrotate
+    if test -x /var/lib/mysql/mysql.sock 
+    then
+	   /usr/bin/mysqladmin flush-logs
+    fi
+    endscript
+}
+/var/lib/mysql/mysql-slow {
+    weekly
+    dateext
+    rotate 8
+    compress
+    missingok
+    notifempty
+    create 660 mysql mysql
+}

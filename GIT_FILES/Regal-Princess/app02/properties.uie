@@ -1,8 +1,0 @@
-
-
-
-senderInterval=200
-receiverPort=4448
-senderPort=4446
-senderAddress=239.20.30.40
-receiverInterval=15000

@@ -1,0 +1,9 @@
+/var/log/nacos.log {
+    daily
+    dateext
+    rotate 30
+    copytruncate
+    compress
+    missingok
+    notifempty
+}

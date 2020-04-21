@@ -1,9 +1,0 @@
-<Context>
-<Environment name="UPLOAD_DIR" value="/nfs/uploads/v2" type="java.lang.String" override="false" />
-<Environment name="UPLOAD_TMP" value="/nfs/uploads/v2/tmp" type="java.lang.String" override="false" />
-<Environment name="UPLOAD_PATH" value="/uploads/v2" type="java.lang.String" override="false" />
-<Environment name="WOWZA_PATH" value="/uploads" type="java.lang.String" override="false" />
-<Environment name="WOWZA_URL" value="http://media.gp.ocean.com:1935/vod" type="java.lang.String" override="false" />
-
-<Environment name="CALLBACK_SERVER" value="http://app01/v2" type="java.lang.String" override="false" />
-
