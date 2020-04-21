@@ -1,5 +1,10 @@
-check process unison with pidfile /var/run/unison.pid
-start program = "/etc/init.d/unison start" with timeout 60 seconds
-stop program = "/etc/init.d/unison stop"
-mode active
-#mode manual
+/var/log/unison.log
+/var/log/unison/unison.log {
+    daily
+    dateext
+    rotate 30
+    copytruncate
+    compress
+    missingok
+    notifempty
+}

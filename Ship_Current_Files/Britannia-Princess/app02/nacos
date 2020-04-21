@@ -1,4 +1,9 @@
-check process nacos with pidfile /var/run/nacos.pid
-start program = "/etc/init.d/nacos start"
-stop program = "/etc/init.d/nacos stop"
-mode manual
+/var/log/nacos.log
+/var/log/nacos/nacos.log {
+    daily
+    rotate 30
+    copytruncate
+    compress
+    missingok
+    notifempty
+}
