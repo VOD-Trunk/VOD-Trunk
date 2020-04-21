@@ -1,26 +1,0 @@
-Ship_name Stopped_service DB_replication_broken Media_storage_issue App_storage_issue Hard_disk_issue app01_load app02_load media01_load media02_load Remote_URL_status Storage_failover Timezone Content_usage_issue
-ZUDM  NA NA NA NA NA NA NA NA NA NA NA NA NA
-Encore  NA NA NA NA NA NA NA NA NA NA NA NA NA
-Britannia  OK OK OK OK OK  1.92  1.56  2.22  2.44 OK OK  GMT+0100 OK
-Caribbean  media01:WowzaStreamingEngine OK OK OK OK  1.96  0.78  0.29  0.73 OK OK  GMT-04 OK
-Coral  OK OK OK OK OK  0.26  0.26  0.10  0.63 OK OK  GMT-0400 OK
-Crown  OK Broken OK OK OK  0.99  0.46  0.70  3.75 NOK OK  GMT-04 OK
-Diamond  OK OK OK OK OK  2.16  0.45  1.02  2.45 OK OK  GMT+0900 OK
-Emerald  media01:WowzaStreamingEngine Broken OK OK OK  0.63  0.52  0.20  0.79 OK OK  GMT-04 OK
-EUDM  OK OK OK OK OK  0.99  1.24  0.26  0.26 OK OK  GMT-06 OK
-Grand  OK Broken OK OK OK  0.95  0.72  0.25  0.88 NOK OK  GMT-07 OK
-KODM  OK OK OK OK NOK  1.17  1.34  0.18  0.19 OK OK  GMT-05 OK
-Majestic  OK OK OK OK OK  1.98  1.70  1.15  0.29 OK OK  GMT+0800 OK
-NADM:  OK OK OK OK OK  1.07  0.85  0.17  0.22 OK OK  GMT-04 OK
-NODM  OK OK OK OK OK  0.30  0.29  0.08  0.74 OK OK  GMT-09 OK
-NSDM  OK OK OK OK OK  3.75  1.04  0.05  1.41 OK OK  GMT-04 OK
-Odyssey  OK OK OK OK OK  0.35  0.48  0.10  0.62 OK OK  GMT-04 OK
-Ovation  media02:heartbeat OK OK OK OK  0.66  0.29  0.49  0.18 OK OK  GMT+03 OK
-Regal  OK OK OK NOK NOK  1.97  1.73  1.50  2.72 OK OK  GMT-04 OK
-Royal  OK OK OK OK NOK  3.49  2.42  0.63  0.54 OK OK  GMT-07 OK
-Ruby  OK OK OK OK OK  1.11  0.81  0.38  1.64 OK OK  GMT+10 OK
-Sapphire  app02:heartbeat OK OK OK OK  0.47  0.36  0.79  2.37 OK OK  GMT+0800 OK
-Sky  OK OK OK OK OK  1.56  0.83  0.17  0.89 NOK OK  GMT-04 OK
-Sun  OK OK OK NOK OK  0.70  0.54  1.54  0.95 OK OK  GMT+1000 OK
-VODM  OK OK OK OK OK  0.18  0.16  0.01  0.55 OK OK  GMT-04 OK
-WEDM  OK OK OK OK OK  0.41  0.40  0.16  0.10 OK OK  GMT-06 OK

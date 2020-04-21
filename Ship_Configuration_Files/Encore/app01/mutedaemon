@@ -1,4 +1,9 @@
-check process mutedaemon with pidfile /var/run/mutedaemon.pid
-start program = "/etc/init.d/mutedaemon start"
-stop program = "/etc/init.d/mutedaemon stop"
-mode manual
+/var/log/mutedaemon.log {
+    daily
+    dateext
+    rotate 30
+    copytruncate
+    compress
+    missingok
+    notifempty
+}

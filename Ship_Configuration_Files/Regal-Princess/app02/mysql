@@ -1,0 +1,45 @@
+# The log file name and location can be set in
+# /etc/my.cnf by setting the "log-error" option
+# in either [mysqld] or [mysqld_safe] section as
+# follows:
+#
+# [mysqld]
+# log-error=/var/lib/mysql/mysqld.log
+#
+# In case the root user has a password, then you
+# have to create a /root/.my.cnf configuration file
+# with the following content:
+#
+# [mysqladmin]
+# password = <secret> 
+# user= root
+#
+# where "<secret>" is the password. 
+#
+# ATTENTION: The /root/.my.cnf file should be readable
+# _ONLY_ by root !
+
+/var/log/mysqld.log {
+    weekly
+    dateext
+    rotate 8
+    compress
+    missingok
+    notifempty
+    create 640 mysql mysql
+    postrotate
+    if test -x /var/lib/mysql/mysql.sock 
+    then
+	   /usr/bin/mysqladmin flush-logs
+    fi
+    endscript
+}
+/var/lib/mysql/mysql-slow {
+    weekly
+    dateext
+    rotate 8
+    compress
+    missingok
+    notifempty
+    create 660 mysql mysql
+}

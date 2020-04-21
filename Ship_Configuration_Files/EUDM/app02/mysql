@@ -1,0 +1,26 @@
+/var/log/mysqld.log {
+    daily
+    dateext
+    rotate 30
+    compress
+    missingok
+    notifempty
+    create 640 mysql mysql
+    sharedscripts
+    postrotate
+     if test -x /var/lib/mysql/mysql.sock 
+     then
+	  /usr/bin/mysqladmin flush-logs
+     fi
+    endscript
+}
+/var/lib/mysql/mysql-slow {
+    daily
+    dateext
+    rotate 30
+    compress
+    missingok
+    notifempty
+    create 660 mysql mysql
+}
+
