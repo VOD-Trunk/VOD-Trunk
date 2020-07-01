@@ -15,7 +15,7 @@ relName = sys.argv[2]
 action = sys.argv[3]
 releasesPath = sys.argv[4]
 
-releasesPath = releasesPath + '/Releases'
+releasesPath = releasesPath + '/Releases/'
 
 if action == "Deploy":
     applicationName=[]
