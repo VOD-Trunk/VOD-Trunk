@@ -1,9 +1,0 @@
-/var/log/mute-node/*log {
-    daily
-    dateext
-    rotate 30
-    copytruncate
-    compress
-    missingok
-    notifempty
-}

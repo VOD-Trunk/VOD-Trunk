@@ -1,5 +1,0 @@
-check process nodejs with pidfile /var/lock/subsys/node-server
-start program = "/etc/init.d/nodejs start" with timeout 60 seconds
-stop program = "/etc/init.d/nodejs stop"
-mode active
-

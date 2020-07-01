@@ -1,8 +1,0 @@
-check host localhost with address localhost
-start program = "/usr/bin/curl -so /dev/null http://localhost:8086/uie?action=unmute"
-stop program = "/usr/bin/curl -so /dev/null http://localhost:8086/uie?action=mute"
-mode manual
-       if failed port 8086 protocol http 
-          and request "/uie?action=mutestatus"
-              with checksum 9238833e8eba462ee9fbfe73e28eb43b
-              then start

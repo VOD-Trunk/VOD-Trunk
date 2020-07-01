@@ -1,4 +1,0 @@
-lb01.gpvod2.cruises.princess.com IPaddr::10.25.224.124 haproxy
-lb01.gpvod2.cruises.princess.com IPaddr::10.25.224.122
-lb02.gpvod2.cruises.princess.com IPaddr::10.25.224.123
-lb01.gpvod2.cruises.princess.com IPaddr::10.122.197.135

@@ -1,9 +1,0 @@
-/var/log/unison.log
-/var/log/unison/unison.log {
-    daily
-    rotate 30
-    copytruncate
-    compress
-    missingok
-    notifempty   
-}
