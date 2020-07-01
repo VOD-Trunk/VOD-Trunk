@@ -1,5 +1,5 @@
 #Author : Abhishek Chadha
-#Last modified : 6/25/2020
+#Last modified : 7/1/2020
 
 import sys
 import requests
@@ -8,11 +8,14 @@ import json
 import re
 import os
 
-releasesPath = '/var/lib/jenkins/workspace/VOD-pipeline-abhi/Releases/'
+#releasesPath = '/var/lib/jenkins/workspace/VOD-deployment/Releases/'
 
 pageName = sys.argv[1]
 relName = sys.argv[2]
 action = sys.argv[3]
+releasesPath = sys.argv[4]
+
+releasesPath = releasesPath + '/Releases'
 
 if action == "Deploy":
     applicationName=[]
