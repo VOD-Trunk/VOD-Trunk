@@ -1,0 +1,35 @@
+node {
+    
+    def jconf = readJSON file: "/home/jenkinsuser/jenkinsconfig/jenkinsconfig.json"
+
+    def confluence_page = jconf.jenkins.Release."${Release_version}"
+
+    def ip = jconf.jenkins.ips."${Deployment_env}"
+
+    stage('fetchBinary') {
+
+        sh """
+            #!/bin/bash
+            python /var/lib/jenkins/workspace/VOD-pipeline-abhi/fetchBinary.py "$confluence_page" $Release_version
+            
+        """
+        
+    }
+   
+   stage('deploy'){
+
+        sh """
+            #!/bin/bash
+             /var/lib/jenkins/workspace/VOD-pipeline-abhi/deployment_caller.sh "$ip" $Release_version $Activity
+            
+        """
+   }
+   
+   stage('test'){
+       
+   }
+   
+   stage('promote'){
+       
+   }
+}
