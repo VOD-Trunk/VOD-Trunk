@@ -4,14 +4,7 @@ node {
         
         checkout scm
         
-        sh """
-            #!/bin/bash
-            mkdir -p ${env.WORKSPACE}/logs
-            mkdir -p ${env.WORKSPACE}/Releases
-            chown jenkins:jenkins ${env.WORKSPACE}/logs
-            chown jenkins:jenkins ${env.WORKSPACE}/Releases
-            chmod 755 ${env.WORKSPACE}/*
-        """
+        sh "chmod 755 ${env.WORKSPACE}/*
     }
     
     def jconf = readJSON file: "${env.WORKSPACE}/jenkinsconfig.json"

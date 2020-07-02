@@ -8,14 +8,12 @@ import json
 import re
 import os
 
-#releasesPath = '/var/lib/jenkins/workspace/VOD-deployment/Releases/'
-
 pageName = sys.argv[1]
 relName = sys.argv[2]
 action = sys.argv[3]
-releasesPath = sys.argv[4]
+workspace = sys.argv[4]
 
-releasesPath = releasesPath + '/Releases/'
+releasesPath = workspace + '/Releases/'
 
 if action == "Deploy":
     applicationName=[]
@@ -174,6 +172,9 @@ if action == "Deploy":
             newReleaseDir = releasesPath + relName
 
             path = os.path.join(newReleaseDir,component)
+            os.makedirs(path)
+            log_path = 'logs'
+            path = os.path.join(workspace,log_path)
             os.makedirs(path)
             
             print("\nDownloading " + component +" ...\n")
