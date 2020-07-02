@@ -172,10 +172,12 @@ if action == "Deploy":
             newReleaseDir = releasesPath + relName
 
             path = os.path.join(newReleaseDir,component)
-            os.makedirs(path)
+            if os.path.isdir(path) != True:
+                os.makedirs(path)
             log_path = 'logs'
             path = os.path.join(workspace,log_path)
-            os.makedirs(path)
+            if os.path.isdir(path) != True:
+                os.makedirs(path)
             
             print("\nDownloading " + component +" ...\n")
 
