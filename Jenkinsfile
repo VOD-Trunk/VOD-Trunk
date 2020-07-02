@@ -4,7 +4,7 @@ node {
         
         checkout scm
         
-        sh "chmod 755 ${env.WORKSPACE}/*
+        sh "chmod 755 ${env.WORKSPACE}/*"
     }
     
     def jconf = readJSON file: "${env.WORKSPACE}/jenkinsconfig.json"
