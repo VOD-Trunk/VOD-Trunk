@@ -462,33 +462,33 @@ else
 		echo "Abhishek1 : $component"
 		if [ "${choice_list[$i]}" == "EXM V2" ]
 		then
-			${choice_list[$i]} = "v2"
+			choice_list[$i]="v2"
 			echo "Abhishek2 : ${choice_list[$i]}"
 		elif [ "${choice_list[$i]}" == "LeftNav" ]
 		then
-			${choice_list[$i]} = "exm-client-leftnav2"
+			choice_list[$i]="exm-client-leftnav2"
 			echo "Abhishek3 : ${choice_list[$i]}"
 		elif [ "${choice_list[$i]}" == "Admin Tool" ]
 		then
-			${choice_list[$i]} = "exm-admin-tool"
+			choice_list[$i]="exm-admin-tool"
 		elif [ "${choice_list[$i]}" == "Cruise Client" ]
 		then
-			${choice_list[$i]} = "exm-client-cruise"
+			choice_list[$i]="exm-client-cruise"
 		elif [ "${choice_list[$i]}" == "EXM Lite Client (Serial)" ]
 		then
-			${choice_list[$i]} = "exm-client-lite"
+			choice_list[$i]="exm-client-lite"
 		elif [ "${choice_list[$i]}" == "Startup Client" ]
 		then
-			${choice_list[$i]} = "exm-client-startup"
+			choice_list[$i]="exm-client-startup"
 		elif [ "${choice_list[$i]}" == "NACOS Listener" ]
 		then
-			${choice_list[$i]} = "nacos"
+			choice_list[$i]="nacos"
 		elif [ "${choice_list[$i]}" == "LeftNav Signage" ]
 		then
-			${choice_list[$i]} = "exm-client-leftnav2-signage"
+			choice_list[$i]="exm-client-leftnav2-signage"
 		elif [ "${choice_list[$i]}" == "Exm-v2-plugin-location (Location Services Plugin)" ]
 		then
-			${choice_list[$i]} = "location"
+			choice_list[$i]="location"
 		fi
 	done
 fi
