@@ -145,9 +145,9 @@ if action == "Deploy":
     else:
         component_list = components.split(",")
         partial_deploy = 1
-        print("Abhishek1 :"+component_list)
+        print(component_list)
 
-    print("Abhishek:"+applicationName)
+    print(applicationName)
 
     if partial_deploy == 2:
         for index, element in enumerate(yesNo):
@@ -158,7 +158,7 @@ if action == "Deploy":
     else:
         for index, element in enumerate(yesNo):
                 if element == "Y" and applicationName[index] in component_list:
-                        print("Abhishek2 :"+component_list)
+                        print(component_list)
                         releaseComponents.append(applicationName[index])
                         releaseArtifactsUrl.append(artifactoryUrl[index])
                         finalArtifactoryUrl = dict(zip(releaseComponents,releaseArtifactsUrl))
