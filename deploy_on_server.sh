@@ -502,8 +502,37 @@ case "${1}" in
 			  iter=$((iter+1))
 		  done
 	  else
-	  	  log "Partial deployment is currently not available."
-	  	  log
+	  	  iter=1
+	  	  for component in "${choice_list[@]}"
+		  do
+		  	  releases_path=$(get_current_build $component | cut -d ":" -f 2)
+			  current_build=$(get_current_build $component | cut -d ":" -f 1)
+
+			  if [ $iter == 1 ]
+			  then
+				log "Starting deployment of $new_release selected components"
+				log
+			  fi
+			  if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "nacos" ] || [ "$component"  == "excursion" ]
+			  then
+			  	restart_services $component stop
+			  fi
+
+			  deploy_new_build $new_release $component $releases_path $current_build
+
+			  if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "nacos" ] || [ "$component"  == "excursion" ]
+			  then
+			  	restart_services $component start
+			  fi
+			  current_build=$(get_current_build $component | cut -d ":" -f 1)
+			  check_versions $component $releases_path $current_build
+			  log "Deployment of $component is complete."
+			  log
+			  log "============================================================================================================================="
+			  log
+
+			  iter=$((iter+1))
+		  done
 	  fi
 	  ;;
 	-r|--rollback)
