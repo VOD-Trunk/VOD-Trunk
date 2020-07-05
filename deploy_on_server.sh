@@ -456,39 +456,39 @@ then
 else
 	partial_flag=1
 	IFS=',' read -r -a choice_list <<< "$component_choice"
-	for component in "${choice_list[@]}"
+	for i in "${!choice_list[@]}"
 	do
-		component=`echo $component | sed "s/_/ /g"`
+		${choice_list[$i]}=`echo ${choice_list[$i]} | sed "s/_/ /g"`
 		echo "Abhishek1 : $component"
-		if [ "$component" == "EXM V2" ]
+		if [ "${choice_list[$i]}" == "EXM V2" ]
 		then
-			component = "v2"
-			echo "Abhishek2 : $component"
-		elif [ "$component" == "LeftNav" ]
+			${choice_list[$i]} = "v2"
+			echo "Abhishek2 : ${choice_list[$i]}"
+		elif [ "${choice_list[$i]}" == "LeftNav" ]
 		then
-			component = "exm-client-leftnav2"
-			echo "Abhishek3 : $component"
-		elif [ "$component" == "Admin Tool" ]
+			${choice_list[$i]} = "exm-client-leftnav2"
+			echo "Abhishek3 : ${choice_list[$i]}"
+		elif [ "${choice_list[$i]}" == "Admin Tool" ]
 		then
-			component = "exm-admin-tool"
-		elif [ "$component" == "Cruise Client" ]
+			${choice_list[$i]} = "exm-admin-tool"
+		elif [ "${choice_list[$i]}" == "Cruise Client" ]
 		then
-			component = "exm-client-cruise"
-		elif [ "$component" == "EXM Lite Client (Serial)" ]
+			${choice_list[$i]} = "exm-client-cruise"
+		elif [ "${choice_list[$i]}" == "EXM Lite Client (Serial)" ]
 		then
-			component = "exm-client-lite"
-		elif [ "$component" == "Startup Client" ]
+			${choice_list[$i]} = "exm-client-lite"
+		elif [ "${choice_list[$i]}" == "Startup Client" ]
 		then
-			component = "exm-client-startup"
-		elif [ "$component" == "NACOS Listener" ]
+			${choice_list[$i]} = "exm-client-startup"
+		elif [ "${choice_list[$i]}" == "NACOS Listener" ]
 		then
-			component = "nacos"
-		elif [ "$component" == "LeftNav Signage" ]
+			${choice_list[$i]} = "nacos"
+		elif [ "${choice_list[$i]}" == "LeftNav Signage" ]
 		then
-			component = "exm-client-leftnav2-signage"
-		elif [ "$component" == "Exm-v2-plugin-location (Location Services Plugin)" ]
+			${choice_list[$i]} = "exm-client-leftnav2-signage"
+		elif [ "${choice_list[$i]}" == "Exm-v2-plugin-location (Location Services Plugin)" ]
 		then
-			component = "location"
+			${choice_list[$i]} = "location"
 		fi
 	done
 fi
