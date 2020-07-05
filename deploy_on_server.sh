@@ -456,7 +456,40 @@ then
 else
 	partial_flag=1
 	IFS=',' read -r -a choice_list <<< "$component_choice"
+	for component in $component_choice
+	do
+		if [ $component == "EXM V2" ]
+		then
+			$component = "v2"
+		elif [ $component == "LeftNav" ]
+		then
+			$component = "exm-client-leftnav2"
+		elif [ $component == "Admin Tool" ]
+		then
+			$component = "exm-admin-tool"
+		elif [ $component == "Cruise Client" ]
+		then
+			$component = "exm-client-cruise"
+		elif [ $component == "EXM Lite Client (Serial)" ]
+		then
+			$component = "exm-client-lite"
+		elif [ $component == "Startup Client" ]
+		then
+			$component = "exm-client-startup"
+		elif [ $component == "NACOS Listener" ]
+		then
+			$component = "nacos"
+		elif [ $component == "LeftNav Signage" ]
+		then
+			$component = "exm-client-leftnav2-signage"
+		elif [ $component == "Exm-v2-plugin-location (Location Services Plugin)" ]
+		then
+			$component = "location"
+		fi
+	done
 fi
+
+
 
 if [[ $# -eq 0 ]]; then
 	err "Usage: ${0} {option}"
