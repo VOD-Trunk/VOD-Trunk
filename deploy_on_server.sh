@@ -459,12 +459,15 @@ else
 	for component in $component_choice
 	do
 		component=`echo $component | sed "s/_/ /g"`
+		echo "Abhishek1 : $component"
 		if [ "$component" == "EXM V2" ]
 		then
 			component = "v2"
+			echo "Abhishek2 : $component"
 		elif [ "$component" == "LeftNav" ]
 		then
 			component = "exm-client-leftnav2"
+			echo "Abhishek3 : $component"
 		elif [ "$component" == "Admin Tool" ]
 		then
 			component = "exm-admin-tool"
