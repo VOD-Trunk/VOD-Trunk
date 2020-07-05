@@ -17,7 +17,7 @@ node {
         
         sh """
             #!/bin/bash
-            python ${env.WORKSPACE}/fetchBinary.py "$confluence_page" $Release_version $Activity "${env.WORKSPACE}"
+            python ${env.WORKSPACE}/fetchBinary.py "$confluence_page" $Release_version $Activity "${env.WORKSPACE}" $Components
             
         """
         
