@@ -459,31 +459,31 @@ else
 	for component in $component_choice
 	do
 		component=`echo $component | sed "s/_/ /g"`
-		if [ $component == "EXM V2" ]
+		if [ "$component" == "EXM V2" ]
 		then
 			component = "v2"
-		elif [ $component == "LeftNav" ]
+		elif [ "$component" == "LeftNav" ]
 		then
 			component = "exm-client-leftnav2"
-		elif [ $component == "Admin Tool" ]
+		elif [ "$component" == "Admin Tool" ]
 		then
 			component = "exm-admin-tool"
-		elif [ $component == "Cruise Client" ]
+		elif [ "$component" == "Cruise Client" ]
 		then
 			component = "exm-client-cruise"
-		elif [ $component == "EXM Lite Client (Serial)" ]
+		elif [ "$component" == "EXM Lite Client (Serial)" ]
 		then
 			component = "exm-client-lite"
-		elif [ $component == "Startup Client" ]
+		elif [ "$component" == "Startup Client" ]
 		then
 			component = "exm-client-startup"
-		elif [ $component == "NACOS Listener" ]
+		elif [ "$component" == "NACOS Listener" ]
 		then
 			component = "nacos"
-		elif [ $component == "LeftNav Signage" ]
+		elif [ "$component" == "LeftNav Signage" ]
 		then
 			component = "exm-client-leftnav2-signage"
-		elif [ $component == "Exm-v2-plugin-location (Location Services Plugin)" ]
+		elif [ "$component" == "Exm-v2-plugin-location (Location Services Plugin)" ]
 		then
 			component = "location"
 		fi
