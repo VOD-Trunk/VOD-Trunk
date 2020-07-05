@@ -456,7 +456,7 @@ then
 else
 	partial_flag=1
 	IFS=',' read -r -a choice_list <<< "$component_choice"
-	for component in $component_choice
+	for component in "${choice_list[@]}"
 	do
 		component=`echo $component | sed "s/_/ /g"`
 		echo "Abhishek1 : $component"
