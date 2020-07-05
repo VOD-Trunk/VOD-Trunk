@@ -154,7 +154,7 @@ if action == "Deploy":
                         finalArtifactoryUrl = dict(zip(releaseComponents,releaseArtifactsUrl))
     else:
         for index, element in enumerate(yesNo):
-                if element == "Y" && applicationName[index] in component_list:
+                if element == "Y" and applicationName[index] in component_list:
                         releaseComponents.append(applicationName[index])
                         releaseArtifactsUrl.append(artifactoryUrl[index])
                         finalArtifactoryUrl = dict(zip(releaseComponents,releaseArtifactsUrl))
