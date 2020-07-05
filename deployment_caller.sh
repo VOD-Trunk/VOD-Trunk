@@ -7,6 +7,7 @@ env=$1
 release=$2
 action=$3
 component=$4
+component=`echo $component | sed "s/ /_/g"`
 workspace=$5
 
 if [ "$action" == "Deploy" ]

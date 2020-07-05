@@ -458,33 +458,34 @@ else
 	IFS=',' read -r -a choice_list <<< "$component_choice"
 	for component in $component_choice
 	do
+		component=`echo $component | sed "s/_/ /g"`
 		if [ $component == "EXM V2" ]
 		then
-			$component = "v2"
+			component = "v2"
 		elif [ $component == "LeftNav" ]
 		then
-			$component = "exm-client-leftnav2"
+			component = "exm-client-leftnav2"
 		elif [ $component == "Admin Tool" ]
 		then
-			$component = "exm-admin-tool"
+			component = "exm-admin-tool"
 		elif [ $component == "Cruise Client" ]
 		then
-			$component = "exm-client-cruise"
+			component = "exm-client-cruise"
 		elif [ $component == "EXM Lite Client (Serial)" ]
 		then
-			$component = "exm-client-lite"
+			component = "exm-client-lite"
 		elif [ $component == "Startup Client" ]
 		then
-			$component = "exm-client-startup"
+			component = "exm-client-startup"
 		elif [ $component == "NACOS Listener" ]
 		then
-			$component = "nacos"
+			component = "nacos"
 		elif [ $component == "LeftNav Signage" ]
 		then
-			$component = "exm-client-leftnav2-signage"
+			component = "exm-client-leftnav2-signage"
 		elif [ $component == "Exm-v2-plugin-location (Location Services Plugin)" ]
 		then
-			$component = "location"
+			component = "location"
 		fi
 	done
 fi
