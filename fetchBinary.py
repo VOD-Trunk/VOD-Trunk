@@ -12,6 +12,8 @@ pageName = sys.argv[1]
 relName = sys.argv[2]
 action = sys.argv[3]
 workspace = sys.argv[4]
+components = sys.argv[5]
+partial_deploy = 2
 
 releasesPath = workspace + '/Releases/'
 
@@ -138,11 +140,24 @@ if action == "Deploy":
     else:
             applicationName,applicationVersion,applicationBuild,artifactoryUrl,yesNo =GetContentInformation(contentID,headers)
 
-    for index, element in enumerate(yesNo):
-            if element == "Y":
-                    releaseComponents.append(applicationName[index])
-                    releaseArtifactsUrl.append(artifactoryUrl[index])
-                    finalArtifactoryUrl = dict(zip(releaseComponents,releaseArtifactsUrl))
+    if components == "All":
+        partial_deploy = 2
+    else:
+        component_list = components.split(",")
+        partial_deploy = 1
+
+    if partial_deploy == 2:
+        for index, element in enumerate(yesNo):
+                if element == "Y":
+                        releaseComponents.append(applicationName[index])
+                        releaseArtifactsUrl.append(artifactoryUrl[index])
+                        finalArtifactoryUrl = dict(zip(releaseComponents,releaseArtifactsUrl))
+    else:
+        for index, element in enumerate(yesNo):
+                if element == "Y" && applicationName[index] in component_list:
+                        releaseComponents.append(applicationName[index])
+                        releaseArtifactsUrl.append(artifactoryUrl[index])
+                        finalArtifactoryUrl = dict(zip(releaseComponents,releaseArtifactsUrl))
 
     print("\n\nFollowing are the artifacts to be deployed:\n")
     for key, value in finalArtifactoryUrl.items():
