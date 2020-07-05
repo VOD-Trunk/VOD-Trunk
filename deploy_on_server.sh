@@ -458,7 +458,7 @@ else
 	IFS=',' read -r -a choice_list <<< "$component_choice"
 	for i in "${!choice_list[@]}"
 	do
-		${choice_list[$i]}=`echo ${choice_list[$i]} | sed "s/_/ /g"`
+		choice_list[$i]=`echo ${choice_list[$i]} | sed "s/_/ /g"`
 		echo "Abhishek1 : $component"
 		if [ "${choice_list[$i]}" == "EXM V2" ]
 		then
