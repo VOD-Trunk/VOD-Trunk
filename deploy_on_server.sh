@@ -459,15 +459,12 @@ else
 	for i in "${!choice_list[@]}"
 	do
 		choice_list[$i]=`echo ${choice_list[$i]} | sed "s/_/ /g"`
-		echo "Abhishek1 : $component"
 		if [ "${choice_list[$i]}" == "EXM V2" ]
 		then
 			choice_list[$i]="v2"
-			echo "Abhishek2 : ${choice_list[$i]}"
 		elif [ "${choice_list[$i]}" == "LeftNav" ]
 		then
 			choice_list[$i]="exm-client-leftnav2"
-			echo "Abhishek3 : ${choice_list[$i]}"
 		elif [ "${choice_list[$i]}" == "Admin Tool" ]
 		then
 			choice_list[$i]="exm-admin-tool"
