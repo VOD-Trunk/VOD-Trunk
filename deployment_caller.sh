@@ -13,7 +13,7 @@ if [ "$action" == "Deploy" ]
 then
 	echo "Transferring artifacts to the target server ( $env )"
 	echo
-	sshpass -p "Carnival@123" scp -r $workspace/$release root@$env:/root/Releases
+	sshpass -p "Carnival@123" scp -r $workspace/Releases/$release root@$env:/root/Releases
 	sshpass -p "Carnival@123" ssh root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" > $workspace/logs/"${logfile}"
 	cat $workspace/logs/${logfile}
 	
