@@ -25,8 +25,6 @@ node {
    
    stage('deploy'){
 
-        input "Are you sure you want to deploy ${Release_version} on ${Deployment_env} ?"
-
         sh """
             #!/bin/bash
              ${env.WORKSPACE}/deployment_caller.sh "$ip" $Release_version $Activity "$Components" "${env.WORKSPACE}"
