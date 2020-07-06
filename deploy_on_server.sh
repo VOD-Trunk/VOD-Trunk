@@ -560,11 +560,13 @@ case "${1}" in
 			  fi
 			  current_build=$(get_current_build $component | cut -d ":" -f 1)
 			  check_versions $component $releases_path $current_build
-			  log "Deployment of $component is complete."
-			  log
-			  log "============================================================================================================================="
-			  log
-
+			  if [ $component != "All" ]
+			  then
+				  log "Deployment of $component is complete."
+				  log
+				  log "============================================================================================================================="
+				  log
+			  fi
 			  iter=$((iter+1))
 		  done
 	  fi
@@ -627,10 +629,13 @@ case "${1}" in
 			  fi
 			  current_build=$(get_current_build $component | cut -d ":" -f 1)
 			  check_versions $component $releases_path $current_build
-			  log "Rollback of $component is completed."
-			  log
-			  log "============================================================================================================================="
-			  log
+			  if [ $component != "All" ]
+			  then
+				  log "Rollback of $component is completed."
+				  log
+				  log "============================================================================================================================="
+				  log
+			  fi
 			  iter=$((iter+1))
 		  done
 	  fi
