@@ -512,7 +512,7 @@ verify() {
 		log
 		log
 		log "============================================================================================================================="
-		log "The deployment of $component was successfull. New version : $timestamp_release"
+		log "The deployment of $component was NOT successfull. New version : $timestamp_release"
 		if [ $timestamp_status -eq 1 ]
 		then
 			log "Please check tomcat7 service."
