@@ -720,5 +720,5 @@ esac
 
 for key in ${!statusArray[@]};
 do
-	log "${key} : ${statusArray[${key}]}""
-done 
+	log "${key} : ${statusArray[${key}]}"
+done
