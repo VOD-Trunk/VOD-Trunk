@@ -484,7 +484,7 @@ verify() {
 
 	
 
-	if [ "$timestamp_release" == *"$new_release"* ]
+	if [[ "$timestamp_release" == *"$new_release"* ]]
 	then
 		timestamp_status=1
 	else
