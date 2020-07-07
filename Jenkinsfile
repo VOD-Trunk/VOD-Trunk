@@ -27,16 +27,9 @@ node {
 
         sh """
             #!/bin/bash
-             ${env.WORKSPACE}/deployment_caller.sh "$ip" $Release_version $Activity "$Components" "${env.WORKSPACE}"
+             ${env.WORKSPACE}/deployment_caller.sh "$ip" $Release_version $Activity "$Components" "${env.WORKSPACE}" "$abort_on_failure"
             
         """
    }
-   
-   stage('test'){
-       
-   }
-   
-   stage('promote'){
-       
-   }
+
 }

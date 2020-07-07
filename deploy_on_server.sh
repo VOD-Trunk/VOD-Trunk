@@ -7,6 +7,7 @@ ts=`date +'%s'`
 logfile='/root/Releases/deployment-$ts.log'
 new_release=$2
 component_choice=$3
+abort_on_fail=$4
 
 err() {
     >&2 echo -e "$@"
@@ -408,43 +409,99 @@ rollback() {
 	
 }
 
-check_versions() {
+verify() {
 
 	#This function is untested. Need to have the timestamp.txt updated in all artifacts of a single release.
 
 	component=$1
 	releases_path=$2
 	current_build=$3
+	abort_on_fail=$4
+	services_status=1
 
 	if  [ $component == "exm-admin-tool" ] || [ $component == "exm-client-cruise" ] || [ $component == "exm-client-startup" ] || [ $component == "exm-client-leftnav2" ] || [ $component == "LeftNav_Signage" ] || [ $component == "exm-client-lite" ]
 	then
 		timestamp_release=`cat $current_build/timestamp.txt | grep Branch | cut -d ":" -f 2 | sed 's/ //g'`
-		log
-		log
-		log "======================== New release version of $component : $timestamp_release ============================="
-		log
-		log
-		
 	fi
 
 	if  [ $component == "v2" ] || [ $component  == "location" ] || [ $component  == "excursion" ]
 	then
 		timestamp_release=`cat $releases_path/$component/timestamp.txt | grep Branch | cut -d ":" -f 2 | sed 's/ //g'`
-		log
-		log
-		log "======================== New release version of $component : $timestamp_release ============================="
-		log
-		log
 	fi
 
-	#if [ "$timestamp_release" == "$new_release" ]
-	#then
-	#	log "Deployment of $component was successful."
-	#	log
-	#else
-	#	log "Deployment of $component failed. Please check."
-	#	log
-	#fi
+	if  [ $component == "v2" ] || [ $component  == "location" ] || [ $component  == "excursion" ]
+	then
+		PID_FILE_SIZE=`stat -c%s /var/run/tomcat7.pid`
+		SIZE=0
+		
+
+		if (( PID_FILE_SIZE > SIZE ));
+		then
+			log "Service Having PID"
+			log
+		else
+			services_status=2
+			if [ abort_on_fail -eq 1 ]
+			then
+				log "Aborting the deployment as tomcat was not restarted properly. Please check tomcat7 service. Thanks."
+				log
+				exit 1
+			fi
+
+		fi
+
+		
+		tail -100 /var/log/tomcat7/catalina.out | grep -w "Starting Servlet Engine: Apache Tomcat"
+		if [ $? -eq 0 ]
+		then
+			log "TOMCAT SERVICE Started"
+			log
+		else
+			services_status=2
+			if [ abort_on_fail -eq 1 ]
+			then
+				log "Aborting the deployment as tomcat was not restarted properly. Please check tomcat7 service. Thanks."
+				log
+				exit 1
+			fi
+		fi
+
+		ps -elf | grep -v grep | grep -q tomcat7
+		if [ $? -eq 0 ]
+		then
+			log "Tomcat Service Running"
+			log
+		else
+			services_status=2
+			if [ abort_on_fail -eq 1 ]
+			then
+				log "Aborting mission during $component deployment as tomcat was not restarted properly. Please check tomcat7 service. Thanks."
+				log
+				exit 1
+			fi
+		fi
+	fi
+
+	
+
+	if [ "$timestamp_release" =~ .*"$new_release"*. ]
+	then
+		timestamp_status=1
+	else
+		timestamp_status=2
+		if [ abort_on_fail -eq 1 ]
+		then
+			log "Aborting mission during $component deployment as the timestamp is not updated. Please check $releases_path . Thanks."
+			log
+			exit 1
+		fi
+	fi
+
+	if [ $timestamp_status -eq 1 ] && [ $services_status -eq 1 ]
+	then
+		log "The deployment of $component was successfull. New version : $timestamp_release"
+		log
+	fi
 }
 
 #main script
@@ -526,12 +583,9 @@ case "${1}" in
 			  then
 			  	restart_services $component start
 			  fi
+
 			  current_build=$(get_current_build $component | cut -d ":" -f 1)
-			  check_versions $component $releases_path $current_build
-			  log "Deployment of $component is complete."
-			  log
-			  log "============================================================================================================================="
-			  log
+			  verify $component $releases_path $current_build $abort_on_fail
 
 			  iter=$((iter+1))
 		  done
@@ -558,15 +612,10 @@ case "${1}" in
 			  then
 			  	restart_services $component start
 			  fi
+
 			  current_build=$(get_current_build $component | cut -d ":" -f 1)
-			  check_versions $component $releases_path $current_build
-			  if [ $component != "All" ]
-			  then
-				  log "Deployment of $component is complete."
-				  log
-				  log "============================================================================================================================="
-				  log
-			  fi
+			  verify $component $releases_path $current_build $abort_on_fail
+
 			  iter=$((iter+1))
 		  done
 	  fi
@@ -596,12 +645,10 @@ case "${1}" in
 			  then
 			  	restart_services $component start
 			  fi
+
 			  current_build=$(get_current_build $component | cut -d ":" -f 1)
-			  check_versions $component $releases_path $current_build
-			  log "Rollback of $component is completed."
-			  log
-			  log "============================================================================================================================="
-			  log
+			  verify $component $releases_path $current_build $abort_on_fail
+
 			  iter=$((iter+1))
 		  done
 	  else
@@ -627,15 +674,10 @@ case "${1}" in
 			  then
 			  	restart_services $component start
 			  fi
+
 			  current_build=$(get_current_build $component | cut -d ":" -f 1)
-			  check_versions $component $releases_path $current_build
-			  if [ $component != "All" ]
-			  then
-				  log "Rollback of $component is completed."
-				  log
-				  log "============================================================================================================================="
-				  log
-			  fi
+			  verify $component $releases_path $current_build $abort_on_fail
+
 			  iter=$((iter+1))
 		  done
 	  fi
