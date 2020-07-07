@@ -441,7 +441,7 @@ verify() {
 			log
 		else
 			services_status=2
-			if [ abort_on_fail -eq 1 ]
+			if [ abort_on_fail == "Abort" ]
 			then
 				log "Aborting the deployment as tomcat was not restarted properly. Please check tomcat7 service. Thanks."
 				log
@@ -458,7 +458,7 @@ verify() {
 			log
 		else
 			services_status=2
-			if [ abort_on_fail -eq 1 ]
+			if [ abort_on_fail == "Abort" ]
 			then
 				log "Aborting the deployment as tomcat was not restarted properly. Please check tomcat7 service. Thanks."
 				log
@@ -473,7 +473,7 @@ verify() {
 			log
 		else
 			services_status=2
-			if [ abort_on_fail -eq 1 ]
+			if [ abort_on_fail == "Abort" ]
 			then
 				log "Aborting mission during $component deployment as tomcat was not restarted properly. Please check tomcat7 service. Thanks."
 				log
@@ -489,7 +489,7 @@ verify() {
 		timestamp_status=1
 	else
 		timestamp_status=2
-		if [ abort_on_fail -eq 1 ]
+		if [ abort_on_fail == "Abort" ]
 		then
 			log "Aborting mission during $component deployment as the timestamp is not updated. Please check $releases_path . Thanks."
 			log
