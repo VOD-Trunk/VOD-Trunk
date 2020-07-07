@@ -499,33 +499,9 @@ verify() {
 
 	if [ $timestamp_status -eq 1 ] && [ $services_status -eq 1 ]
 	then
-		log
-		log
-		log
-		log "============================================================================================================================="
-		log "The deployment of $component was successfull. New version : $timestamp_release"
-		log "============================================================================================================================="
-		log
-		log
+		
 		echo "Successful( Version : $timestamp_release )"
 	else
-		log
-		log
-		log
-		log "============================================================================================================================="
-		log "The deployment of $component was NOT successfull. New version : $timestamp_release"
-		if [ $timestamp_status -eq 1 ]
-		then
-			log "Please check tomcat7 service."
-		elif [ $services_status -eq 1 ]
-		then
-			log "The timestamp doesn't contain the new release number. Please check $releases_path"
-		else
-			log "The timestamp doesn't contain the new release number and tomcat is not running. Please check both"
-		fi
-		log "============================================================================================================================="
-		log
-		log
 		echo "Failed( Version : $timestamp_release )"
 	fi
 
@@ -616,6 +592,27 @@ case "${1}" in
 
 			  current_build=$(get_current_build $component | cut -d ":" -f 1)
 			  statusArray[$component]=$(verify $component $releases_path $current_build $abort_on_fail)
+			  if [ "${statusArray[$component]}" == *"Successful"* ]
+			  then
+			  	log
+				log
+				log
+				log "============================================================================================================================="
+				log "The deployment/rollback of $component was successfull."
+				log "============================================================================================================================="
+				log
+				log
+			  else
+			  	log
+				log
+				log
+				log "============================================================================================================================="
+				log "The deployment/rollback of $component has failed."
+				log "============================================================================================================================="
+				log
+				log
+			  fi
+
 
 			  iter=$((iter+1))
 		  done
@@ -645,6 +642,26 @@ case "${1}" in
 
 			  current_build=$(get_current_build $component | cut -d ":" -f 1)
 			  statusArray[$component]=$(verify $component $releases_path $current_build $abort_on_fail)
+			  if [ "${statusArray[$component]}" == *"Successful"* ]
+			  then
+			  	log
+				log
+				log
+				log "============================================================================================================================="
+				log "The deployment/rollback of $component was successfull."
+				log "============================================================================================================================="
+				log
+				log
+			  else
+			  	log
+				log
+				log
+				log "============================================================================================================================="
+				log "The deployment/rollback of $component has failed."
+				log "============================================================================================================================="
+				log
+				log
+			  fi
 
 			  iter=$((iter+1))
 		  done
@@ -678,6 +695,26 @@ case "${1}" in
 
 			  current_build=$(get_current_build $component | cut -d ":" -f 1)
 			  statusArray[$component]=$(verify $component $releases_path $current_build $abort_on_fail)
+			  if [ "${statusArray[$component]}" == *"Successful"* ]
+			  then
+			  	log
+				log
+				log
+				log "============================================================================================================================="
+				log "The deployment/rollback of $component was successfull."
+				log "============================================================================================================================="
+				log
+				log
+			  else
+			  	log
+				log
+				log
+				log "============================================================================================================================="
+				log "The deployment/rollback of $component has failed."
+				log "============================================================================================================================="
+				log
+				log
+			  fi
 
 			  iter=$((iter+1))
 		  done
@@ -707,6 +744,26 @@ case "${1}" in
 
 			  current_build=$(get_current_build $component | cut -d ":" -f 1)
 			  statusArray[$component]=$(verify $component $releases_path $current_build $abort_on_fail)
+			  if [ "${statusArray[$component]}" == *"Successful"* ]
+			  then
+			  	log
+				log
+				log
+				log "============================================================================================================================="
+				log "The deployment/rollback of $component was successfull."
+				log "============================================================================================================================="
+				log
+				log
+			  else
+			  	log
+				log
+				log
+				log "============================================================================================================================="
+				log "The deployment/rollback of $component has failed."
+				log "============================================================================================================================="
+				log
+				log
+			  fi
 
 			  iter=$((iter+1))
 		  done
