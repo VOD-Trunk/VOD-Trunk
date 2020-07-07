@@ -499,7 +499,13 @@ verify() {
 
 	if [ $timestamp_status -eq 1 ] && [ $services_status -eq 1 ]
 	then
+		log
+		log
+		log
+		log "============================================================================================================================="
 		log "The deployment of $component was successfull. New version : $timestamp_release"
+		log "============================================================================================================================="
+		log
 		log
 	fi
 }
