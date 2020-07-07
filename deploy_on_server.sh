@@ -507,6 +507,7 @@ verify() {
 		log "============================================================================================================================="
 		log
 		log
+		echo "Successful( Version : $timestamp_release )"
 	else
 		log
 		log
@@ -525,12 +526,16 @@ verify() {
 		log "============================================================================================================================="
 		log
 		log
-
+		echo "Failed( Version : $timestamp_release )"
 	fi
+
+	echo "$component:"
 }
 
 #main script
 		log "==================================================`date`========================================================="
+
+declare -A statusArray
 
 if [ "$component_choice" == "All" ]
 then
@@ -610,7 +615,7 @@ case "${1}" in
 			  fi
 
 			  current_build=$(get_current_build $component | cut -d ":" -f 1)
-			  verify $component $releases_path $current_build $abort_on_fail
+			  statusArray[$component]=$(verify $component $releases_path $current_build $abort_on_fail)
 
 			  iter=$((iter+1))
 		  done
@@ -639,7 +644,7 @@ case "${1}" in
 			  fi
 
 			  current_build=$(get_current_build $component | cut -d ":" -f 1)
-			  verify $component $releases_path $current_build $abort_on_fail
+			  statusArray[$component]=$(verify $component $releases_path $current_build $abort_on_fail)
 
 			  iter=$((iter+1))
 		  done
@@ -672,7 +677,7 @@ case "${1}" in
 			  fi
 
 			  current_build=$(get_current_build $component | cut -d ":" -f 1)
-			  verify $component $releases_path $current_build $abort_on_fail
+			  statusArray[$component]=$(verify $component $releases_path $current_build $abort_on_fail)
 
 			  iter=$((iter+1))
 		  done
@@ -701,7 +706,7 @@ case "${1}" in
 			  fi
 
 			  current_build=$(get_current_build $component | cut -d ":" -f 1)
-			  verify $component $releases_path $current_build $abort_on_fail
+			  statusArray[$component]=$(verify $component $releases_path $current_build $abort_on_fail)
 
 			  iter=$((iter+1))
 		  done
@@ -712,3 +717,8 @@ case "${1}" in
 	  exit 1
 	  ;;
 esac
+
+for key in ${!statusArray[@]};
+do
+	log "${key} : ${statusArray[${key}]}""
+done 
