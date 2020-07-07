@@ -507,6 +507,24 @@ verify() {
 		log "============================================================================================================================="
 		log
 		log
+	elselog
+		log
+		log
+		log "============================================================================================================================="
+		log "The deployment of $component was successfull. New version : $timestamp_release"
+		if [ $timestamp_status -eq 1 ]
+		then
+			log "Please check tomcat7 service."
+		elif [ $services_status -eq 1 ]
+		then
+			log "The timestamp doesn't contain the new release number. Please check $releases_path"
+		else
+			log "The timestamp doesn't contain the new release number and tomcat is not running. Please check both"
+		fi
+		log "============================================================================================================================="
+		log
+		log
+
 	fi
 }
 
