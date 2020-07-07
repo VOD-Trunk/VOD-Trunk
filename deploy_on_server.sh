@@ -10,6 +10,46 @@ component_choice=$3
 abort_on_fail=$4
 declare -A statusArray
 
+if [ "$component_choice" == "All" ]
+then
+	partial_flag=2
+else
+	partial_flag=1
+	IFS=',' read -r -a choice_list <<< "$component_choice"
+	for i in "${!choice_list[@]}"
+	do
+		choice_list[$i]=`echo ${choice_list[$i]} | sed "s/_/ /g"`
+		if [ "${choice_list[$i]}" == "EXM V2" ]
+		then
+			choice_list[$i]="v2"
+		elif [ "${choice_list[$i]}" == "LeftNav" ]
+		then
+			choice_list[$i]="exm-client-leftnav2"
+		elif [ "${choice_list[$i]}" == "Admin Tool" ]
+		then
+			choice_list[$i]="exm-admin-tool"
+		elif [ "${choice_list[$i]}" == "Cruise Client" ]
+		then
+			choice_list[$i]="exm-client-cruise"
+		elif [ "${choice_list[$i]}" == "EXM Lite Client (Serial)" ]
+		then
+			choice_list[$i]="exm-client-lite"
+		elif [ "${choice_list[$i]}" == "Startup Client" ]
+		then
+			choice_list[$i]="exm-client-startup"
+		elif [ "${choice_list[$i]}" == "NACOS Listener" ]
+		then
+			choice_list[$i]="nacos"
+		elif [ "${choice_list[$i]}" == "LeftNav Signage" ]
+		then
+			choice_list[$i]="exm-client-leftnav2-signage"
+		elif [ "${choice_list[$i]}" == "Exm-v2-plugin-location (Location Services Plugin)" ]
+		then
+			choice_list[$i]="location"
+		fi
+	done
+fi
+
 err() {
     >&2 echo -e "$@"
 }
@@ -505,7 +545,7 @@ verify() {
 		log
 		log
 		log "============================================================================================================================="
-		log "The deployment/rollback of $component was successfull."
+		log "The deployment/rollback of $component was successful."
 		log "============================================================================================================================="
 		log
 		log
@@ -517,6 +557,13 @@ verify() {
 		log
 		log "============================================================================================================================="
 		log "The deployment/rollback of $component has failed."
+		if [ $timestamp_status -eq 1 ]
+		then
+			log "Tomcat7 service is not running. Please check and deploy/rollback $component."
+		elif [ $services_status -eq 1 ]
+		then
+			log "The desired build of $component has not been deployed/rolled back. Please check the symlink at $releases_path."
+		fi
 		log "============================================================================================================================="
 		log
 		log
@@ -524,52 +571,32 @@ verify() {
 	fi
 }
 
+deploy_master() {
+
+	component=$1
+	abort_on_fail=$2
+
+	releases_path=$(get_current_build $component | cut -d ":" -f 2)
+	current_build=$(get_current_build $component | cut -d ":" -f 1)
+
+	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "nacos" ] || [ "$component"  == "excursion" ]
+	then
+		restart_services $component stop
+	fi
+
+	deploy_new_build $new_release $component $releases_path $current_build
+
+	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "nacos" ] || [ "$component"  == "excursion" ]
+	then
+		restart_services $component start
+	fi
+
+	current_build=$(get_current_build $component | cut -d ":" -f 1)
+	verify $component $releases_path $current_build $abort_on_fail
+}
+
 #main script
 		log "==================================================`date`========================================================="
-
-
-
-if [ "$component_choice" == "All" ]
-then
-	partial_flag=2
-else
-	partial_flag=1
-	IFS=',' read -r -a choice_list <<< "$component_choice"
-	for i in "${!choice_list[@]}"
-	do
-		choice_list[$i]=`echo ${choice_list[$i]} | sed "s/_/ /g"`
-		if [ "${choice_list[$i]}" == "EXM V2" ]
-		then
-			choice_list[$i]="v2"
-		elif [ "${choice_list[$i]}" == "LeftNav" ]
-		then
-			choice_list[$i]="exm-client-leftnav2"
-		elif [ "${choice_list[$i]}" == "Admin Tool" ]
-		then
-			choice_list[$i]="exm-admin-tool"
-		elif [ "${choice_list[$i]}" == "Cruise Client" ]
-		then
-			choice_list[$i]="exm-client-cruise"
-		elif [ "${choice_list[$i]}" == "EXM Lite Client (Serial)" ]
-		then
-			choice_list[$i]="exm-client-lite"
-		elif [ "${choice_list[$i]}" == "Startup Client" ]
-		then
-			choice_list[$i]="exm-client-startup"
-		elif [ "${choice_list[$i]}" == "NACOS Listener" ]
-		then
-			choice_list[$i]="nacos"
-		elif [ "${choice_list[$i]}" == "LeftNav Signage" ]
-		then
-			choice_list[$i]="exm-client-leftnav2-signage"
-		elif [ "${choice_list[$i]}" == "Exm-v2-plugin-location (Location Services Plugin)" ]
-		then
-			choice_list[$i]="location"
-		fi
-	done
-fi
-
-
 
 if [[ $# -eq 0 ]]; then
 	err "Usage: ${0} {option}"
@@ -586,59 +613,25 @@ case "${1}" in
 	  	  iter=1
 	  	  for component in `ls /root/Releases/$new_release`
 		  do
-		  	  releases_path=$(get_current_build $component | cut -d ":" -f 2)
-			  current_build=$(get_current_build $component | cut -d ":" -f 1)
-
-			  if [ $iter == 1 ]
-			  then
-				log "Starting deployment of $new_release all components"
-				log
-			  fi
-			  if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "nacos" ] || [ "$component"  == "excursion" ]
-			  then
-			  	restart_services $component stop
-			  fi
-
-			  deploy_new_build $new_release $component $releases_path $current_build
-
-			  if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "nacos" ] || [ "$component"  == "excursion" ]
-			  then
-			  	restart_services $component start
-			  fi
-
-			  current_build=$(get_current_build $component | cut -d ":" -f 1)
-			  verify $component $releases_path $current_build $abort_on_fail
-			  
-			  iter=$((iter+1))
+		  	if [ $iter == 1 ]
+			then
+			log "Starting deployment of $new_release all components"
+			log
+			fi
+		  	deploy_master $component $abort_on_fail
+			iter=$((iter+1))
 		  done
 	  else
 	  	  iter=1
 	  	  for component in "${choice_list[@]}"
 		  do
-		  	  releases_path=$(get_current_build $component | cut -d ":" -f 2)
-			  current_build=$(get_current_build $component | cut -d ":" -f 1)
-
-			  if [ $iter == 1 ]
-			  then
-				log "Starting deployment of $new_release selected components"
-				log
-			  fi
-			  if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "nacos" ] || [ "$component"  == "excursion" ]
-			  then
-			  	restart_services $component stop
-			  fi
-
-			  deploy_new_build $new_release $component $releases_path $current_build
-
-			  if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "nacos" ] || [ "$component"  == "excursion" ]
-			  then
-			  	restart_services $component start
-			  fi
-
-			  current_build=$(get_current_build $component | cut -d ":" -f 1)
-			  verify $component $releases_path $current_build $abort_on_fail
-
-			  iter=$((iter+1))
+			if [ $iter == 1 ]
+			then
+			log "Starting deployment of $new_release selected components"
+			log
+			fi
+			deploy_master $component $abort_on_fail
+			iter=$((iter+1))
 		  done
 	  fi
 	  ;;
@@ -648,58 +641,24 @@ case "${1}" in
 	  	  iter=1
 	  	  for component in `ls /root/Releases/$new_release`
 		  do
-		  	  releases_path=$(get_current_build $component | cut -d ":" -f 2)
-			  current_build=$(get_current_build $component | cut -d ":" -f 1)
-
-			  if [ $iter == 1 ]
+		  	 if [ $iter == 1 ]
 			  then
 				log "Starting rollback of $new_release : All components"
 				log
 			  fi
-			  if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "nacos" ] || [ "$component"  == "excursion" ]
-			  then
-			  	restart_services $component stop
-			  fi
-
-			  rollback $current_build $component $releases_path
-
-			  if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "nacos" ] || [ "$component"  == "excursion" ]
-			  then
-			  	restart_services $component start
-			  fi
-
-			  current_build=$(get_current_build $component | cut -d ":" -f 1)
-			  verify $component $releases_path $current_build $abort_on_fail
-
+			  deploy_master $component $abort_on_fail
 			  iter=$((iter+1))
 		  done
 	  else
 	  	  iter=1
 	  	  for component in "${choice_list[@]}"
 	  	  do
-	  	  	  releases_path=$(get_current_build $component | cut -d ":" -f 2)
-			  current_build=$(get_current_build $component | cut -d ":" -f 1)
-
-			  if [ $iter == 1 ]
+	  	  	  if [ $iter == 1 ]
 			  then
 				log "Starting rollback of $new_release : Selected components"
 				log
 			  fi
-			  if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "nacos" ] || [ "$component"  == "excursion" ]
-			  then
-			  	restart_services $component stop
-			  fi
-
-			  rollback $current_build $component $releases_path
-
-			  if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "nacos" ] || [ "$component"  == "excursion" ]
-			  then
-			  	restart_services $component start
-			  fi
-
-			  current_build=$(get_current_build $component | cut -d ":" -f 1)
-			  verify $component $releases_path $current_build $abort_on_fail
-
+			  deploy_master $component $abort_on_fail
 			  iter=$((iter+1))
 		  done
 	  fi
