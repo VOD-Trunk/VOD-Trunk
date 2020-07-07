@@ -504,8 +504,6 @@ verify() {
 	else
 		echo "Failed( Version : $timestamp_release )"
 	fi
-
-	echo "$component:"
 }
 
 #main script
