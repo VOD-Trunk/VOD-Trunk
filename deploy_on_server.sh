@@ -462,12 +462,12 @@ verify() {
 
 	if  [ $component == "exm-admin-tool" ] || [ $component == "exm-client-cruise" ] || [ $component == "exm-client-startup" ] || [ $component == "exm-client-leftnav2" ] || [ $component == "LeftNav_Signage" ] || [ $component == "exm-client-lite" ]
 	then
-		timestamp_build=`cat $current_build/timestamp.txt | grep Build | cut -d ":" -f 2 | sed 's/ //g'`
+		timestamp_build=`cat $current_build/timestamp.txt | grep "Build Number"| cut -d ":" -f 2 | sed 's/ //g'`
 	fi
 
 	if  [ $component == "v2" ] || [ $component  == "location" ] || [ $component  == "excursion" ]
 	then
-		timestamp_build=`cat $releases_path/$component/timestamp.txt | grep Build | cut -d ":" -f 2 | sed 's/ //g'`
+		timestamp_build=`cat $releases_path/$component/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
 	fi
 
 	if  [ $component == "v2" ] || [ $component  == "location" ] || [ $component  == "excursion" ]
@@ -525,7 +525,7 @@ verify() {
 
 	
 
-	if [ ! -z "$timestamp_release" ]
+	if [ ! -z "$timestamp_build" ]
 	then
 		timestamp_status=1
 	else
