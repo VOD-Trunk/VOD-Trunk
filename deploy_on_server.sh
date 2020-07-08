@@ -106,6 +106,12 @@ get_current_build() {
 			releases_path='/usr/local/nacos'
 	fi
 
+	if [ $component == "mutedaemon" ]
+	then
+			current_build=`ls -la /usr/local/mutedaemon/ | grep mutedaemon.jar | cut -d '>' -f 2 | sed 's/ //g' | cut -d '/' -f 6`
+			releases_path='/usr/local/mutedaemon'
+	fi
+
 	if  [ $component == "exm-client-lite" ]
 	then
 			current_build=`ls -la /apps/clientmap/exm-client-lite/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
@@ -201,6 +207,8 @@ deploy_new_build() {
 	releases_path=$3
 	current_build=$4
 
+	#####Deployment of all clients have the same steps. So using the same code for both in below code block.
+
 	if  [ $component == "exm-admin-tool" ] || [ $component == "exm-client-cruise" ] || [ $component == "exm-client-startup" ] || [ $component == "exm-client-leftnav2" ] || [ $component == "LeftNav_Signage" ] || [ $component == "exm-client-lite" ]
 	then
 		log "Starting the deployment of $component"
@@ -253,6 +261,10 @@ deploy_new_build() {
 		log
 	fi
 
+
+
+	#####Deployment of all .war files have the same steps. So usinf the same code for both in below code block.
+
 	if  [ $component == "v2" ] || [ $component  == "location" ] || [ $component  == "excursion" ]
 	then
 		log "Starting deployment of $component"
@@ -282,15 +294,13 @@ deploy_new_build() {
 		cp /root/Releases/$new_release/$component/* $releases_path/$component.war
 	fi
 
-	if  [ $component  == "nacos" ]
+	#####Deployment of nacos and mutedaemon have the same steps. So usinf the same code for both in below code block.
+
+	if  [ $component  == "nacos" ] || [ $component  == "mutedaemon" ]
 	then
 		log "Starting deployment of $component"
 		log
-		log "Making a new directory $releases_path/$new_release"
-		log
-		log "Taking backup of the current build."
-		log
-
+				
 		if [ ! -d $releases_path/Backup ]
 		then
 			mkdir -p $releases_path/Backup
@@ -301,43 +311,61 @@ deploy_new_build() {
 				rm -rf $releases_path/Backup/$i
 			done
 		fi
-		cp -r $releases_path/releases/$current_build $releases_path/Backup/
 
-		if [ ! -d $releases_path/releases/$new_release ]
+		if [ ! -d $releases_path/releases ]
 		then
-			mkdir -p $releases_path/releases/$new_release
-		elif [ -d $releases_path/releases/$new_release ]
+			mkdir -p $releases_path/releases
+		elif [ -d $releases_path/releases ]
 		then
-			for i in `ls $releases_path/releases/$new_release`
-			do
-				rm -rf $releases_path/releases/$new_release/$i
-			done
+			if [ ! -d $releases_path/releases/$new_release ]
+			then
+				mkdir -p $releases_path/releases/$new_release
+			elif [ -d $releases_path/releases/$new_release ]
+			then
+				for i in `ls $releases_path/releases/$new_release`
+				do
+					rm -rf $releases_path/releases/$new_release/$i
+				done
+			fi
 		fi
 		
+		log "Taking backup of the current build."
+		log
+		
+		cp -r $releases_path/releases/$current_build $releases_path/Backup/
+
 		new_build=`ls /root/Releases/$new_release/$component/*.jar | cut -d "/" -f 6`
 
 		log "Copying $new_build to $releases_path/$new_release"
 		log
 
+		if [ $component  == "nacos" ]
+		then
+			jar_symlink="nacos.daemon.jar"
+		elif [ $component  == "mutedaemon" ]
+		then
+			jar_symlink="mutedaemon.jar"
+		fi
+
+
 		cp /root/Releases/$new_release/$component/$new_build $releases_path/releases/$new_release
 
-		log "Unlinking nacos.daemon.jar symlink..."
+		log "Current $jar_symlink symlink is :"
 		log
-		log "Current nacos.daemon.jar symlink is :"
+		log "`ls -l $releases_path | grep "$jar_symlink"`"
 		log
-		log "`ls -l $releases_path | grep "nacos.daemon.jar"`"
+		log "Unlinking $jar_symlink symlink..."
 		log
-
 		unlink $releases_path/nacos.daemon.jar
 
-		log "Creating new symlink nacos.daemon.jar ..."
+		log "Creating new symlink $jar_symlink ..."
 		log
 
-		ln -s $releases_path/releases/$new_release/$new_build $releases_path/nacos.daemon.jar
+		ln -s $releases_path/releases/$new_release/$new_build $releases_path/$jar_symlink
 
-		log "New nacos.daemon.jar symlink is :"
+		log "New $jar_symlink symlink is :"
 		log
-		log "`ls -l $releases_path | grep "nacos.daemon.jar"`"
+		log "`ls -l $releases_path | grep "$jar_symlink"`"
 		log
 		log "Copying properties.uie file to $releases_path/releases/$new_release"
 		log
@@ -360,6 +388,8 @@ deploy_new_build() {
 		log
 		log "`ls -l $releases_path | grep "properties.uie"`"
 		log
+
+		
 	fi
 }
 
@@ -393,6 +423,8 @@ rollback() {
 		
 	fi
 
+	
+
 	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursion" ]
 	then
 
@@ -408,27 +440,38 @@ rollback() {
 		cp $releases_path/Backup/$component.war $releases_path/$component.war
 	fi
 
-	if  [ "$component"  == "nacos" ]
+
+
+	if  [ "$component"  == "nacos" ] || [ "$component"  == "mutedaemon" ]
 	then
 
 		log "Starting rollback of $component"
 		log
 
+		if [ $component  == "nacos" ]
+		then
+			jar_symlink="nacos.daemon.jar"
+		elif [ $component  == "mutedaemon" ]
+		then
+			jar_symlink="mutedaemon.jar"
+		fi
+
+
 		rollback_build=`cd /$releases_path/Backup/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
 
-		log "Unlinking the current nacos.daemon.jar symlink..."
+		log "Unlinking the current $jar_symlink symlink..."
 		log
 
-		unlink $releases_path/nacos.daemon.jar
+		unlink $releases_path/$jar_symlink
 
 		log "Creating a new link using the Backup build..."
 		log
 
 		ln -s $releases_path/releases/$rollback_build/*.jar $releases_path/nacos.daemon.jar
 
-		log "New nacos.daemon.jar symlink is :"
+		log "New $jar_symlink symlink is :"
 		log
-		log "`ls -l $releases_path | grep "nacos.daemon.jar"`"
+		log "`ls -l $releases_path | grep "$jar_symlink"`"
 		log
 
 
