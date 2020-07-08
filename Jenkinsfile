@@ -17,12 +17,9 @@ node {
      
         stage('fetchBinary') {
             
-            sh """
-                #!/bin/bash
-                python ${env.WORKSPACE}/fetchBinary.py "$confluence_page" $Release_version $Activity "${env.WORKSPACE}" "$Components"
-                
-            """
-            
+            def build_numbers = sh( script : 'python ${env.WORKSPACE}/fetchBinary.py "$confluence_page" $Release_version $Activity "${env.WORKSPACE}" "$Components"',returnStdout: true )
+            def builds_array = build_numbers.split('\n')
+            echo "$builds_array"
         }
        
        stage('deploy'){
