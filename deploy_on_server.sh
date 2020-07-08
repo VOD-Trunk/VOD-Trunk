@@ -272,7 +272,7 @@ deploy_new_build() {
 				rm -rf $releases_path/Backup/$i
 			done
 		fi
-		cp -r $component* $releases_path/Backup/
+		cp -r $releases_path/$component* $releases_path/Backup/
 		#cp $releases_path/$component.war /tmp/
 		rm -rf $releases_path/$component*
 
