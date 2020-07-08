@@ -9,7 +9,7 @@ import re
 import os
 import logging
 
-logging.basicConfig(filename=fetchBinaryLogs.log, filemode='a', format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s', datefmt='%H:%M:%S', level=logging.DEBUG)
+
 
 pageName = sys.argv[1]
 relName = sys.argv[2]
@@ -18,6 +18,7 @@ workspace = sys.argv[4]
 components = sys.argv[5]
 partial_deploy = 2
 
+logging.basicConfig(filename= workspace +'/logs/fetchBinaryLogs.log', filemode='a', format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s', datefmt='%H:%M:%S', level=logging.DEBUG)
 releasesPath = workspace + '/Releases/'
 
 if action == "Deploy":
