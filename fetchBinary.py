@@ -222,7 +222,7 @@ if action == "Deploy":
 
     builds_file_path = workspace + "/tmp/component_build_mapping.txt"
     for key, value in component_build_mapping.items():
-        with open(builds_file_path, 'w') as f:
+        with open(builds_file_path, 'a') as f:
             f.write(str(key) + " : " + str(value))
 else:
     logging.info("fetchBinary stage is not required for actions other than Deploy.")

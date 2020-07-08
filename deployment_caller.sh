@@ -18,9 +18,10 @@ then
 	sshpass -p "Carnival@123" scp -r $workspace/Releases/$release root@$env:/root/Releases
 	sshpass -p "Carnival@123" ssh root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" > $workspace/logs/"${logfile}"
 	cat $workspace/logs/${logfile}
-	
+	rm -f $workspace/tmp/*
 elif [ "$action" == "Rollback" ]
 then
 	sshpass -p "Carnival@123" ssh root@$env "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" > $workspace/logs/"${logfile}"
 	cat $workspace/logs/${logfile}
+	rm -f $workspace/tmp/*
 fi
