@@ -225,6 +225,6 @@ if action == "Deploy":
         f.truncate()
     for key, value in component_build_mapping.items():
         with open(builds_file_path, 'a+') as f:
-            f.write(str(key) + " : " + str(value))
+            f.write(str(key) + " : " + str(value) + "\n")
 else:
     logging.info("fetchBinary stage is not required for actions other than Deploy.")
