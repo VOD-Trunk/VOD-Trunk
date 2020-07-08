@@ -527,7 +527,7 @@ verify() {
 
 	
 
-	if [ "$timestamp_build" == "release_build" ]
+	if [ "$timestamp_build" == "$release_build" ]
 	then
 		timestamp_status=1
 	else
