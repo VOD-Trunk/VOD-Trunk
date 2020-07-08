@@ -158,6 +158,7 @@ if action == "Deploy":
                         releaseBuildNumbers.append(applicationBuild[index])
                         releaseArtifactsUrl.append(artifactoryUrl[index])
                         finalArtifactoryUrl = dict(zip(releaseComponents,releaseArtifactsUrl))
+                        component_build_mapping = dict(zip(releaseComponents,releaseBuildNumbers))
     else:
         for index, element in enumerate(yesNo):
                 if element == "Y" and applicationName[index] in component_list:
@@ -165,6 +166,7 @@ if action == "Deploy":
                         releaseBuildNumbers.append(applicationBuild[index])
                         releaseArtifactsUrl.append(artifactoryUrl[index])
                         finalArtifactoryUrl = dict(zip(releaseComponents,releaseArtifactsUrl))
+                        component_build_mapping = dict(zip(releaseComponents,releaseBuildNumbers))
 
     logging.info("\n\nFollowing are the artifacts to be deployed:\n")
     for key, value in finalArtifactoryUrl.items():
@@ -200,6 +202,10 @@ if action == "Deploy":
             path = os.path.join(workspace,log_path)
             if os.path.isdir(path) != True:
                 os.makedirs(path)
+            tmp_path = 'tmp'
+            path = os.path.join(workspace,tmp_path)
+            if os.path.isdir(path) != True:
+                os.makedirs(path)
             
             logging.info("\nDownloading " + component +" ...\n")
 
@@ -214,7 +220,9 @@ if action == "Deploy":
             else:
                 logging.info("Couldn't reach the provided url with response : "+ str(response.status_code) + "\n")
 
-    for index, element in enumerate(releaseBuildNumbers):
-        print(releaseBuildNumbers[index])
+    builds_file_path = workspace + "/tmp/component_build_mapping.txt"
+    for key, value in component_build_mapping.items():
+        with open(builds_file_path, 'w') as f:
+            f.write(str(key) + " : " + str(value))
 else:
     logging.info("fetchBinary stage is not required for actions other than Deploy.")
