@@ -170,6 +170,9 @@ if action == "Deploy":
                         releaseArtifactsUrl.append(artifactoryUrl[index])
                         finalArtifactoryUrl = dict(zip(releaseComponents,releaseArtifactsUrl))
                         component_build_mapping = dict(zip(releaseComponents,releaseBuildNumbers))
+                        print("Abhishek: applicationName[index] = "+ applicationName[index])
+                        print("Abhishek: applicationBuild[index] = "+ applicationBuild[index])
+                        
 
     logging.info("\n\nFollowing are the artifacts to be deployed:\n")
     for key, value in finalArtifactoryUrl.items():
