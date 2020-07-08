@@ -186,7 +186,7 @@ if action == "Deploy":
                 component = "exm-admin-tool"
             elif componentConfluence == "Cruise Client":
                 component = "exm-client-cruise"
-            elif componentConfluence == "EXM Lite Client (Serial)":
+            elif componentConfluence == "EXM Lite Client":
                 component = "exm-client-lite"
             elif componentConfluence == "Startup Client":
                 component = "exm-client-startup"
@@ -194,8 +194,10 @@ if action == "Deploy":
                 component = "nacos"
             elif componentConfluence == "LeftNav Signage":
                 component = "exm-client-leftnav2-signage"
-            elif componentConfluence == "Exm-v2-plugin-location (Location Services Plugin)":
+            elif componentConfluence == "Exm-v2-plugin-location":
                 component = "location"
+            elif componentConfluence == "Mute Daemon":
+                component = "mutedaemon"
 
             newReleaseDir = releasesPath + relName
 
