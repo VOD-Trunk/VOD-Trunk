@@ -223,8 +223,7 @@ if action == "Deploy":
             else:
                 logging.info("Couldn't reach the provided url with response : "+ str(response.status_code) + "\n")
 
-            for key, value in component_build_mapping.items():
-                with open(builds_file_path, 'a+') as f:
-                    f.write(component + " : " + str(component_build_mapping[componentConfluence]) + "\n")
+            with open(builds_file_path, 'a+') as f:
+                f.write(component + " : " + str(component_build_mapping[componentConfluence]) + "\n")
 else:
     logging.info("fetchBinary stage is not required for actions other than Deploy.")
