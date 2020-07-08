@@ -525,7 +525,7 @@ verify() {
 		timestamp_build=`cat $releases_path/$component/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
 		if [ "$action" == "deploy" ]
 		then
-			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep $component | cut -d ":" -f 2 | sed 's/ //g'`
+			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep -w $component | cut -d ":" -f 2 | sed 's/ //g'`
 		else
 			release_build=`cat cat $releases_path/Backup/$component/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
 		fi
