@@ -152,7 +152,7 @@ restart_services() {
 		log "Starting tomcat7 service for $component..."
 		log
 		service tomcat7 start #Start_Tomcat_Service
-		sleep 5
+		sleep 15
 		tomcat_status=`service tomcat7 status | grep running | wc -l`
 		
 		if [ $tomcat_status == 1 ]
