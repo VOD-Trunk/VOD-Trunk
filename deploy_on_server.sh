@@ -8,6 +8,7 @@ logfile='/root/Releases/deployment-$ts.log'
 new_release=$2
 component_choice=$3
 abort_on_fail=$4
+action=$1
 declare -A statusArray
 
 if [ "$component_choice" == "All" ]
@@ -271,7 +272,7 @@ deploy_new_build() {
 				rm -rf $releases_path/Backup/$i
 			done
 		fi
-		cp -r $current_build $releases_path/Backup/
+		cp -r $component* $releases_path/Backup/
 		#cp $releases_path/$component.war /tmp/
 		rm -rf $releases_path/$component*
 
@@ -374,7 +375,7 @@ rollback() {
 		log "Starting rollback of $component"
 		log
 
-		rollback_build=`cd /$releases_path/Backup/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
+		rollback_build=`cd $releases_path/Backup/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
 
 		log "Unlinking the current link..."
 		log
@@ -463,13 +464,25 @@ verify() {
 	if  [ $component == "exm-admin-tool" ] || [ $component == "exm-client-cruise" ] || [ $component == "exm-client-startup" ] || [ $component == "exm-client-leftnav2" ] || [ $component == "LeftNav_Signage" ] || [ $component == "exm-client-lite" ]
 	then
 		timestamp_build=`cat $current_build/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
-		release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep $component | cut -d ":" -f 2 | sed 's/ //g'`
+		if [ "$action" == "-d" ]
+		then
+			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep $component | cut -d ":" -f 2 | sed 's/ //g'`
+		else
+			rollback_build=`cd $releases_path/Backup/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
+			release_build=`cat $releases_path/Backup/$rollback_build/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
+		fi
+
 	fi
 
 	if  [ $component == "v2" ] || [ $component  == "location" ] || [ $component  == "excursion" ]
 	then
 		timestamp_build=`cat $releases_path/$component/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
-		release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep $component | cut -d ":" -f 2 | sed 's/ //g'`
+		if [ "$action" == "-d" ]
+		then
+			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep $component | cut -d ":" -f 2 | sed 's/ //g'`
+		else
+			release_build=`cat cat $releases_path/Backup/$component/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
+		fi
 	fi
 
 	if  [ $component == "v2" ] || [ $component  == "location" ] || [ $component  == "excursion" ]
