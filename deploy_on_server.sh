@@ -121,7 +121,7 @@ get_current_build() {
 			releases_path='/apps/clientmap/exm-client-lite'
 	fi
 
-	if  [ $component == "Location_Service" ]
+	if  [ $component == "location" ]
 	then
 			current_build='/var/lib/tomcat7/hosts/prod.uiexm.com/webapps/location.war'
 			releases_path='/var/lib/tomcat7/hosts/prod.uiexm.com/webapps'
