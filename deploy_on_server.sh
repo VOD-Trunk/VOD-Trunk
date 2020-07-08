@@ -462,12 +462,12 @@ verify() {
 
 	if  [ $component == "exm-admin-tool" ] || [ $component == "exm-client-cruise" ] || [ $component == "exm-client-startup" ] || [ $component == "exm-client-leftnav2" ] || [ $component == "LeftNav_Signage" ] || [ $component == "exm-client-lite" ]
 	then
-		timestamp_release=`cat $current_build/timestamp.txt | grep Branch | cut -d ":" -f 2 | sed 's/ //g'`
+		timestamp_build=`cat $current_build/timestamp.txt | grep Build | cut -d ":" -f 2 | sed 's/ //g'`
 	fi
 
 	if  [ $component == "v2" ] || [ $component  == "location" ] || [ $component  == "excursion" ]
 	then
-		timestamp_release=`cat $releases_path/$component/timestamp.txt | grep Branch | cut -d ":" -f 2 | sed 's/ //g'`
+		timestamp_build=`cat $releases_path/$component/timestamp.txt | grep Build | cut -d ":" -f 2 | sed 's/ //g'`
 	fi
 
 	if  [ $component == "v2" ] || [ $component  == "location" ] || [ $component  == "excursion" ]
@@ -525,7 +525,7 @@ verify() {
 
 	
 
-	if [[ "$timestamp_release" == *"$new_release"* ]]
+	if [[ ! -z "$timestamp_release" -a "$timestamp_release" != " "  ]]
 	then
 		timestamp_status=1
 	else
@@ -533,14 +533,13 @@ verify() {
 		if [ $abort_on_fail == "Abort" ]
 		then
 			log "Aborting mission during $component deployment as the timestamp is not updated. Please check $releases_path . Thanks."
-			log
 			exit 1
 		fi
 	fi
 
 	if [ $timestamp_status -eq 1 ] && [ $services_status -eq 1 ]
 	then
-		statusArray[$component]="Successful( Version : $timestamp_release )"
+		statusArray[$component]="Successful( Build Number : $timestamp_build )"
 		log
 		log
 		log
@@ -551,7 +550,7 @@ verify() {
 		log
 		#echo "Successful( Version : $timestamp_release )"
 	else
-		statusArray[$component]="Failed( Version : $timestamp_release )"
+		statusArray[$component]="Failed( Build Number : $timestamp_build )"
 		log
 		log
 		log
