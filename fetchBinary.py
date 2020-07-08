@@ -39,28 +39,28 @@ if action == "Deploy":
                params=PARAMS,
                headers=headers,
             )
-            logger.info(response.request.url)
+            logging.info.info(response.request.url)
 
             if response.status_code == 200:
-                    logger.info ("HTTP Query successful:")
+                    logging.info.info ("HTTP Query successful:")
                     searchResult=json.loads(response.text)['results']
 
                     if len(searchResult)==0:
                             errorValue=("Confluence Page not exist:" +pageName)
-                            logger.info ("No Record found for URL:" + response.request.url)
+                            logging.info.info ("No Record found for URL:" + response.request.url)
                             exit
                     elif len(searchResult)==1:
-                            logger.info(json.dumps((json.loads(response.text)['results'][0]['id']), sort_keys=True, indent=4, separators=(",", ": ")))
+                            logging.info.info(json.dumps((json.loads(response.text)['results'][0]['id']), sort_keys=True, indent=4, separators=(",", ": ")))
                             contentID=searchResult[0]['id']
                     else:
                             contentID =0
                             errorValue=("More then one record exist for page:",pageName)
-                            logger.info(response.text)
+                            logging.info.info(response.text)
 
             else:
-                    logger.info(response)
+                    logging.info.info(response)
                     errorValue=("HTTP request failed for page " ,pageName ,"reason:" ,response)
-                    logger.info ("Confluence page not exist or other error::",url)
+                    logging.info.info ("Confluence page not exist or other error::",url)
 
             return  (contentID,errorValue)
 
@@ -79,10 +79,10 @@ if action == "Deploy":
             )
 
             if response.status_code == 200:
-                    logger.info ("Query successful:Confluence page exist")
+                    logging.info.info ("Query successful:Confluence page exist")
             else:
-                    logger.info(response)
-                    logger.info ("Confluence page not exist or other error::",url)
+                    logging.info.info(response)
+                    logging.info.info ("Confluence page not exist or other error::",url)
                     exit()
 
             searchString = response.text
@@ -96,22 +96,22 @@ if action == "Deploy":
             yesNo=[]
             test=[]
             TAG_RE = re.compile(r'<[^>]+>')
-            logger.info(len(subTable))
+            logging.info.info(len(subTable))
             for x in subTable:
 
-                    #logger.info(x)
+                    #logging.info.info(x)
 
                     columnValue=TAG_RE.sub('', x)
 
                     if recordCount%7 == 0:  #Ignore first record
                             applicationName.append(columnValue)
-                            #logger.info("applicationName:"+ columnValue)
+                            #logging.info.info("applicationName:"+ columnValue)
                     elif recordCount%7== 1:
                             applicationVersion.append(columnValue)
-                            #logger.info("applicationVersion:"+ columnValue)
+                            #logging.info.info("applicationVersion:"+ columnValue)
                     elif recordCount%7== 2:
                             applicationBuild.append(columnValue)
-                            #logger.info("applicationBuild:"+ columnValue)
+                            #logging.info.info("applicationBuild:"+ columnValue)
                     elif recordCount%7== 4:
                             artifactoryUrl.append(columnValue)
                     elif recordCount%7== 6:
@@ -119,13 +119,13 @@ if action == "Deploy":
 
 
                     recordCount= recordCount + 1
-                    #logger.info(recordCount)
+                    #logging.info.info(recordCount)
             return (applicationName,applicationVersion,applicationBuild,artifactoryUrl,yesNo)
 
     # end of function //GetContentInformation
 
     #Main script
-    logger.info("Starting...\n")
+    logging.info.info("Starting...\n")
 
     headers = {
                "Accept": "application/json",
@@ -141,7 +141,7 @@ if action == "Deploy":
     contentID=0
     contentID,errorValue = CheckConfluencePage(pageName)
     if contentID ==0:
-            logger.info(errorValue)
+            logging.info.info(errorValue)
     else:
             applicationName,applicationVersion,applicationBuild,artifactoryUrl,yesNo =GetContentInformation(contentID,headers)
 
@@ -166,9 +166,9 @@ if action == "Deploy":
                         releaseArtifactsUrl.append(artifactoryUrl[index])
                         finalArtifactoryUrl = dict(zip(releaseComponents,releaseArtifactsUrl))
 
-    logger.info("\n\nFollowing are the artifacts to be deployed:\n")
+    logging.info.info("\n\nFollowing are the artifacts to be deployed:\n")
     for key, value in finalArtifactoryUrl.items():
-            logger.info(str(key)+ ' -> ' + str(value))
+            logging.info.info(str(key)+ ' -> ' + str(value))
 
             componentConfluence = str(key)
             
@@ -201,7 +201,7 @@ if action == "Deploy":
             if os.path.isdir(path) != True:
                 os.makedirs(path)
             
-            logger.info("\nDownloading " + component +" ...\n")
+            logging.info.info("\nDownloading " + component +" ...\n")
 
             url = str(value)
             target_path = releasesPath + relName + '/' + component + '/' + url.split("/")[-1]
@@ -210,10 +210,10 @@ if action == "Deploy":
             if response.status_code == 200:
                 with open(target_path, 'wb') as f:
                     f.write(response.raw.read())
-                    logger.info("File successfully stored at : " + target_path + "\n")
+                    logging.info.info("File successfully stored at : " + target_path + "\n")
             else:
-                logger.info("Couldn't reach the provided url with response : "+ str(response.status_code) + "\n")
+                logging.info.info("Couldn't reach the provided url with response : "+ str(response.status_code) + "\n")
 
     print(releaseBuildNumbers)
 else:
-    logger.info("fetchBinary stage is not required for actions other than Deploy.")
+    logging.info.info("fetchBinary stage is not required for actions other than Deploy.")
