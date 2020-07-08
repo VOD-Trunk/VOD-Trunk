@@ -152,7 +152,7 @@ restart_services() {
 		log "Starting tomcat7 service for $component..."
 		log
 		service tomcat7 start #Start_Tomcat_Service
-		sleep 15
+		sleep 20
 		tomcat_status=`service tomcat7 status | grep running | wc -l`
 		
 		if [ $tomcat_status == 1 ]
@@ -534,7 +534,7 @@ verify() {
 	if [ $component == "nacos" ] || [ $component  == "mutedaemon" ]
 	then
 		timestamp_build=`ls -l $releases_path | grep ".jar" | cut -d '>' -f 2 | cut -d '/' -f 6`
-		release_build=$new_release
+		release_build="$new_release"
 	fi
 
 	if  [ $component == "v2" ] || [ $component  == "location" ] || [ $component  == "excursion" ]
