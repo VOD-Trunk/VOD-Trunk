@@ -221,7 +221,8 @@ if action == "Deploy":
                 logging.info("Couldn't reach the provided url with response : "+ str(response.status_code) + "\n")
 
     builds_file_path = workspace + "/tmp/component_build_mapping.txt"
-    builds_file_path.truncate()
+    with open(builds_file_path, 'w') as f:
+        f.truncate()
     for key, value in component_build_mapping.items():
         with open(builds_file_path, 'a+') as f:
             f.write(str(key) + " : " + str(value))
