@@ -32,7 +32,7 @@ else
 		elif [ "${choice_list[$i]}" == "Cruise Client" ]
 		then
 			choice_list[$i]="exm-client-cruise"
-		elif [ "${choice_list[$i]}" == "EXM Lite Client (Serial)" ]
+		elif [ "${choice_list[$i]}" == "EXM Lite Client" ]
 		then
 			choice_list[$i]="exm-client-lite"
 		elif [ "${choice_list[$i]}" == "Startup Client" ]
@@ -41,10 +41,13 @@ else
 		elif [ "${choice_list[$i]}" == "NACOS Listener" ]
 		then
 			choice_list[$i]="nacos"
+		elif [ "${choice_list[$i]}" == "Mute Daemon" ]
+		then
+			choice_list[$i]="mutedaemon"
 		elif [ "${choice_list[$i]}" == "LeftNav Signage" ]
 		then
 			choice_list[$i]="exm-client-leftnav2-signage"
-		elif [ "${choice_list[$i]}" == "Exm-v2-plugin-location (Location Services Plugin)" ]
+		elif [ "${choice_list[$i]}" == "Exm-v2-plugin-location" ]
 		then
 			choice_list[$i]="location"
 		fi
@@ -209,7 +212,7 @@ deploy_new_build() {
 
 	#####Deployment of all clients have the same steps. So using the same code for both in below code block.
 
-	if  [ $component == "exm-admin-tool" ] || [ $component == "exm-client-cruise" ] || [ $component == "exm-client-startup" ] || [ $component == "exm-client-leftnav2" ] || [ $component == "LeftNav_Signage" ] || [ $component == "exm-client-lite" ]
+	if  [ $component == "exm-admin-tool" ] || [ $component == "exm-client-cruise" ] || [ $component == "exm-client-startup" ] || [ $component == "exm-client-leftnav2" ] || [ $component == "exm-client-leftnav2-signage" ] || [ $component == "exm-client-lite" ]
 	then
 		log "Starting the deployment of $component"
 		log
@@ -356,8 +359,7 @@ deploy_new_build() {
 		log
 		log "Unlinking $jar_symlink symlink..."
 		log
-		unlink $releases_path/nacos.daemon.jar
-
+		unlink $releases_path/jar_symlink
 		log "Creating new symlink $jar_symlink ..."
 		log
 
