@@ -589,6 +589,7 @@ deploy_master() {
 
 	component=$1
 	abort_on_fail=$2
+	action=$3
 
 	releases_path=$(get_current_build $component | cut -d ":" -f 2)
 	current_build=$(get_current_build $component | cut -d ":" -f 1)
@@ -597,8 +598,12 @@ deploy_master() {
 	then
 		restart_services $component stop
 	fi
-
-	deploy_new_build $new_release $component $releases_path $current_build
+	if [ "$action" == "deploy" ]
+	then
+		deploy_new_build $new_release $component $releases_path $current_build
+	else
+		rollback $new_release $component $releases_path $current_build
+	fi
 
 	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "nacos" ] || [ "$component"  == "excursion" ]
 	then
@@ -632,7 +637,7 @@ case "${1}" in
 			log "Starting deployment of $new_release all components"
 			log
 			fi
-		  	deploy_master $component $abort_on_fail
+		  	deploy_master $component $abort_on_fail deploy
 			iter=$((iter+1))
 		  done
 	  else
@@ -644,7 +649,7 @@ case "${1}" in
 			log "Starting deployment of $new_release selected components"
 			log
 			fi
-			deploy_master $component $abort_on_fail
+			deploy_master $component $abort_on_fail deploy
 			iter=$((iter+1))
 		  done
 	  fi
@@ -660,7 +665,7 @@ case "${1}" in
 				log "Starting rollback of $new_release : All components"
 				log
 			  fi
-			  deploy_master $component $abort_on_fail
+			  deploy_master $component $abort_on_fail rollback
 			  iter=$((iter+1))
 		  done
 	  else
@@ -672,7 +677,7 @@ case "${1}" in
 				log "Starting rollback of $new_release : Selected components"
 				log
 			  fi
-			  deploy_master $component $abort_on_fail
+			  deploy_master $component $abort_on_fail rollback
 			  iter=$((iter+1))
 		  done
 	  fi
