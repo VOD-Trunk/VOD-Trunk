@@ -525,7 +525,7 @@ verify() {
 
 	
 
-	if [[ ! -z "$timestamp_release" -a "$timestamp_release" != " "  ]]
+	if [ ! -z "$timestamp_release" ]
 	then
 		timestamp_status=1
 	else
