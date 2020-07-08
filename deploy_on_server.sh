@@ -459,12 +459,13 @@ verify() {
 	releases_path=$2
 	current_build=$3
 	abort_on_fail=$4
+	action=$5
 	services_status=1
 
 	if  [ $component == "exm-admin-tool" ] || [ $component == "exm-client-cruise" ] || [ $component == "exm-client-startup" ] || [ $component == "exm-client-leftnav2" ] || [ $component == "LeftNav_Signage" ] || [ $component == "exm-client-lite" ]
 	then
 		timestamp_build=`cat $current_build/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
-		if [ "$action" == "-d" ]
+		if [ "$action" == "deploy" ]
 		then
 			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep $component | cut -d ":" -f 2 | sed 's/ //g'`
 		else
@@ -477,7 +478,7 @@ verify() {
 	if  [ $component == "v2" ] || [ $component  == "location" ] || [ $component  == "excursion" ]
 	then
 		timestamp_build=`cat $releases_path/$component/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
-		if [ "$action" == "-d" ]
+		if [ "$action" == "deploy" ]
 		then
 			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep $component | cut -d ":" -f 2 | sed 's/ //g'`
 		else
@@ -611,7 +612,7 @@ deploy_master() {
 	fi
 
 	current_build=$(get_current_build $component | cut -d ":" -f 1)
-	verify $component $releases_path $current_build $abort_on_fail
+	verify $component $releases_path $current_build $abort_on_fail $action
 }
 
 #main script
