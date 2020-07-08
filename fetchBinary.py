@@ -17,6 +17,9 @@ action = sys.argv[3]
 workspace = sys.argv[4]
 components = sys.argv[5]
 partial_deploy = 2
+builds_file_path = workspace + "/tmp/component_build_mapping.txt"
+with open(builds_file_path, 'w') as f:
+        f.truncate()
 
 logging.basicConfig(filename= workspace +'/logs/fetchBinaryLogs.log', filemode='a', format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s', datefmt='%H:%M:%S', level=logging.DEBUG)
 releasesPath = workspace + '/Releases/'
@@ -220,11 +223,8 @@ if action == "Deploy":
             else:
                 logging.info("Couldn't reach the provided url with response : "+ str(response.status_code) + "\n")
 
-    builds_file_path = workspace + "/tmp/component_build_mapping.txt"
-    with open(builds_file_path, 'w') as f:
-        f.truncate()
-    for key, value in component_build_mapping.items():
-        with open(builds_file_path, 'a+') as f:
-            f.write(str(key) + " : " + str(value) + "\n")
+            for key, value in component_build_mapping.items():
+                with open(builds_file_path, 'a+') as f:
+                    f.write(component + " : " + str(component_build_mapping[componentConfluence]) + "\n")
 else:
     logging.info("fetchBinary stage is not required for actions other than Deploy.")
