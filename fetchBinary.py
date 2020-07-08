@@ -214,6 +214,7 @@ if action == "Deploy":
             else:
                 logging.info("Couldn't reach the provided url with response : "+ str(response.status_code) + "\n")
 
-    print(str(releaseBuildNumbers))
+    for index, element in enumerate(releaseBuildNumbers):
+        print(releaseBuildNumbers[index])
 else:
     logging.info("fetchBinary stage is not required for actions other than Deploy.")
