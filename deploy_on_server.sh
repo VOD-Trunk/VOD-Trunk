@@ -359,7 +359,7 @@ deploy_new_build() {
 		log
 		log "Unlinking $jar_symlink symlink..."
 		log
-		unlink $releases_path/jar_symlink
+		unlink $releases_path/$jar_symlink
 		log "Creating new symlink $jar_symlink ..."
 		log
 
