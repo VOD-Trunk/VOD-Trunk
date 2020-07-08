@@ -423,7 +423,7 @@ rollback() {
 		
 	fi
 
-	
+
 
 	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursion" ]
 	then
@@ -529,6 +529,12 @@ verify() {
 		fi
 	fi
 
+	if [ $component == "nacos" ] || [ $component  == "mutedaemon" ]
+	then
+		timestamp_build=`ls -l $releases_path | grep ".jar" | cut -d '>' -f 2 | cut -d '/' -f 6`
+		release_build=$new_release
+	fi
+
 	if  [ $component == "v2" ] || [ $component  == "location" ] || [ $component  == "excursion" ]
 	then
 		PID_FILE_SIZE=`stat -c%s /var/run/tomcat7.pid`
@@ -537,7 +543,7 @@ verify() {
 
 		if (( PID_FILE_SIZE > SIZE ));
 		then
-			log "Service Having PID"
+			log "tomcat7 service has a PID."
 			log
 		else
 			services_status=2
@@ -554,7 +560,7 @@ verify() {
 		tail -100 /var/log/tomcat7/catalina.out | grep -w "Starting Servlet Engine: Apache Tomcat"
 		if [ $? -eq 0 ]
 		then
-			log "TOMCAT SERVICE Started"
+			log "tomcat7 service has been started."
 			log
 		else
 			services_status=2
@@ -582,6 +588,45 @@ verify() {
 		fi
 	fi
 
+	if [ $component == "nacos" ] || [ $component  == "mutedaemon" ]
+	then
+		PID_FILE_SIZE=`stat -c%s /var/run/$component.pid`
+		SIZE=0
+		
+
+		if (( PID_FILE_SIZE > SIZE ));
+		then
+			log "$component Service has a PID."
+			log
+		else
+			services_status=2
+			if [ $abort_on_fail == "Abort" ]
+			then
+				log "Aborting mission during $component deployment as $component service was not restarted properly. Please check $component service. Thanks."
+				log
+				exit 1
+			fi
+
+		fi
+
+
+		ps -elf | grep -v grep | grep -q $component
+		if [ $? -eq 0 ]
+		then
+			log "$component service is running"
+			log
+		else
+			services_status=2
+			if [ $abort_on_fail == "Abort" ]
+			then
+				log "Aborting mission during $component deployment as $component service was not restarted properly. Please check $component service. Thanks."
+				log
+				exit 1
+			fi
+		fi
+
+	fi
+
 	
 
 	if [ "$timestamp_build" == "$release_build" ]
@@ -598,7 +643,12 @@ verify() {
 
 	if [ $timestamp_status -eq 1 ] && [ $services_status -eq 1 ]
 	then
-		statusArray[$component]="Successful( Build Number : $timestamp_build )"
+		if [ $component == "nacos" ] || [ $component  == "mutedaemon" ]
+		then 
+			statusArray[$component]="Successful( Release Number : $timestamp_build )"
+		else
+			statusArray[$component]="Successful( Build Number : $timestamp_build )"
+		fi
 		log
 		log
 		log
@@ -609,7 +659,12 @@ verify() {
 		log
 		#echo "Successful( Version : $timestamp_release )"
 	else
-		statusArray[$component]="Failed( Build Number : $timestamp_build )"
+		if [ $component == "nacos" ] || [ $component  == "mutedaemon" ]
+		then 
+			statusArray[$component]="Failed( Release Number : $timestamp_build )"
+		else
+			statusArray[$component]="Failed( Build Number : $timestamp_build )"
+		fi
 		log
 		log
 		log
