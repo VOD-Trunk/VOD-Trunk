@@ -115,8 +115,8 @@ get_current_build() {
 
 	if [ "$component" == "exm-diagnostic-app" ]
 	then
-			current_build=`ls -la /apps/clientmap/exm-diagnostic-app/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
-			releases_path='/apps/clientmap/exm-diagnostic-app'
+			current_build=`ls -la /apps/exm-diagnostic-app/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
+			releases_path='/apps/exm-diagnostic-app'
 	fi
 
 	if  [ "$component" == "exm-client-lite" ]
