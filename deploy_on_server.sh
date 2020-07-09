@@ -3,6 +3,7 @@
 #Author : Abhishek Chadha
 #Last modified : 7/1/2020
 
+
 ts=`date +'%s'`
 logfile='/root/Releases/deployment-$ts.log'
 new_release=$2
@@ -360,12 +361,12 @@ deploy_new_build() {
 			if [ ! -d $releases_path/releases/$new_release ]
 			then
 				mkdir -p $releases_path/releases/$new_release
-			elif [ -d $releases_path/releases/$new_release ]
-			then
-				for i in `ls $releases_path/releases/$new_release`
-				do
-					rm -rf $releases_path/releases/$new_release/$i
-				done
+			#elif [ -d $releases_path/releases/$new_release ]
+			#then
+			#	for i in `ls $releases_path/releases/$new_release`
+			#	do
+			#		rm -rf $releases_path/releases/$new_release/$i
+			#	done
 			fi
 		fi
 		
@@ -408,8 +409,12 @@ deploy_new_build() {
 		log
 		log "Copying properties.uie file to $releases_path/releases/$new_release"
 		log
-		prop_file=`ls -la $releases_path | grep "properties.uie" | cut -d ">" -f 2 | sed 's/ //g'`
-		cp $prop_file $releases_path/releases/$new_release
+		if [ "$component" == "nacos"]
+		then
+			cp $releases_path/Backup/$new_release/properties.uie $releases_path/releases/$new_release
+		else
+			cp $releases_path/Backup/$new_release/*.properties $releases_path/releases/$new_release
+		fi
 
 		log "Current properties.uie symlink is :"
 		log
@@ -668,7 +673,7 @@ verify() {
 		release_build="$new_release"
 	fi
 
-	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursion" ]
+	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursion" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]
 	then
 		PID_FILE_SIZE=`stat -c%s /var/run/tomcat7.pid`
 		SIZE=0
