@@ -79,6 +79,8 @@ log(){
 
 get_current_build() {
 
+	### This function returns the build that is present for a component before new deployment. It returns the path where symlink/component is present. These two variables are used throughout the code.
+
 	component=$1
 
 	if [ "$component" == "exm-admin-tool" ]
@@ -170,6 +172,8 @@ get_current_build() {
 
 restart_services() {
 
+	### This function takes the component name and start/stop has input and accordingly starts or stops the relevant service if required.
+
 	component=$1
 	start_stop=$2
 	
@@ -205,11 +209,11 @@ restart_services() {
 		log	
 	fi
 	
-	if [ "$component" == "nacos" ] && [ "$start_stop" == "stop" ]
+	if ([ "$component" == "nacos" ] || [ "$component" == "mutedaemon" ]) && [ "$start_stop" == "stop" ]
 	then
-		log "Stopping nacos service..."
+		log "Stopping $component service..."
 		log
-		service nacos stop
+		service $component stop
 		log
 		sleep 5
 		log
@@ -217,21 +221,21 @@ restart_services() {
 		log	
 	fi
 
-	if [ "$component" == "nacos" ] && [ "$start_stop" == "start" ]
+	if ([ "$component" == "nacos" ] || [ "$component" == "mutedaemon" ]) && [ "$start_stop" == "start" ]
 	then
-		log "Starting nacos service..."
+		log "Starting $component service..."
 		log
-		service nacos start
+		service $component start
 		sleep 5
 		
-		nacos_status=`ps -ef | grep nacos.daemon.jar | wc -l`
+		service_status=`ps -ef | grep "$component" | wc -l`
 		
-		if [ $nacos_status -gt 1 ]
+		if [ $service_status -gt 1 ]
 		then
-			log "nacos started successfully."
+			log "$component started successfully."
 			log
 		else
-			log "nacos failed to start."
+			log "$component failed to start."
 			log
 		fi
 
@@ -242,6 +246,8 @@ restart_services() {
 }
 
 deploy_new_build() {
+
+	### This function contains all the deployment steps for each type of component. All tar files are deployed in one way and similarly all jar files in one way and all war files in one way.
 
 	new_release=$1
 	component=$2
@@ -304,7 +310,7 @@ deploy_new_build() {
 
 
 
-	#####Deployment of all .war files have the same steps. So usinf the same code for both in below code block.
+	#####Deployment of all .war files have the same steps. So using the same code for all in below code block.
 
 	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursion" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]
 	then
@@ -335,7 +341,7 @@ deploy_new_build() {
 		cp /root/Releases/$new_release/$component/* $releases_path/$component.war
 	fi
 
-	#####Deployment of nacos and mutedaemon have the same steps. So usinf the same code for both in below code block.
+	#####Deployment of nacos and mutedaemon have the same steps. So using the same code for both in below code block.
 
 	if  [ "$component"  == "nacos" ] || [ "$component"  == "mutedaemon" ]
 	then
@@ -361,12 +367,6 @@ deploy_new_build() {
 			if [ ! -d $releases_path/releases/$new_release ]
 			then
 				mkdir -p $releases_path/releases/$new_release
-			#elif [ -d $releases_path/releases/$new_release ]
-			#then
-			#	for i in `ls $releases_path/releases/$new_release`
-			#	do
-			#		rm -rf $releases_path/releases/$new_release/$i
-			#	done
 			fi
 		fi
 		
@@ -440,6 +440,8 @@ deploy_new_build() {
 
 		
 	fi
+
+	### Steps for node-mute service is different from all others. It is a zip file.
 
 	if [ "$component" == "mute" ]
 	then
@@ -520,6 +522,8 @@ deploy_new_build() {
 }
 
 rollback() {
+
+	### Rollback function makes use of the Backup folder which contains the build that was there prior to this deployment.
 
 	current_build=$1
 	component=$2
@@ -622,7 +626,7 @@ rollback() {
 
 verify() {
 
-	#This function is untested. Need to have the timestamp.txt updated in all artifacts of a single release.
+	### This function compares the Build Number present in the component after deployment/rollback and also tests whether related service has been restarted or not. If both checks are satisfied it marks the activity successful.
 
 	component=$1
 	releases_path=$2
@@ -823,6 +827,8 @@ verify() {
 }
 
 deploy_master() {
+
+	### This is the main function which calls all the other functions according to the script arguments like 1) Component to be deployed. 2) To abort mission on failure or proceed 3) To deploy or rollabck  etc etc...
 
 	component=$1
 	abort_on_fail=$2
