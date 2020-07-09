@@ -421,7 +421,12 @@ deploy_new_build() {
 		log "Creating new symlink properties.uie ..."
 		log
 
-		ln -s $releases_path/releases/$new_release/properties.uie $releases_path/properties.uie
+		if [ "$component" == "nacos" ]
+		then
+			ln -s $releases_path/releases/$new_release/properties.uie $releases_path/properties.uie
+		else
+			ln -s $releases_path/releases/$new_release/*.properties $releases_path/properties.uie
+		fi
 
 		log "New properties.uie symlink is :"
 		log
@@ -626,7 +631,7 @@ verify() {
 		timestamp_build=`cat $current_build/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
 		if [ "$action" == "deploy" ]
 		then
-			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep "$component " | cut -d ":" -f 2 | sed 's/ //g'`
+			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep -w "$component " | cut -d ":" -f 2 | sed 's/ //g'`
 		else
 			rollback_build=`cd $releases_path/Backup/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
 			release_build=`cat $releases_path/Backup/$rollback_build/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
@@ -639,7 +644,7 @@ verify() {
 		timestamp_build=`cat $releases_path/$component/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
 		if [ "$action" == "deploy" ]
 		then
-			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep "$component " | cut -d ":" -f 2 | sed 's/ //g'`
+			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep -w "$component " | cut -d ":" -f 2 | sed 's/ //g'`
 		else
 			release_build=`cat cat $releases_path/Backup/$component/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
 		fi
@@ -650,7 +655,7 @@ verify() {
 		timestamp_build=`cat $current_build/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
 		if [ "$action" == "deploy" ]
 		then
-			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep "$component " | cut -d ":" -f 2 | sed 's/ //g'`
+			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep -w "$component " | cut -d ":" -f 2 | sed 's/ //g'`
 		else
 			rollback_build=`cd $releases_path/Backup/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
 			release_build=`cat $releases_path/Backup/$rollback_build/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
