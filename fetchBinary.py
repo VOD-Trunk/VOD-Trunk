@@ -198,6 +198,14 @@ if action == "Deploy":
                 component = "location"
             elif componentConfluence == "Mute Daemon":
                 component = "mutedaemon"
+            elif componentConfluence == "EXM Diagnostic Application":
+                component = "exm-diagnostic-app"
+            elif componentConfluence == "EXM Diagnostic plugin":
+                component = "diagnostics"
+            elif componentConfluence == "EXM Notification plugin":
+                component = "notification-service"
+            elif componentConfluence == "Mute Status Service":
+                component = "mute"
 
             newReleaseDir = releasesPath + relName
 

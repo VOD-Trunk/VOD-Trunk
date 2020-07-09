@@ -50,7 +50,20 @@ else
 		elif [ "${choice_list[$i]}" == "Exm-v2-plugin-location" ]
 		then
 			choice_list[$i]="location"
+		elif [ "${choice_list[$i]}" == "EXM Diagnostic Application" ]
+		then
+			choice_list[$i]="exm-diagnostic-app"
+		elif [ "${choice_list[$i]}" == "EXM Diagnostic plugin" ]
+		then
+			choice_list[$i]="diagnostics"
+		elif [ "${choice_list[$i]}" == "EXM Notification plugin" ]
+		then
+			choice_list[$i]="notification-service"
+		elif [ "${choice_list[$i]}" == "Mute Status Service" ]
+		then
+			choice_list[$i]="mute"
 		fi
+
 	done
 fi
 
@@ -67,65 +80,89 @@ get_current_build() {
 
 	component=$1
 
-	if [ $component == "exm-admin-tool" ]
+	if [ "$component" == "exm-admin-tool" ]
 	then
 			current_build=`ls -la /apps/exm-admin-tool/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
 			releases_path='/apps/exm-admin-tool'
 	fi
 
-	if [ $component == "exm-client-cruise" ]
+	if [ "$component" == "exm-client-cruise" ]
 	then
-			current_build=`ls -la /apps/clientmap/exm-client-cruise | grep current | cut -d '>' -f 2 | sed 's/ //g'`
+			current_build=`ls -la /apps/clientmap/exm-client-cruise/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
 			releases_path='/apps/clientmap/exm-client-cruise'
 	fi
 
-	if [ $component == "exm-client-startup" ]
+	if [ "$component" == "exm-client-startup" ]
 	then
 			current_build=`ls -la /apps/clientmap/exm-client-startup/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
 			releases_path='/apps/clientmap/exm-client-startup'
 	fi
 
-	if [ $component == "exm-client-leftnav2" ]
+	if [ "$component" == "exm-client-leftnav2" ]
 	then
 			current_build=`ls -la /apps/clientmap/exm-client-leftnav2/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
 			releases_path='/apps/clientmap/exm-client-leftnav2'
 	fi
 
-	if [ $component == "LeftNav_Signage" ]
+	if [ "$component" == "exm-client-leftnav2-signage" ]
 	then
 			current_build=`ls -la /apps/clientmap/exm-client-leftnav2-signage/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
 			releases_path='/apps/clientmap/exm-client-leftnav2-signage'
 	fi
 
-	if [  $component == "v2" ]
+	if [ "$component" == "exm-diagnostic-app" ]
 	then
-			current_build='/var/lib/tomcat7/hosts/prod.uiexm.com/webapps/v2.war'
-			releases_path='/var/lib/tomcat7/hosts/prod.uiexm.com/webapps'
+			current_build=`ls -la /apps/clientmap/exm-diagnostic-app/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
+			releases_path='/apps/clientmap/exm-diagnostic-app'
 	fi
 
-	if [ $component == "nacos" ]
-	then
-			current_build=`ls -la /usr/local/nacos/ | grep nacos.daemon.jar | cut -d '>' -f 2 | sed 's/ //g' | cut -d '/' -f 6`
-			releases_path='/usr/local/nacos'
-	fi
-
-	if [ $component == "mutedaemon" ]
-	then
-			current_build=`ls -la /usr/local/mutedaemon/ | grep mutedaemon.jar | cut -d '>' -f 2 | sed 's/ //g' | cut -d '/' -f 6`
-			releases_path='/usr/local/mutedaemon'
-	fi
-
-	if  [ $component == "exm-client-lite" ]
+	if  [ "$component" == "exm-client-lite" ]
 	then
 			current_build=`ls -la /apps/clientmap/exm-client-lite/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
 			releases_path='/apps/clientmap/exm-client-lite'
 	fi
 
-	if  [ $component == "location" ]
+	if  [ "$component" == "mute" ]
+	then
+			current_build=`ls -la /apps/mute/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
+			releases_path='/apps/mute'
+	fi
+
+	if [ "$component" == "v2" ]
+	then
+			current_build='/var/lib/tomcat7/hosts/prod.uiexm.com/webapps/v2.war'
+			releases_path='/var/lib/tomcat7/hosts/prod.uiexm.com/webapps'
+	fi
+
+	if  [ "$component" == "location" ]
 	then
 			current_build='/var/lib/tomcat7/hosts/prod.uiexm.com/webapps/location.war'
 			releases_path='/var/lib/tomcat7/hosts/prod.uiexm.com/webapps'
 	fi
+
+	if [ "$component" == "diagnostics" ]
+	then
+			current_build='/var/lib/tomcat7/hosts/prod.uiexm.com/webapps/diagnostics.war'
+			releases_path='/var/lib/tomcat7/hosts/prod.uiexm.com/webapps'
+	fi
+
+	if [ "$component" == "notification-service" ]
+	then
+			current_build='/var/lib/tomcat7/hosts/prod.uiexm.com/webapps/notification-service.war'
+			releases_path='/var/lib/tomcat7/hosts/prod.uiexm.com/webapps'
+	fi
+
+	if [ "$component" == "nacos" ]
+	then
+			current_build=`ls -la /usr/local/nacos/ | grep nacos.daemon.jar | cut -d '>' -f 2 | sed 's/ //g' | cut -d '/' -f 6`
+			releases_path='/usr/local/nacos'
+	fi
+
+	if [ "$component" == "mutedaemon" ]
+	then
+			current_build=`ls -la /usr/local/mutedaemon/ | grep mutedaemon.jar | cut -d '>' -f 2 | sed 's/ //g' | cut -d '/' -f 6`
+			releases_path='/usr/local/mutedaemon'
+	fi	
 
 	echo "$current_build:$releases_path"
 }
@@ -135,7 +172,7 @@ restart_services() {
 	component=$1
 	start_stop=$2
 	
-	if  ([ $component == "v2" ] || [ $component  == "location" ]) && [ $start_stop == "stop" ]
+	if  ([ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]) && [ "$start_stop" == "stop" ]
 	then
 		log "Stopping tomcat7 service for $component..."
 		log
@@ -147,7 +184,7 @@ restart_services() {
 		log	
 	fi
 
-	if  ([ $component == "v2" ] || [ $component  == "location" ]) && [ $start_stop == "start" ]
+	if  ([ "$component" == "v2" ] || [ "$component"  == "location" ]) && [ "$start_stop" == "start" ]
 	then
 		log "Starting tomcat7 service for $component..."
 		log
@@ -167,7 +204,7 @@ restart_services() {
 		log	
 	fi
 	
-	if [ $component == "nacos" ] && [ $start_stop == "stop" ]
+	if [ "$component" == "nacos" ] && [ "$start_stop" == "stop" ]
 	then
 		log "Stopping nacos service..."
 		log
@@ -179,7 +216,7 @@ restart_services() {
 		log	
 	fi
 
-	if [ $component == "nacos" ] && [ $start_stop == "start" ]
+	if [ "$component" == "nacos" ] && [ "$start_stop" == "start" ]
 	then
 		log "Starting nacos service..."
 		log
@@ -212,7 +249,7 @@ deploy_new_build() {
 
 	#####Deployment of all clients have the same steps. So using the same code for both in below code block.
 
-	if  [ $component == "exm-admin-tool" ] || [ $component == "exm-client-cruise" ] || [ $component == "exm-client-startup" ] || [ $component == "exm-client-leftnav2" ] || [ $component == "exm-client-leftnav2-signage" ] || [ $component == "exm-client-lite" ]
+	if  [ "$component" == "exm-admin-tool" ] || [ "$component" == "exm-client-cruise" ] || [ "$component" == "exm-client-startup" ] || [ "$component" == "exm-client-leftnav2" ] || [ "$component" == "exm-client-leftnav2-signage" ] || [ "$component" == "exm-client-lite" ] || [ "$component" == "exm-diagnostic-app" ]
 	then
 		log "Starting the deployment of $component"
 		log
@@ -268,7 +305,7 @@ deploy_new_build() {
 
 	#####Deployment of all .war files have the same steps. So usinf the same code for both in below code block.
 
-	if  [ $component == "v2" ] || [ $component  == "location" ] || [ $component  == "excursion" ]
+	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursion" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]
 	then
 		log "Starting deployment of $component"
 		log
@@ -299,7 +336,7 @@ deploy_new_build() {
 
 	#####Deployment of nacos and mutedaemon have the same steps. So usinf the same code for both in below code block.
 
-	if  [ $component  == "nacos" ] || [ $component  == "mutedaemon" ]
+	if  [ "$component"  == "nacos" ] || [ "$component"  == "mutedaemon" ]
 	then
 		log "Starting deployment of $component"
 		log
@@ -393,6 +430,83 @@ deploy_new_build() {
 
 		
 	fi
+
+	if [ "$component" == "mute" ]
+	then
+		log "Starting the deployment of $component"
+		log
+		log "Taking backup of the current build."
+		log
+
+		if [ ! -d $releases_path/Backup ]
+		then
+			mkdir -p $releases_path/Backup
+		elif [ -d $releases_path/Backup ]
+		then
+			for i in `ls $releases_path/Backup`
+			do
+				rm -rf $releases_path/Backup/$i
+			done
+		fi
+		cp -r $current_build $releases_path/Backup
+
+		if [ ! -d $releases_path/releases ]
+		then
+			mkdir -p $releases_path/releases
+		elif [ -d $releases_path/releases ]
+		then
+			if [ ! -d $releases_path/releases/$new_release ]
+			then
+				mkdir -p $releases_path/releases/$new_release
+			elif [ -d $releases_path/releases/$new_release ]
+			then
+				for i in `ls $releases_path/releases/$new_release`
+				do
+					rm -rf $releases_path/releases/$new_release/$i
+				done
+			fi
+		fi
+
+		file_name=`ls /root/Releases/$new_release/$component/*.zip | cut -d "/" -f 6`
+
+		log "Unzipping $file_name ..."
+		log
+
+		unzip $file_name -d /root/Releases/$new_release/$component/
+
+		new_build=`cd /root/Releases/$new_release/$component/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
+
+		log "Copying $new_build to $releases_path/releases"
+		log
+
+		cp -r /root/Releases/$new_release/$component/$new_build $releases_path/releases/
+
+		link_present=`ls $releases_path | grep current | wc -l`
+
+		if [ $link_present == 1 ]
+		then 
+			log "Unlinking current symlink..."
+			log
+			log "current symlink is :"
+			log "`ls -l $releases_path | grep current`"
+			log
+
+			unlink $releases_path/current
+		fi
+
+		log "Creating new symlink current ..."
+		log
+
+		ln -s $releases_path/releases/$new_build/*.js $releases_path/current
+
+		log "New symlink is:"
+		log "`ls -l $releases_path | grep current`"
+		log
+	fi
+
+
+
+
 }
 
 rollback() {
@@ -401,7 +515,7 @@ rollback() {
 	component=$2
 	releases_path=$3
 
-	if  [ "$component" == "exm-admin-tool" ] || [ "$component" == "exm-client-cruise" ] || [ "$component" == "exm-client-startup" ] || [ "$component" == "exm-client-leftnav2" ] || [ "$component" == "LeftNav_Signage" ] || [ "$component" == "exm-client-lite" ]
+	if  [ "$component" == "exm-admin-tool" ] || [ "$component" == "exm-client-cruise" ] || [ "$component" == "exm-client-startup" ] || [ "$component" == "exm-client-leftnav2" ] || [ "$component" == "exm-client-leftnav2-signage" ] || [ "$component" == "exm-client-lite" ] || [ "$component" == "exm-diagnostic-app" ]
 	then
 
 		log "Starting rollback of $component"
@@ -427,7 +541,7 @@ rollback() {
 
 
 
-	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursion" ]
+	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursion" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]
 	then
 
 		log "Starting rollback of $component"
@@ -507,7 +621,7 @@ verify() {
 	action=$5
 	services_status=1
 
-	if  [ $component == "exm-admin-tool" ] || [ $component == "exm-client-cruise" ] || [ $component == "exm-client-startup" ] || [ $component == "exm-client-leftnav2" ] || [ $component == "LeftNav_Signage" ] || [ $component == "exm-client-lite" ]
+	if  [ "$component" == "exm-admin-tool" ] || [ "$component" == "exm-client-cruise" ] || [ "$component" == "exm-client-startup" ] || [ "$component" == "exm-client-leftnav2" ] || [ "$component" == "exm-client-leftnav2-signage" ] || [ "$component" == "exm-client-lite" ] || [ "$component" == "exm-diagnostic-app" ]
 	then
 		timestamp_build=`cat $current_build/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
 		if [ "$action" == "deploy" ]
@@ -520,7 +634,7 @@ verify() {
 
 	fi
 
-	if  [ $component == "v2" ] || [ $component  == "location" ] || [ $component  == "excursion" ]
+	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursion" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]
 	then
 		timestamp_build=`cat $releases_path/$component/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
 		if [ "$action" == "deploy" ]
@@ -531,13 +645,13 @@ verify() {
 		fi
 	fi
 
-	if [ $component == "nacos" ] || [ $component  == "mutedaemon" ]
+	if [ "$component" == "nacos" ] || [ "$component"  == "mutedaemon" ]
 	then
 		timestamp_build=`ls -l $releases_path | grep ".jar" | cut -d '>' -f 2 | cut -d '/' -f 6`
 		release_build="$new_release"
 	fi
 
-	if  [ $component == "v2" ] || [ $component  == "location" ] || [ $component  == "excursion" ]
+	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursion" ]
 	then
 		PID_FILE_SIZE=`stat -c%s /var/run/tomcat7.pid`
 		SIZE=0
@@ -590,7 +704,7 @@ verify() {
 		fi
 	fi
 
-	if [ $component == "nacos" ] || [ $component  == "mutedaemon" ]
+	if [ "$component" == "nacos" ] || [ "$component"  == "mutedaemon" ]
 	then
 		PID_FILE_SIZE=`stat -c%s /var/run/$component.pid`
 		SIZE=0
@@ -695,7 +809,7 @@ deploy_master() {
 	releases_path=$(get_current_build $component | cut -d ":" -f 2)
 	current_build=$(get_current_build $component | cut -d ":" -f 1)
 
-	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "nacos" ] || [ "$component"  == "excursion" ]
+	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "nacos" ] || [ "$component"  == "excursion" ] || [  "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]
 	then
 		restart_services $component stop
 	fi
@@ -706,7 +820,7 @@ deploy_master() {
 		rollback $new_release $component $releases_path $current_build
 	fi
 
-	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "nacos" ] || [ "$component"  == "excursion" ]
+	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "nacos" ] || [ "$component"  == "excursion" ] || [  "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]
 	then
 		restart_services $component start
 	fi
