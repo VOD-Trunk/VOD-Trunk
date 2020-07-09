@@ -626,7 +626,7 @@ verify() {
 		timestamp_build=`cat $current_build/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
 		if [ "$action" == "deploy" ]
 		then
-			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep -w $component | cut -d ":" -f 2 | sed 's/ //g'`
+			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep "$component " | cut -d ":" -f 2 | sed 's/ //g'`
 		else
 			rollback_build=`cd $releases_path/Backup/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
 			release_build=`cat $releases_path/Backup/$rollback_build/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
@@ -639,7 +639,7 @@ verify() {
 		timestamp_build=`cat $releases_path/$component/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
 		if [ "$action" == "deploy" ]
 		then
-			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep -w $component | cut -d ":" -f 2 | sed 's/ //g'`
+			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep "$component " | cut -d ":" -f 2 | sed 's/ //g'`
 		else
 			release_build=`cat cat $releases_path/Backup/$component/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
 		fi
@@ -650,7 +650,7 @@ verify() {
 		timestamp_build=`cat $current_build/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
 		if [ "$action" == "deploy" ]
 		then
-			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep -w $component | cut -d ":" -f 2 | sed 's/ //g'`
+			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep "$component " | cut -d ":" -f 2 | sed 's/ //g'`
 		else
 			rollback_build=`cd $releases_path/Backup/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
 			release_build=`cat $releases_path/Backup/$rollback_build/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
