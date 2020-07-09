@@ -124,7 +124,7 @@ get_current_build() {
 
 	if  [ "$component" == "mute" ]
 	then
-			current_build=`ls -la /apps/mute/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
+			current_build=`ls -la /apps/mute/ | grep current | cut -d '>' -f 2 | cut -d '/' -f 1-5| sed 's/ //g'`
 			releases_path='/apps/mute'
 	fi
 
@@ -472,7 +472,7 @@ deploy_new_build() {
 		log "Unzipping $file_name ..."
 		log
 
-		unzip $file_name -d /root/Releases/$new_release/$component/
+		unzip /root/Releases/$new_release/$component/$file_name -d /root/Releases/$new_release/$component/
 
 		new_build=`cd /root/Releases/$new_release/$component/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
 
@@ -644,6 +644,17 @@ verify() {
 			release_build=`cat cat $releases_path/Backup/$component/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
 		fi
 	fi
+
+	if [ "$component" == "mute" ]
+	then
+		timestamp_build=`cat $current_build/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
+		if [ "$action" == "deploy" ]
+		then
+			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep $component | cut -d ":" -f 2 | sed 's/ //g'`
+		else
+			rollback_build=`cd $releases_path/Backup/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
+			release_build=`cat $releases_path/Backup/$rollback_build/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
+		fi
 
 	if [ "$component" == "nacos" ] || [ "$component"  == "mutedaemon" ]
 	then
