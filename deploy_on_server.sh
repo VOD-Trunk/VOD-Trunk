@@ -185,12 +185,12 @@ restart_services() {
 		log	
 	fi
 
-	if  ([ "$component" == "v2" ] || [ "$component"  == "location" ]) && [ "$start_stop" == "start" ]
+	if  ([ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]) && [ "$start_stop" == "start" ]
 	then
 		log "Starting tomcat7 service for $component..."
 		log
 		service tomcat7 start #Start_Tomcat_Service
-		sleep 30
+		sleep 15
 		tomcat_status=`service tomcat7 status | grep running | wc -l`
 		
 		if [ $tomcat_status == 1 ]
