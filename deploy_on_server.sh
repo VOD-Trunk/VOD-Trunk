@@ -655,6 +655,7 @@ verify() {
 			rollback_build=`cd $releases_path/Backup/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
 			release_build=`cat $releases_path/Backup/$rollback_build/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
 		fi
+	fi
 
 	if [ "$component" == "nacos" ] || [ "$component"  == "mutedaemon" ]
 	then
