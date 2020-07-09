@@ -190,7 +190,7 @@ restart_services() {
 		log "Starting tomcat7 service for $component..."
 		log
 		service tomcat7 start #Start_Tomcat_Service
-		sleep 20
+		sleep 15
 		tomcat_status=`service tomcat7 status | grep running | wc -l`
 		
 		if [ $tomcat_status == 1 ]
@@ -310,7 +310,7 @@ deploy_new_build() {
 	then
 		log "Starting deployment of $component"
 		log
-		log "Copying $releases_path/$component.war file to /tmp for backup."
+		log "Copying $releases_path/$component.war file to $releases_path/Backup for backup."
 		log
 		log "Taking backup of the current build."
 		log
@@ -409,7 +409,7 @@ deploy_new_build() {
 		log
 		log "Copying properties.uie file to $releases_path/releases/$new_release"
 		log
-		if [ "$component" == "nacos"]
+		if [ "$component" == "nacos" ]
 		then
 			cp $releases_path/Backup/$new_release/properties.uie $releases_path/releases/$new_release
 		else
@@ -695,20 +695,20 @@ verify() {
 		fi
 
 		
-		tail -100 /var/log/tomcat7/catalina.out | grep -w "Starting Servlet Engine: Apache Tomcat"
-		if [ $? -eq 0 ]
-		then
-			log "tomcat7 service has been started."
-			log
-		else
-			services_status=2
-			if [ $abort_on_fail == "Abort" ]
-			then
-				log "Aborting the deployment as tomcat was not restarted properly. Please check tomcat7 service. Thanks."
-				log
-				exit 1
-			fi
-		fi
+		#tail -100 /var/log/tomcat7/catalina.out | grep -w "Starting Servlet Engine: Apache Tomcat"
+		#if [ $? -eq 0 ]
+		#then
+		#	log "tomcat7 service has been started."
+		#	log
+		#else
+		#	services_status=2
+		#	if [ $abort_on_fail == "Abort" ]
+		#	then
+		#		log "Aborting the deployment as tomcat was not restarted properly. Please check tomcat7 service. Thanks."
+		#		log
+		#		exit 1
+		#	fi
+		#fi
 
 		ps -elf | grep -v grep | grep -q tomcat7
 		if [ $? -eq 0 ]
