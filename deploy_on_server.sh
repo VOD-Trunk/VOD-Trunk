@@ -408,13 +408,8 @@ deploy_new_build() {
 		log
 		log "Copying properties.uie file to $releases_path/releases/$new_release"
 		log
-		if [ "$component" == "nacos" ]
-		then
-			cp $releases_path/properties.uie $releases_path/releases/$new_release
-		else
-			prop_file=`ls -la $releases_path | grep "properties.uie" | cut -d ">" -f 2 | sed 's/ //g'`
-			cp $prop_file $releases_path/releases/$new_release
-		fi
+		prop_file=`ls -la $releases_path | grep "properties.uie" | cut -d ">" -f 2 | sed 's/ //g'`
+		cp $prop_file $releases_path/releases/$new_release
 
 		log "Current properties.uie symlink is :"
 		log
