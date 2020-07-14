@@ -4,35 +4,33 @@ node {
 
         stage('checkArtifactProperty') {
                 
-                sh """
-                    #!/bin/bash
-                    if [ "${Deployment_env}" == "Support" ] && [ "${Activity}" == "Deploy" ]
+            sh """
+                #!/bin/bash
+                if [ "${Deployment_env}" == "Support" ] && [ "${Activity}" == "Deploy" ]
+                then
+
+                    #isQADone=`curl -sS -u dro7535:Hsc@start1 -X GET 'http://artifactory.tools.ocean.com/artifactory/api/storage/libs-release-local/com/uievolution/exm/exm/"${Release_version}"?properties=QA' | grep "Done" | wc -l`
+                    isQADone=0
+                    if [ $isQADone -eq 1 ]
                     then
-
-                        #isQADone=`curl -sS -u dro7535:Hsc@start1 -X GET 'http://artifactory.tools.ocean.com/artifactory/api/storage/libs-release-local/com/uievolution/exm/exm/"${Release_version}"?properties=QA' | grep "Done" | wc -l`
-                        isQADone=0
-                        if [ $isQADone -eq 1 ]
-                        then
-                            echo "We are good to deploy in Support environment."
-                        else
-                            echo "[FAILURE] Aborting deployment!! Please deploy and test in QA environment first."
-                            exit 1
-                        fi
-
+                        echo "We are good to deploy in Support environment."
                     else
-
-                        #isSupportDone=`curl -sS -u dro7535:Hsc@start1 -X GET 'http://artifactory.tools.ocean.com/artifactory/api/storage/libs-release-local/com/uievolution/exm/exm/"${Release_version}"?properties=Support' | grep "Done" | wc -l`
-                        isSupportDone=0
-                        if [ $isSupportDone -eq 1 ]
-                        then
-                            echo "We are good to deploy in Production environment."
-                        else
-                            echo "[FAILURE] Aborting deployment!! Please deploy and test in Support environment first."
-                            exit 1
-                        fi
+                        exit "[FAILURE] Aborting deployment!! Please deploy and test in QA environment first."
                     fi
-                    
-                """
+
+                else
+
+                    #isSupportDone=`curl -sS -u dro7535:Hsc@start1 -X GET 'http://artifactory.tools.ocean.com/artifactory/api/storage/libs-release-local/com/uievolution/exm/exm/"${Release_version}"?properties=Support' | grep "Done" | wc -l`
+                    isSupportDone=0
+                    if [ $isSupportDone -eq 1 ]
+                    then
+                        echo "We are good to deploy in Production environment."
+                    else
+                        exit "[FAILURE] Aborting deployment!! Please deploy and test in Support environment first."
+                    fi
+                fi
+                
+            """
         }
     
         stage('git-checkout') {
