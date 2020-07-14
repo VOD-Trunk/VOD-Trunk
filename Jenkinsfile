@@ -15,7 +15,7 @@ node {
                     then
                         echo "We are good to deploy in Support environment."
                     else
-                        exit "[FAILURE] Aborting deployment!! Please deploy and test in QA environment first."
+                        echo "[FAILURE] Aborting deployment!! Please deploy and test in QA environment first."; exit 1
                     fi
 
                 else
@@ -26,7 +26,7 @@ node {
                     then
                         echo "We are good to deploy in Production environment."
                     else
-                        exit "[FAILURE] Aborting deployment!! Please deploy and test in Support environment first."
+                        echo "[FAILURE] Aborting deployment!! Please deploy and test in Support environment first."; exit 1
                     fi
                 fi
                 
