@@ -66,6 +66,7 @@ node {
        }
         
     } catch(Exception err) {
+        echo "[FAILURE] Aborting deployment!! Please deploy and test in Support environment first."
         currentBuild.result = 'FAILURE'
     }
 
