@@ -1,5 +1,12 @@
 node {
 
+        stage('git-checkout') {
+                
+                checkout scm
+                
+                sh "chmod 755 ${env.WORKSPACE}/*"
+        }
+
         if( "${Activity}" != "Promote" ){
 
             stage('checkArtifactProperty') {
@@ -15,13 +22,7 @@ node {
                 """
             }
         
-            stage('git-checkout') {
-                
-                checkout scm
-                
-                sh "chmod 755 ${env.WORKSPACE}/*"
-            }
-            
+                   
             def jconf = readJSON file: "${env.WORKSPACE}/jenkinsconfig.json"
 
             def confluence_page = jconf.jenkins.Release."${Release_version}"
