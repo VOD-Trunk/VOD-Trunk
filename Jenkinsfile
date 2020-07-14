@@ -2,7 +2,7 @@ node {
 
     try {
 
-        if( $Activity == "Promote" && $Deployment_env == "Support" ) {
+        if( "${Activity}" == "Promote" && "${Deployment_env}" == "Support" ) {
                     echo "${Deployment_env}"
         }
 
