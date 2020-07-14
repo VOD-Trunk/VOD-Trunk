@@ -2,12 +2,8 @@ node {
 
     try {
 
-        if( $Activity == "Promote" ) {
-            stage('promote'){
-                if( $Deployment_env == "Support" ) {
+        if( $Activity == "Promote" && $Deployment_env == "Support" ) {
                     echo "${Deployment_env}"
-                }
-            }
         }
 
         else{
