@@ -3,37 +3,33 @@ node {
     try {
 
         stage('checkArtifactProperty') {
-            def res = 0
-            res = sh (script: '''
-                        #!/bin/bash
-                        if [ "${Deployment_env}" == "Support" ] && [ "${Activity}" == "Deploy" ]
-                        then
+            sh """
+                #!/bin/bash
+                if [ "${Deployment_env}" == "Support" ] && [ "${Activity}" == "Deploy" ]
+                then
 
-                            #isQADone=`curl -sS -u dro7535:Hsc@start1 -X GET 'http://artifactory.tools.ocean.com/artifactory/api/storage/libs-release-local/com/uievolution/exm/exm/"${Release_version}"?properties=QA' | grep "Done" | wc -l`
-                            isQADone=0
-                            if [ $isQADone -eq 1 ]
-                            then
-                                echo "We are good to deploy in Support environment."
-                            else
-                                 exit 1
-                            fi
+                    #isQADone=`curl -sS -u dro7535:Hsc@start1 -X GET 'http://artifactory.tools.ocean.com/artifactory/api/storage/libs-release-local/com/uievolution/exm/exm/"${Release_version}"?properties=QA' | grep "Done" | wc -l`
+                    isQADone=0
+                    if [ $isQADone -eq 1 ]
+                    then
+                        echo "We are good to deploy in Support environment."
+                    else
+                         exit 1
+                    fi
 
-                        else
+                else
 
-                            #isSupportDone=`curl -sS -u dro7535:Hsc@start1 -X GET 'http://artifactory.tools.ocean.com/artifactory/api/storage/libs-release-local/com/uievolution/exm/exm/"${Release_version}"?properties=Support' | grep "Done" | wc -l`
-                            isSupportDone=0
-                            if [ $isSupportDone -eq 1 ]
-                            then
-                                echo "We are good to deploy in Production environment."
-                            else
-                                 exit 1
-                            fi
-                        fi
+                    #isSupportDone=`curl -sS -u dro7535:Hsc@start1 -X GET 'http://artifactory.tools.ocean.com/artifactory/api/storage/libs-release-local/com/uievolution/exm/exm/"${Release_version}"?properties=Support' | grep "Done" | wc -l`
+                    isSupportDone=0
+                    if [ $isSupportDone -eq 1 ]
+                    then
+                        echo "We are good to deploy in Production environment."
+                    else
+                         exit 1
+                    fi
+                fi
                         
-                    '''
-                    , returnStatus:true)
-        if (res != 0) {
-          currentBuild.result = 'ABORTED'
+            """
         }
     
         stage('git-checkout') {
