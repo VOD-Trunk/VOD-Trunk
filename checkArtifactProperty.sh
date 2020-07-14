@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 
 Deployment_env=$1
 Activity=$2
