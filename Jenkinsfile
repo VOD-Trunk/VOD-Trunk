@@ -1,7 +1,5 @@
 node {
 
-    try {
-
         if( "${Activity}" != "Promote" ){
 
             stage('checkArtifactProperty') {
@@ -96,9 +94,4 @@ node {
             }
         }
         
-    } catch(Exception err) {
-        echo "[FAILURE] Aborting deployment!! Please deploy and test in a lower environment first."
-        currentBuild.result = 'FAILURE'
-    }
-
 }
