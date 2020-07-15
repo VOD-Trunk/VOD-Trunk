@@ -12,6 +12,7 @@
 		},
 		
 		"environments": {
+			"None": { "None": "000.000.000.000" },
 			"XS": { "XS": "000.000.000.000" },
 			"Support": { "Support": "192.168.248.161" },
 			"Production": {
