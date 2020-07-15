@@ -1,10 +1,7 @@
 node {
 
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: '${Artifactory_Credentials}',
-                    usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-
-        println(env.USERNAME)
-        }
+                    usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']])
 
         stage('git-checkout') {
                 

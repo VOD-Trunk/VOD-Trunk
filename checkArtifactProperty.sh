@@ -12,8 +12,6 @@ then
     #isQADone=`curl -sS -u "$UserName":"$Password" -X GET 'http://artifactory.tools.ocean.com/artifactory/api/storage/libs-release-local/com/uievolution/exm/exm/"$Release_version"?properties=QA' | grep "Done" | wc -l`
     isQADone=1
 
-    echo "$isQADone"
-
     if [ ${isQADone} -eq 1 ]
     then
         echo "We are good to deploy in Support environment."

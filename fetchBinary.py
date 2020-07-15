@@ -19,6 +19,7 @@ components = sys.argv[5]
 username = sys.argv[6]
 password = sys.argv[7]
 partial_deploy = 2
+
 builds_file_path = workspace + "/tmp/component_build_mapping.txt"
 with open(builds_file_path, 'w') as f:
         f.truncate()
