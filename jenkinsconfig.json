@@ -6,21 +6,9 @@
 		},
 
 		"users": {
-			"admin": {
-				"operations": "Build,Deploy,Promote",
-				"env": "support,xs,prod",
-				"user_type": "Support"
-			},
-			"dro7535": {
-				"operations": "Build,Deploy,Promote",
-				"env": "support,xs,prod",
-				"user_type": "Super"
-			},
-			"qauser": {
-				"operations": "Deploy,Promote",
-				"env": "xs",
-				"user_type": "QA"
-			}
+			"admin": "Support",
+			"dro7535": "Super",
+			"qauser": "QA"
 		},
 		
 		"environments": {
