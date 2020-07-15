@@ -34,10 +34,12 @@ node {
 
             if("${Deployment_env}" == "Support") {
 
-                def ip = jconf.jenkins.environments."${Deployment_env}"
+                echo "${Deployment_env}"
+
+                def ipaddr = jconf.jenkins.environments."${Deployment_env}"
             } else{
 
-                def ip = jconf.jenkins.environments."${Deployment_env}"."${Ship_Name}"
+                def ipaddr = jconf.jenkins.environments."${Deployment_env}"."${Ship_Name}"
             }
          
             stage('fetchBinary') {
@@ -54,7 +56,7 @@ node {
 
                 sh """
                     #!/bin/bash
-                     ${env.WORKSPACE}/deployment_caller.sh "$ip" $Release_version $Activity "$Components" "${env.WORKSPACE}" "$abort_on_failure"
+                     ${env.WORKSPACE}/deployment_caller.sh "$ipaddr" $Release_version $Activity "$Components" "${env.WORKSPACE}" "$abort_on_failure"
                     
                 """
            }
