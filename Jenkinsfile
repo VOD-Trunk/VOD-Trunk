@@ -12,6 +12,14 @@ node {
             sh "chmod 755 ${env.WORKSPACE}/*"
     }
 
+    def jconf = readJSON file: "${env.WORKSPACE}/jenkinsconfig.json"
+
+    def confluence_page = jconf.jenkins.Release."${Release_version}"
+
+    def ipaddr = jconf.jenkins.environments."${Deployment_env}"."${Ship_Name}"
+
+    def user_role = jconf.jenkins.user_env."${Artifactory_Credentials}"
+
     if( "${Activity}" != "Promote" ){
 
         stage('checkArtifactProperty') {
@@ -26,16 +34,7 @@ node {
                         
             """
         }
-    
-               
-        def jconf = readJSON file: "${env.WORKSPACE}/jenkinsconfig.json"
-
-        def confluence_page = jconf.jenkins.Release."${Release_version}"
-
-        def ipaddr = jconf.jenkins.environments."${Deployment_env}"."${Ship_Name}"
-
-        def user_role = jconf.jenkins.user_env."${Artifactory_Credentials}"
-        
+          
      
         stage('fetchBinary') {
             
