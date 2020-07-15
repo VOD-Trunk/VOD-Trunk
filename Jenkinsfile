@@ -34,7 +34,7 @@ node {
 
             if( "${Deployment_env}" == "Support" || "${Deployment_env}" == "QA" || "${Deployment_env}" == "XS" ) {
 
-                def ip = jconf.jenkins.environments."${Deployment_env}".ipaddr
+                def ip = jconf.jenkins.environments."${Deployment_env}"
             } else{
 
                 def ip = jconf.jenkins.ips."${Deployment_env}"."${Ship_Name}"

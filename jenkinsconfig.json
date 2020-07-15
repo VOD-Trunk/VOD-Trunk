@@ -26,19 +26,8 @@
 		
 		"environments":
 		{
-			"XS": {
-				"mailIds": "Oceansupport@hsc.com,xicms-support-list@hsc.com",
-				"sourceEnv": "dev",
-				"mtChannelWebhook": "https://outlook.office.com/webhook/<<Remaining_Details>>",
-				"gitCOPBranch": "master"
-			},
-			"Support": {
-				"ipaddr": "192.168.248.161",
-				"mailIds": "Oceansupport@hsc.com,xicms-support-list@hsc.com",
-				"sourceEnv": "xs",
-				"mtChannelWebhook": "https://outlook.office.com/webhook/<<Remaining_Details>>",
-				"gitCOPBranch": "master"
-			},
+			"XS": "000.000.000.000",
+			"Support": "192.168.248.161",
 			"Production": {
 				"Royal": "10.10.68.120",
 				"Sun": "172.29.222.196",
