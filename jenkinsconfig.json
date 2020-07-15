@@ -53,11 +53,7 @@
 				"NODM": "10.114.114.50",
 				"VODM": "10.112.242.50",
 				"ZUDM": "10.9.192.53",
-				"OSDM": "10.9.156.53",
-				"mailIds": "Oceansupport@hsc.com,xicms-support-list@hsc.com",
-				"sourceEnv": "support",
-				"mtChannelWebhook": "https://outlook.office.com/webhook/<<Remaining_Details>>",
-				"gitCOPBranch": "master"
+				"OSDM": "10.9.156.53"
 			}  
 		}
 	}

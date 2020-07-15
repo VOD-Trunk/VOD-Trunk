@@ -20,6 +20,8 @@ node {
                 sh """
                     #!/bin/bash
 
+                    echo "${Deployment_env}"
+
                     ${env.WORKSPACE}/checkArtifactProperty.sh "${Deployment_env}" "${Activity}" "${Release_version}" "${env.USERNAME}" "${env.PASSWORD}"
 
                     
