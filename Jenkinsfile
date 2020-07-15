@@ -34,7 +34,7 @@ node {
 
         def ipaddr = jconf.jenkins.environments."${Deployment_env}"."${Ship_Name}"
 
-        def user_type = jconf.jenkins.users."${UserName}"
+        def user_type = jconf.jenkins.users."${env.USERNAME}"
         
      
         stage('fetchBinary') {
