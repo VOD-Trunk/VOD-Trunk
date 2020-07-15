@@ -5,7 +5,7 @@
 			"2.64.0": "xiCMS 2.64.0: Artifacts for Jenkins testing"
 		},
 
-		"users": {
+		"user_type": {
 			"admin": "Support",
 			"dro7535": "Super",
 			"qauser": "QA"
