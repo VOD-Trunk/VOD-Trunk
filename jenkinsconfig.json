@@ -6,21 +6,20 @@
 		},
 
 		"users": {
-			"rsingh": {
+			"admin": {
 				"operations": "Build,Deploy,Promote",
-				"env": "support,xs,prod"
+				"env": "support,xs,prod",
+				"user_type": "Support"
 			},
-			"drohilla": {
+			"dro7535": {
 				"operations": "Build,Deploy,Promote",
-				"env": "support,xs,prod"
-			},
-			"supportadmin": {
-				"operations": "Build,Deploy,Promote",
-				"env": "support,xs,prod"
+				"env": "support,xs,prod",
+				"user_type": "Super"
 			},
 			"qauser": {
 				"operations": "Deploy,Promote",
-				"env": "xs"
+				"env": "xs",
+				"user_type": "QA"
 			}
 		},
 		
