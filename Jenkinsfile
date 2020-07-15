@@ -34,7 +34,7 @@ node {
 
         def ipaddr = jconf.jenkins.environments."${Deployment_env}"."${Ship_Name}"
 
-        def user_type = jconf.jenkins.users."${Artifactory_Credentials}"
+        def user_type = jconf.jenkins.users.admin
         
      
         stage('fetchBinary') {
