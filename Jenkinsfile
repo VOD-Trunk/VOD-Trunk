@@ -32,7 +32,13 @@ node {
 
             def confluence_page = jconf.jenkins.Release."${Release_version}"
 
-            def ip = jconf.jenkins.ips."${Deployment_env}"
+            if( "${Deployment_env}" == "Support" || "${Deployment_env}" == "QA" || "${Deployment_env}" == "XS" ) {
+
+                def ip = jconf.jenkins.environments."${Deployment_env}".ipaddr
+            } else{
+
+                def ip = jconf.jenkins.ips."${Deployment_env}"."${Ship_Name}"
+            }
          
             stage('fetchBinary') {
                 

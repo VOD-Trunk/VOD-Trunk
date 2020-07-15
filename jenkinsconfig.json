@@ -23,53 +23,49 @@
 				"env": "xs"
 			}
 		},
-		"ips": {
-			"Support": "192.168.248.161",
-			"Royal": "10.10.68.120",
-			"Sun": "172.29.222.196",
-			"Sky": "10.125.5.144",
-			"Sapphire": "172.29.196.194",
-			"Majestic": "10.124.178.51",
-			"Ruby": "172.29.134.228",
-			"Grand": "172.29.227.244",
-			"Crown": "172.29.239.244",
-			"Regal": "10.122.197.137",
-			"Caribbean": "10.120.8.140",
-			"Britannia": "172.28.248.20",
-			"Diamond": "172.29.204.194",
-			"Emerald": "172.29.124.233",
-			"Coral": "10.120.69.150",
-			"KODM": "10.115.50.52",
-			"NADM": "10.9.200.52",
-			"EUDM": "10.9.196.53",
-			"WEDM": "10.9.184.53",
-			"NSDM": "10.115.114.52",
-			"Ovation": "10.118.50.52",
-			"Encore": "10.117.242.52",
-			"Odyssey": "10.117.50.52",
-			"NODM": "10.114.114.50",
-			"VODM": "10.112.242.50",
-			"ZUDM": "10.9.192.53",
-			"OSDM": "10.9.156.53"
-		},
+		
 		"environments":
 		{
-			"xs": {
+			"XS": {
 				"mailIds": "Oceansupport@hsc.com,xicms-support-list@hsc.com",
 				"sourceEnv": "dev",
 				"mtChannelWebhook": "https://outlook.office.com/webhook/<<Remaining_Details>>",
 				"gitCOPBranch": "master"
 			},
 			"Support": {
+				"ipaddr": "192.168.248.161",
 				"mailIds": "Oceansupport@hsc.com,xicms-support-list@hsc.com",
 				"sourceEnv": "xs",
 				"mtChannelWebhook": "https://outlook.office.com/webhook/<<Remaining_Details>>",
 				"gitCOPBranch": "master"
 			},
-			"Prod": {
-				"Ship": {
-					
-				},
+			"Production": {
+				"Royal": "10.10.68.120",
+				"Sun": "172.29.222.196",
+				"Sky": "10.125.5.144",
+				"Sapphire": "172.29.196.194",
+				"Majestic": "10.124.178.51",
+				"Ruby": "172.29.134.228",
+				"Grand": "172.29.227.244",
+				"Crown": "172.29.239.244",
+				"Regal": "10.122.197.137",
+				"Caribbean": "10.120.8.140",
+				"Britannia": "172.28.248.20",
+				"Diamond": "172.29.204.194",
+				"Emerald": "172.29.124.233",
+				"Coral": "10.120.69.150",
+				"KODM": "10.115.50.52",
+				"NADM": "10.9.200.52",
+				"EUDM": "10.9.196.53",
+				"WEDM": "10.9.184.53",
+				"NSDM": "10.115.114.52",
+				"Ovation": "10.118.50.52",
+				"Encore": "10.117.242.52",
+				"Odyssey": "10.117.50.52",
+				"NODM": "10.114.114.50",
+				"VODM": "10.112.242.50",
+				"ZUDM": "10.9.192.53",
+				"OSDM": "10.9.156.53",
 				"mailIds": "Oceansupport@hsc.com,xicms-support-list@hsc.com",
 				"sourceEnv": "support",
 				"mtChannelWebhook": "https://outlook.office.com/webhook/<<Remaining_Details>>",
@@ -79,3 +75,4 @@
 		}  
 	}
 }
+
