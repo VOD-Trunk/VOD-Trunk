@@ -21,8 +21,8 @@ then
          exit 1
     fi
 
-else
-
+elif [ "$Deployment_env" == "Production" ] && [ "$Activity" == "Deploy" ]
+then
     #isSupportDone=`curl -sS -u "${UserName}":"${Password}" -X GET 'http://artifactory.tools.ocean.com/artifactory/api/storage/libs-release-local/com/uievolution/exm/exm/"${Release_version}"?properties=Support' | grep "Done" | wc -l`
     isSupportDone=1
     if [ $isSupportDone -eq 1 ]
@@ -31,6 +31,9 @@ else
     else
          exit 1
     fi
+elif ([ "$Deployment_env" == "None" ] || [ "$Deployment_env" == "None" ]) && [ "$Activity" == "Deploy" ]
+then
+	echo "Property checking not required."
 fi
 
 

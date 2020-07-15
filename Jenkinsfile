@@ -28,7 +28,7 @@ node {
             sh """
                 #!/bin/bash
 
-                ${env.WORKSPACE}/checkArtifactProperty.sh "${Deployment_env}" "${Activity}" "${Release_version}" "${env.USERNAME}" "${env.PASSWORD}"
+                ${env.WORKSPACE}/checkArtifactProperty.sh "${Deployment_env}" "${Activity}" "${Release_version}" "${env.USERNAME}" "${env.PASSWORD}" "$user_role" "${Set_status_done_on}"
 
                 
                         
