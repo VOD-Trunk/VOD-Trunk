@@ -24,8 +24,7 @@
 			}
 		},
 		
-		"environments":
-		{
+		"environments": {
 			"XS": "000.000.000.000",
 			"Support": "192.168.248.161",
 			"Production": {
@@ -59,9 +58,7 @@
 				"sourceEnv": "support",
 				"mtChannelWebhook": "https://outlook.office.com/webhook/<<Remaining_Details>>",
 				"gitCOPBranch": "master"
-			}
-
-		}  
+			}  
+		}
 	}
 }
-
