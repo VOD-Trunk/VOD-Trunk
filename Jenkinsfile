@@ -34,7 +34,7 @@ node {
 
             def confluence_page = jconf.jenkins.Release."${Release_version}"
 
-            def ipaddr = jconf.jenkins.environments."${Deployment_env}"
+            def ipaddr = jconf.jenkins.environments."${Deployment_env}"."${Ship_Name}"
             
          
             stage('fetchBinary') {
