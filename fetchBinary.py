@@ -16,6 +16,8 @@ relName = sys.argv[2]
 action = sys.argv[3]
 workspace = sys.argv[4]
 components = sys.argv[5]
+username = sys.argv[6]
+password = sys.argv[7]
 partial_deploy = 2
 builds_file_path = workspace + "/tmp/component_build_mapping.txt"
 with open(builds_file_path, 'w') as f:
@@ -49,7 +51,7 @@ if action == "Deploy":
                     searchResult=json.loads(response.text)['results']
 
                     if len(searchResult)==0:
-                            errorValue=("Confluence Page not exist:" +pageName)
+                            errorValue=("Confluence Page does not exist:" +pageName)
                             logging.info ("No Record found for URL:" + response.request.url)
                             exit
                     elif len(searchResult)==1:
@@ -226,7 +228,7 @@ if action == "Deploy":
             url = str(value)
             target_path = releasesPath + relName + '/' + component + '/' + url.split("/")[-1]
 
-            response = requests.get(url, auth = HTTPBasicAuth('admin', 'password'), stream=True)
+            response = requests.get(url, auth = HTTPBasicAuth(username,password), stream=True)
             if response.status_code == 200:
                 with open(target_path, 'wb') as f:
                     f.write(response.raw.read())

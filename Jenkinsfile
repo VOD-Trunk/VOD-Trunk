@@ -1,5 +1,11 @@
 node {
 
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: '${Artifactory_Credentials}',
+                    usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+
+        println(env.USERNAME)
+        }
+
         stage('git-checkout') {
                 
                 checkout scm
@@ -15,7 +21,7 @@ node {
                 sh """
                     #!/bin/bash
 
-                    ${env.WORKSPACE}/checkArtifactProperty.sh "${Deployment_env}" "${Activity}" "${Release_version}" "${UserName}" "${Password}"
+                    ${env.WORKSPACE}/checkArtifactProperty.sh "${Deployment_env}" "${Activity}" "${Release_version}" "${env.USERNAME}" "${env.PASSWORD}"
 
                     
                             
@@ -33,7 +39,7 @@ node {
                 
                 sh """
                     #!/bin/bash
-                    python ${env.WORKSPACE}/fetchBinary.py "$confluence_page" $Release_version $Activity "${env.WORKSPACE}" "$Components"
+                    python ${env.WORKSPACE}/fetchBinary.py "$confluence_page" $Release_version $Activity "${env.WORKSPACE}" "$Components" "${env.USERNAME}" "${env.PASSWORD}"
                     
                 """
                 
