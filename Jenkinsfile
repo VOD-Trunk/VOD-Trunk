@@ -13,6 +13,14 @@ node {
 
     def user_role = jconf.jenkins.user_env."${Artifactory_Credentials}"
 
+    echo "${Deployment_env}" 
+    echo "${Activity}" 
+    echo "${Release_version}" 
+    echo "${env.USERNAME}" 
+    echo "${env.PASSWORD}" 
+    echo "$user_role" 
+    echo "${Set_status_done_on}"
+
     stage('git-checkout') {
             
             checkout scm
@@ -27,6 +35,7 @@ node {
 
             sh """
                 #!/bin/bash
+
 
                 ${env.WORKSPACE}/checkArtifactProperty.sh "${Deployment_env}" "${Activity}" "${Release_version}" "${env.USERNAME}" "${env.PASSWORD}" "$user_role" "${Set_status_done_on}"
 
