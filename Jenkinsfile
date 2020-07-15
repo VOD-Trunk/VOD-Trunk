@@ -34,15 +34,8 @@ node {
 
             def confluence_page = jconf.jenkins.Release."${Release_version}"
 
-            if("${Deployment_env}" == "Support") {
-
-                echo "${Deployment_env}"
-
-                def ipaddr = jconf.jenkins.environments."${Deployment_env}"
-            } else{
-
-                def ipaddr = jconf.jenkins.environments."${Deployment_env}"."${Ship_Name}"
-            }
+            def ipaddr = jconf.jenkins.environments."${Deployment_env}"
+            
          
             stage('fetchBinary') {
                 
