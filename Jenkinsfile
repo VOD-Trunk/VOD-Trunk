@@ -1,7 +1,5 @@
 node {
 
-    echo "${Artifactory_Credentials}"
-
     withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: '${Artifactory_Credentials}',
                 usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
         println(env.USERNAME)
@@ -36,7 +34,7 @@ node {
 
         def ipaddr = jconf.jenkins.environments."${Deployment_env}"."${Ship_Name}"
 
-        def user_type = jconf.jenkins.users."${env.USERNAME}"
+        def user_type = jconf.jenkins.users."${Artifactory_Credentials}"
         
      
         stage('fetchBinary') {
