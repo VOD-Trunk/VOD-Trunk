@@ -6,7 +6,7 @@ Release_version=$3
 UserName=$4
 Password=$5
 user_type=$6
-Set_status_done_on=$7
+Promoting_from=$7
 
 
 if [ "$Deployment_env" == "Support" ] && [ "$Activity" == "Deploy" ]
@@ -37,18 +37,24 @@ then
 fi
 
 
-if [ "$Activity" == "Promote" ] && [ "$user_type" == "QA" ]
+if [ "$Activity" == "Promote" ] && [ "$Promoting_from" == "QA"]
 then
-	echo "Setting QA = Done."
-    #curl -sS -u "${UserName}":"${Password}" -X PUT "http://artifactory.tools.ocean.com/artifactory/api/storage/libs-release-local/com/uievolution/exm/exm/'${Release_version}'?properties=QA=Done"
-elif [ "$Activity" == "Promote" ] && [ "$user_type" == "Support" ]
+	if [ "$user_type" == "QA" ] || [ "$user_type" == "Super" ]
+	then
+		echo "Setting QA = Done."
+    	#curl -sS -u "${UserName}":"${Password}" -X PUT "http://artifactory.tools.ocean.com/artifactory/api/storage/libs-release-local/com/uievolution/exm/exm/'${Release_version}'?properties=QA=Done"
+    else
+    	echo "This user is not allowed to set property QA = Done."
+    fi
+elif [ "$Activity" == "Promote" ] && [ "$Promoting_from" == "QA"]
 then
-	echo "Setting Support = Done."
-    #curl -sS -u "${UserName}":"${Password}" -X PUT "http://artifactory.tools.ocean.com/artifactory/api/storage/libs-release-local/com/uievolution/exm/exm/'${Release_version}'?properties=Support=Done"
-elif [ "$Activity" == "Promote" ] && [ "$user_type" == "Super" ]
-then
-	echo "Setting $Set_status_done_on = Done."
-	#curl -sS -u "${UserName}":"${Password}" -X PUT "http://artifactory.tools.ocean.com/artifactory/api/storage/libs-release-local/com/uievolution/exm/exm/'${Release_version}'?properties='${Set_status_done_on}'=Done"
+	if [ "$user_type" == "Support" ] || [ "$user_type" == "Super" ]
+	then
+		echo "Setting Support = Done."
+	    #curl -sS -u "${UserName}":"${Password}" -X PUT "http://artifactory.tools.ocean.com/artifactory/api/storage/libs-release-local/com/uievolution/exm/exm/'${Release_version}'?properties=Support=Done"
+	else
+		echo "This user is not allowed to set property Support = Done."
+	fi
 else
 	echo "User is not defined in jenkinsconfig.json"
 fi
