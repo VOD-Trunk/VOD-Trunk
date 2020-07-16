@@ -19,7 +19,7 @@ node {
     echo "${env.USERNAME}" 
     echo "${env.PASSWORD}" 
     echo "$user_role" 
-    echo "${promote_from}"
+    echo "${Promoting_from}"
 
     stage('git-checkout') {
             
@@ -37,7 +37,7 @@ node {
                 #!/bin/bash
 
 
-                ${env.WORKSPACE}/checkArtifactProperty.sh "${Deployment_env}" "${Activity}" "${Release_version}" "${env.USERNAME}" "${env.PASSWORD}" "$user_role" "${promote_from}"
+                ${env.WORKSPACE}/checkArtifactProperty.sh "${Deployment_env}" "${Activity}" "${Release_version}" "${env.USERNAME}" "${env.PASSWORD}" "$user_role" "${Promoting_from}"
 
                 
                         
@@ -69,7 +69,7 @@ node {
            sh """
                 #!/bin/bash
 
-                ${env.WORKSPACE}/checkArtifactProperty.sh "${Deployment_env}" "${Activity}" "${Release_version}" "${env.USERNAME}" "${env.PASSWORD}" "$user_role" "${promote_from}"
+                ${env.WORKSPACE}/checkArtifactProperty.sh "${Deployment_env}" "${Activity}" "${Release_version}" "${env.USERNAME}" "${env.PASSWORD}" "$user_role" "${Promoting_from}"
 
                 
                         
