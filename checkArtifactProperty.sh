@@ -37,7 +37,7 @@ then
 fi
 
 
-if [ "$Activity" == "Promote" ] && [ "$Promoting_from" == "QA"]
+if [ "$Activity" == "Promote" ] && [ "$Promoting_from" == "QA" ]
 then
 	if [ "$user_type" == "QA" ] || [ "$user_type" == "Super" ]
 	then
@@ -47,7 +47,7 @@ then
     	echo "This user is not allowed to set property QA = Done."
     	exit 1
     fi
-elif [ "$Activity" == "Promote" ] && [ "$Promoting_from" == "QA"]
+elif [ "$Activity" == "Promote" ] && [ "$Promoting_from" == "Support" ]
 then
 	if [ "$user_type" == "Support" ] || [ "$user_type" == "Super" ]
 	then
