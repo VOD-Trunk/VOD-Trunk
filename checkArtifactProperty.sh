@@ -45,6 +45,7 @@ then
     	#curl -sS -u "${UserName}":"${Password}" -X PUT "http://artifactory.tools.ocean.com/artifactory/api/storage/libs-release-local/com/uievolution/exm/exm/'${Release_version}'?properties=QA=Done"
     else
     	echo "This user is not allowed to set property QA = Done."
+    	exit 1
     fi
 elif [ "$Activity" == "Promote" ] && [ "$Promoting_from" == "QA"]
 then
@@ -54,7 +55,9 @@ then
 	    #curl -sS -u "${UserName}":"${Password}" -X PUT "http://artifactory.tools.ocean.com/artifactory/api/storage/libs-release-local/com/uievolution/exm/exm/'${Release_version}'?properties=Support=Done"
 	else
 		echo "This user is not allowed to set property Support = Done."
+		exit 1
 	fi
 else
 	echo "User is not defined in jenkinsconfig.json"
+	exit 1
 fi

@@ -13,13 +13,6 @@ node {
 
     def user_role = jconf.jenkins.user_env."${Artifactory_Credentials}"
 
-    echo "${Deployment_env}" 
-    echo "${Activity}" 
-    echo "${Release_version}" 
-    echo "${env.USERNAME}" 
-    echo "${env.PASSWORD}" 
-    echo "$user_role" 
-    echo "${Promoting_from}"
 
     stage('git-checkout') {
             
