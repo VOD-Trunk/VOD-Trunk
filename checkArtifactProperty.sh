@@ -31,7 +31,7 @@ then
     else
          exit 1
     fi
-elif ([ "$Deployment_env" == "None" ] || [ "$Deployment_env" == "None" ]) && [ "$Activity" == "Deploy" ]
+elif ([ "$Deployment_env" == "NA" ] || [ "$Deployment_env" == "QA" ]) && [ "$Activity" == "Deploy" ]
 then
 	echo "Property checking not required."
 fi
@@ -57,7 +57,4 @@ then
 		echo "This user is not allowed to set property Support = Done."
 		exit 1
 	fi
-else
-	echo "User is not defined in jenkinsconfig.json"
-	exit 1
 fi
