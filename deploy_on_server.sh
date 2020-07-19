@@ -391,6 +391,11 @@ deploy_new_build() {
 
 		cp /root/Releases/$new_release/$component/$new_build $releases_path/releases/$new_release
 
+		log "Unzipping the $component jar file"
+		log
+
+		unzip $releases_path/releases/$new_release/$new_build -d $releases_path/releases/$new_release
+
 		log "Current $jar_symlink symlink is :"
 		log
 		log "`ls -l $releases_path | grep "$jar_symlink"`"
@@ -673,8 +678,14 @@ verify() {
 
 	if [ "$component" == "nacos" ] || [ "$component"  == "mutedaemon" ]
 	then
-		timestamp_build=`ls -l $releases_path | grep ".jar" | cut -d '>' -f 2 | cut -d '/' -f 6`
-		release_build="$new_release"
+		timestamp_build=`cat $releases_path/releases/$new_release/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
+		if [ "$action" == "deploy" ]
+		then
+			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep -w "$component " | cut -d ":" -f 2 | sed 's/ //g'`
+		else
+			rollback_build=`cd $releases_path/Backup/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
+			release_build=`cat $releases_path/Backup/$rollback_build/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
+		fi
 	fi
 
 	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursion" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]
