@@ -29,9 +29,6 @@ if os.path.exists(builds_file_path):
 releasesPath = workspace + '/Releases/'
 newReleaseDir = releasesPath + relName
 
-path = os.path.join(newReleaseDir,component)
-if os.path.isdir(path) != True:
-    os.makedirs(path)
 log_path = 'logs'
 path = os.path.join(workspace,log_path)
 if os.path.isdir(path) != True:
@@ -40,7 +37,7 @@ tmp_path = 'tmp'
 path = os.path.join(workspace,tmp_path)
 if os.path.isdir(path) != True:
     os.makedirs(path)
-    
+
 logging.basicConfig(filename= workspace +'/logs/fetchBinaryLogs.log', filemode='a+', format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s', datefmt='%H:%M:%S', level=logging.DEBUG)
 
 
@@ -227,7 +224,9 @@ if action == "Deploy":
             elif componentConfluence == "Mute Status Service":
                 component = "mute"
 
-            
+            path = os.path.join(newReleaseDir,component)
+            if os.path.isdir(path) != True:
+                os.makedirs(path)
             
             logging.info("\nDownloading " + component +" ...\n")
 
