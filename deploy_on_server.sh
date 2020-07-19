@@ -364,18 +364,15 @@ deploy_new_build() {
 			mkdir -p $releases_path/releases/$new_release
 		elif [ -d $releases_path/releases/$new_release ]
 		then
-			if [ ! -d $releases_path/releases/$new_release ]
-			then
-				log "Taking backup of the current build."
-				log
-		
-					cp -r $releases_path/releases/$current_build $releases_path/Backup/
+			log "Taking backup of the current build."
+			log
+	
+			cp -r $releases_path/releases/$current_build $releases_path/Backup/
 
-					for i in `ls $releases_path/releases/$new_release`
-					do
-						rm -rf $releases_path/releases/$new_release/$i
-					done
-			fi
+			for i in `ls $releases_path/releases/$new_release`
+			do
+				rm -rf $releases_path/releases/$new_release/$i
+			done
 		fi
 		
 		
