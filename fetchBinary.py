@@ -233,7 +233,7 @@ if action == "Deploy":
             url = str(value)
             target_path = releasesPath + relName + '/' + component + '/' + url.split("/")[-1]
 
-            response = requests.get(url, auth = HTTPBasicAuth(username,password), stream=True)
+            response = requests.get(url, auth = HTTPBasicAuth('admin','password'), stream=True)
             if response.status_code == 200:
                 with open(target_path, 'wb') as f:
                     f.write(response.raw.read())
