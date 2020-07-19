@@ -91,8 +91,8 @@ get_current_build() {
 
 	if [ "$component" == "exm-client-cruise" ]
 	then
-			current_build=`ls -la /apps/clientmap/exm-client-cruise/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
-			releases_path='/apps/clientmap/exm-client-cruise'
+			current_build=`ls -la /apps/exm-client/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
+			releases_path='/apps/exm-client'
 	fi
 
 	if [ "$component" == "exm-client-startup" ]
@@ -306,6 +306,13 @@ deploy_new_build() {
 		log "New symlink is:"
 		log "`ls -l $releases_path | grep current`"
 		log
+
+		if [ "$component" == "exm-client-cruise" ]
+		then
+			log "Setting permission on new release folder for cruise client..."
+			log
+			chmod -R 777 $releases_path/releases/$new_build
+		fi
 	fi
 
 
@@ -396,7 +403,7 @@ deploy_new_build() {
 		log "Unzipping the $component jar file"
 		log
 
-		unzip $releases_path/releases/$new_release/$new_build -d $releases_path/releases/$new_release
+		unzip -qq $releases_path/releases/$new_release/$new_build -d $releases_path/releases/$new_release
 
 		log "Current $jar_symlink symlink is :"
 		log
@@ -491,7 +498,7 @@ deploy_new_build() {
 		log "Unzipping $file_name ..."
 		log
 
-		unzip /root/Releases/$new_release/$component/$file_name -d /root/Releases/$new_release/$component/
+		unzip -qq /root/Releases/$new_release/$component/$file_name -d /root/Releases/$new_release/$component/
 
 		new_build=`cd /root/Releases/$new_release/$component/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
 
@@ -798,12 +805,7 @@ verify() {
 
 	if [ $timestamp_status -eq 1 ] && [ $services_status -eq 1 ]
 	then
-		if [ $component == "nacos" ] || [ $component  == "mutedaemon" ]
-		then 
-			statusArray[$component]="Successful( Release Number : $timestamp_build )"
-		else
-			statusArray[$component]="Successful( Build Number : $timestamp_build )"
-		fi
+		statusArray[$component]="Successful( Build Number : $timestamp_build )"
 		log
 		log
 		log
@@ -814,12 +816,7 @@ verify() {
 		log
 		#echo "Successful( Version : $timestamp_release )"
 	else
-		if [ $component == "nacos" ] || [ $component  == "mutedaemon" ]
-		then 
-			statusArray[$component]="Failed( Release Number : $timestamp_build )"
-		else
-			statusArray[$component]="Failed( Build Number : $timestamp_build )"
-		fi
+		statusArray[$component]="Failed( Build Number : $timestamp_build )"
 		log
 		log
 		log
