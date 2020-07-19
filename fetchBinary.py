@@ -26,7 +26,8 @@ if os.path.exists(builds_file_path):
     with open(builds_file_path, 'w') as f:
         f.truncate()
 
-log_file = open(workspace +'/logs/fetchBinaryLogs.log','a+')
+log_file_path = workspace +'/logs/fetchBinaryLogs.log'
+logFile = open(log_file_path,'a+')
 logging.basicConfig(filename= workspace +'/logs/fetchBinaryLogs.log', filemode='a', format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s', datefmt='%H:%M:%S', level=logging.DEBUG)
 releasesPath = workspace + '/Releases/'
 
