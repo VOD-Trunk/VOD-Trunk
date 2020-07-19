@@ -21,7 +21,8 @@ password = sys.argv[7]
 partial_deploy = 2
 
 builds_file_path = workspace + "/tmp/component_build_mapping.txt"
-with open(builds_file_path, 'w') as f:
+if builds_file_path.exists():
+    with open(builds_file_path, 'w') as f:
         f.truncate()
 
 logging.basicConfig(filename= workspace +'/logs/fetchBinaryLogs.log', filemode='a', format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s', datefmt='%H:%M:%S', level=logging.DEBUG)
