@@ -359,21 +359,26 @@ deploy_new_build() {
 			done
 		fi
 
-		if [ ! -d $releases_path/releases ]
+		if [ ! -d $releases_path/releases/$new_release ]
 		then
-			mkdir -p $releases_path/releases
-		elif [ -d $releases_path/releases ]
+			mkdir -p $releases_path/releases/$new_release
+		elif [ -d $releases_path/releases/$new_release ]
 		then
 			if [ ! -d $releases_path/releases/$new_release ]
 			then
-				mkdir -p $releases_path/releases/$new_release
+				log "Taking backup of the current build."
+				log
+		
+					cp -r $releases_path/releases/$current_build $releases_path/Backup/
+
+					for i in `ls $releases_path/releases/$new_release`
+					do
+						rm -rf $releases_path/releases/$new_release/$i
+					done
 			fi
 		fi
 		
-		log "Taking backup of the current build."
-		log
 		
-		cp -r $releases_path/releases/$current_build $releases_path/Backup/
 
 		new_build=`ls /root/Releases/$new_release/$component/*.jar | cut -d "/" -f 6`
 
