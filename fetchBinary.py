@@ -21,9 +21,8 @@ password = sys.argv[7]
 partial_deploy = 2
 
 builds_file_path = workspace + "/tmp/component_build_mapping.txt"
-path = builds_file_path
 
-if os.path.exists():
+if os.path.exists(builds_file_path):
     with open(builds_file_path, 'w') as f:
         f.truncate()
 
