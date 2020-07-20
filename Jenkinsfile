@@ -19,7 +19,7 @@ node {
     def ipaddr = jconf.jenkins.environments."${Deployment_env}"."${Ship_Name}"
 
     def user_role = jconf.jenkins.user_env."${Artifactory_Credentials}"
-    
+
 
     if( "${Activity}" != "Promote" ){
 
@@ -52,7 +52,15 @@ node {
 
             sh """
                 #!/bin/bash
-                 ${env.WORKSPACE}/deployment_caller.sh "$ipaddr" $Release_version $Activity "$Components" "${env.WORKSPACE}" "$abort_on_failure"
+
+                sshpass -p "Carnival@123" ssh root@"$ipaddr" 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do rm -rf /root/Releases/$folder; done; fi'
+                sshpass -p "Carnival@123" ssh -A -tt root@"$ipaddr" ssh -A -tt app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do rm -rf /root/Releases/$folder; done; fi'
+                sshpass -p "Carnival@123" scp -r ${env.WORKSPACE}/Releases/"${Release_version}" ${env.WORKSPACE}/tmp root@"$ipaddr":/root/Releases
+                sshpass -p "Carnival@123" scp -r ${env.WORKSPACE}/deploy_on_server.sh root@"$ipaddr":/root/bin
+                sshpass -p "Carnival@123" ssh root@"$ipaddr" 'chmod +x /root/bin/deploy_on_server.sh && /root/bin/deploy_on_server.sh -d "${Release_version}" "$Components" "$abort_on_failure" "app01"'
+                sshpass -p "Carnival@123" ssh -A -tt root@"$ipaddr" ssh -A -tt app02 'chmod +x /root/bin/deploy_on_server.sh && /root/bin/deploy_on_server.sh -d "${Release_version}" "$Components" "$abort_on_failure" "app01"'
+
+                 ##${env.WORKSPACE}/deployment_caller.sh "$ipaddr" $Release_version $Activity "$Components" "${env.WORKSPACE}" "$abort_on_failure"
                 
             """
        }
