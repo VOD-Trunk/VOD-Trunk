@@ -959,7 +959,5 @@ server=$5
 if [ "$server" == "app01" ]
 then
 	scp /root/bin/deploy_on_server.sh app02:/root/bin
-	ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do rm -rf /root/Releases/$folder; done; fi'
 	scp -r /root/Releases/$new_release /root/Releases/tmp app02:/root/Releases
-	ssh app02 'chmod +x /root/bin/deploy_on_server.sh && /root/bin/deploy_on_server.sh "-$action" "$new_release" "$component_choice" "$abort_on_fail" app02'
 fi
