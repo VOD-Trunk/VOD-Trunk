@@ -4,6 +4,11 @@
 #Last modified : 7/9/2020
 
 
+
+ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do rm -rf /root/Releases/$folder; done; fi'
+scp -r /root/Releases/ app02:/root/
+
+
 ts=`date +'%s'`
 logfile='/root/Releases/deployment-$ts.log'
 new_release=$2
