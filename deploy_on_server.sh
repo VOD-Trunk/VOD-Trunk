@@ -4,9 +4,11 @@
 #Last modified : 7/9/2020
 
 
-
-ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do rm -rf /root/Releases/$folder; done; fi'
-scp -r /root/Releases/ app02:/root/
+if [ $hostname == *"app01"* ]
+then
+	#ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do rm -rf /root/Releases/$folder; done; fi'
+	scp -r /root/Releases/ app02:/root/
+fi
 
 
 ts=`date +'%s'`
