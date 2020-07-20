@@ -6,11 +6,10 @@
 
 for server in app01 app02;
 do
-	ssh $server 'printf "$(hostname):\n"
+	ssh $server '
 	if [ "$server" == "app01" ]
 	then
-		#scp /root/bin/deploy_on_server.sh app02:/root/bin
-		scp -r /root/Releases root@app02:/root
+		scp -r /root/Releases app02:/root
 	fi
 
 
