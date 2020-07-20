@@ -328,14 +328,14 @@ deploy_new_build() {
 		log "Taking backup of the current build."
 		log
 
-		if [ ! -d $releases_path/Backup ]
+		if [ ! -d $releases_path/Backup/$component ]
 		then
-			mkdir -p $releases_path/Backup
-		elif [ -d $releases_path/Backup ]
+			mkdir -p $releases_path/Backup/$component
+		elif [ -d $releases_path/Backup/$component ]
 		then
-			for i in `ls $releases_path/Backup`
+			for i in `ls $releases_path/Backup/$component`
 			do
-				rm -rf $releases_path/Backup/$i
+				rm -rf $releases_path/Backup/$component/$i
 			done
 		fi
 		cp -r $releases_path/$component* $releases_path/Backup/
@@ -953,3 +953,9 @@ do
 	log "${key} : ${statusArray[${key}]}"
 	log "=============================================================="
 done
+
+
+scp /root/bin/deploy_on_server.sh app02:/root/bin
+ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do rm -rf /root/Releases/$folder; done; fi'
+scp /root/Releases/$new_release /root/Releases/tmp app02:/root/Releases
+ssh app02 'chmod +x /root/bin/deploy_on_server.sh && /root/bin/deploy_on_server.sh -"$action" "$new_release" "$component_choice" "$abort_on_fail"'

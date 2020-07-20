@@ -18,10 +18,15 @@ then
 	echo
 	sshpass -p "Carnival@123" ssh root@$env 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do rm -rf /root/Releases/$folder; done; fi'
 	sshpass -p "Carnival@123" scp -r $workspace/Releases/$release $workspace/tmp root@$env:/root/Releases
-	sshpass -p "Carnival@123" ssh root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" > $workspace/logs/"${logfile}"
-	cat $workspace/logs/${logfile}
+	sshpass -p "Carnival@123" scp -r $workspace/deploy_on_server.sh root@$env:/root/bin
+	sshpass -p "Carnival@123" ssh root@$env chmod +x /root/bin/deploy_on_server.sh && /root/bin/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail"
+	#sshpass -p "Carnival@123" ssh root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" > $workspace/logs/"${logfile}"
+
+	#cat $workspace/logs/${logfile}
 elif [ "$action" == "Rollback" ]
 then
-	sshpass -p "Carnival@123" ssh root@$env "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" > $workspace/logs/"${logfile}"
-	cat $workspace/logs/${logfile}
+	sshpass -p "Carnival@123" scp -r $workspace/deploy_on_server.sh root@$env:/root/bin
+	sshpass -p "Carnival@123" ssh root@$env chmod +x /root/bin/deploy_on_server.sh && /root/bin/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail"
+	#sshpass -p "Carnival@123" ssh root@$env "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" > $workspace/logs/"${logfile}"
+	#cat $workspace/logs/${logfile}
 fi
