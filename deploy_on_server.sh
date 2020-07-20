@@ -6,7 +6,7 @@
 
 for server in app01 app02;
 do
-	ssh $server '
+	ssh $server "
 	if [ "$server" == "app01" ]
 	then
 		scp -r /root/Releases app02:/root
@@ -961,5 +961,5 @@ do
 	do
 		log "${key} : ${statusArray[${key}]}"
 		log "=============================================================="
-	done'
+	done"
 done
