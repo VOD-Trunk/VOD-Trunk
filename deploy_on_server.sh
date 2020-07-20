@@ -3,8 +3,8 @@
 #Author : Abhishek Chadha
 #Last modified : 7/9/2020
 
-
-if [ $hostname == *"app01"* ]
+server=$5
+if [ "$server" == "app01" ]
 then
 	#ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do rm -rf /root/Releases/$folder; done; fi'
 	scp -r /root/Releases/ app02:/root/
