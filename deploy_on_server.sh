@@ -958,6 +958,6 @@ server=$5
 
 if [ "$server" == "app01" ]
 then
-	scp /root/bin/deploy_on_server.sh app02:/root/bin
+	#scp /root/bin/deploy_on_server.sh app02:/root/bin
 	scp -r /root/Releases/$new_release /root/Releases/tmp app02:/root/Releases
 fi
