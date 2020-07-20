@@ -18,7 +18,10 @@ then
 	echo
 	sshpass -p "Carnival@123" ssh root@$env 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do rm -rf /root/Releases/$folder; done; fi'
 	sshpass -p "Carnival@123" scp -r $workspace/Releases/$release $workspace/tmp root@$env:/root/Releases
-	sshpass -p "Carnival@123" ssh root@$env "bash -s" -- < for server in app01 app02; do ssh $server '$workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail"'; done> $workspace/logs/"${logfile}"
+	for server in app01 app02;
+	do
+		sshpass -p "Carnival@123" ssh root@$env 'ssh $server' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" > $workspace/logs/"${logfile}"
+	done
 	cat $workspace/logs/${logfile}
 elif [ "$action" == "Rollback" ]
 then
