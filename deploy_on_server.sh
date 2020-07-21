@@ -954,6 +954,7 @@ if [ "$action" == "-d" ]
 then
 	log "=================================FINAL DEPLOYMENT STATUS( $server )================================"
 elif [ "$action" == "-r" ]
+then
 	log "=================================FINAL ROLLBACK STATUS( $server )================================"
 fi
 log
