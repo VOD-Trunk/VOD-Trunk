@@ -1,6 +1,3 @@
-#Author : Abhishek Chadha
-#Last modified : 7/9/2020
-
 import sys
 import requests
 from requests.auth import HTTPBasicAuth

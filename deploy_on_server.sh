@@ -1,9 +1,5 @@
 #!/bin/bash
 
-#Author : Abhishek Chadha
-#Last modified : 7/9/2020
-
-
 ts=`date +'%s'`
 logfile='/root/Releases/deployment-$ts.log'
 new_release=$2
