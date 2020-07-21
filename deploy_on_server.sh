@@ -3,13 +3,6 @@
 #Author : Abhishek Chadha
 #Last modified : 7/9/2020
 
-server=$5
-if [ "$server" == "app01" ]
-then
-	#ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do rm -rf /root/Releases/$folder; done; fi'
-	scp -r /root/Releases/ app02:/root/
-fi
-
 
 ts=`date +'%s'`
 logfile='/root/Releases/deployment-$ts.log'
@@ -17,6 +10,14 @@ new_release=$2
 component_choice=$3
 abort_on_fail=$4
 action=$1
+
+server=$5
+if [ "$server" == "app01" ] || [ "action" == "-d" ]
+then
+	scp -r /root/Releases/ app02:/root/
+fi
+
+
 declare -A statusArray
 
 if [ "$component_choice" == "All" ]
