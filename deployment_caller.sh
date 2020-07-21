@@ -22,6 +22,7 @@ then
 	cat $workspace/logs/${logfile}
 elif [ "$action" == "Rollback" ]
 then
-	sshpass -p "Carnival@123" ssh root@$env "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" > $workspace/logs/"${logfile}"
+	sshpass -p "Carnival@123" ssh root@$env "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" "app01"> $workspace/logs/"${logfile}"
+	sshpass -p "Carnival@123" ssh root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" "app02" >> $workspace/logs/"${logfile}"
 	cat $workspace/logs/${logfile}
 fi
