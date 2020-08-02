@@ -8,10 +8,11 @@ abort_on_fail=$4
 action=$1
 
 server=$5
-if [ "$server" == "app01" ] || [ "action" == "-d" ]
-then
-	scp -r /root/Releases/ app02:/root/
-fi
+
+#if [ "$server" == "app01" ] || [ "action" == "-d" ]
+#then
+#	scp -r /root/Releases/ app02:/root/
+#fi
 
 
 declare -A statusArray
@@ -89,49 +90,81 @@ get_current_build() {
 
 	if [ "$component" == "exm-admin-tool" ]
 	then
+			if [ ! -d /apps/exm-admin-tool/releases ]
+			then
+				mkdir -p /apps/exm-admin-tool/releases
+			fi
 			current_build=`ls -la /apps/exm-admin-tool/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
 			releases_path='/apps/exm-admin-tool'
 	fi
 
 	if [ "$component" == "exm-client-cruise" ]
 	then
+			if [ ! -d /apps/exm-client/releases ]
+			then
+				mkdir -p /apps/exm-client/releases
+			fi
 			current_build=`ls -la /apps/exm-client/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
 			releases_path='/apps/exm-client'
 	fi
 
 	if [ "$component" == "exm-client-startup" ]
 	then
+			if [ ! -d /apps/clientmap/exm-client-startup/releases ]
+			then
+				mkdir -p /apps/clientmap/exm-client-startup/releases
+			fi
 			current_build=`ls -la /apps/clientmap/exm-client-startup/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
 			releases_path='/apps/clientmap/exm-client-startup'
 	fi
 
 	if [ "$component" == "exm-client-leftnav2" ]
 	then
+			if [ ! -d /apps/clientmap/exm-client-leftnav2/releases ]
+			then
+				mkdir -p /apps/clientmap/exm-client-leftnav2/releases
+			fi
 			current_build=`ls -la /apps/clientmap/exm-client-leftnav2/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
 			releases_path='/apps/clientmap/exm-client-leftnav2'
 	fi
 
 	if [ "$component" == "exm-client-leftnav2-signage" ]
 	then
+			if [ ! -d /apps/clientmap/exm-client-leftnav2-signage/releases ]
+			then
+				mkdir -p /apps/clientmap/exm-client-leftnav2-signage/releases
+			fi
 			current_build=`ls -la /apps/clientmap/exm-client-leftnav2-signage/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
 			releases_path='/apps/clientmap/exm-client-leftnav2-signage'
 	fi
 
 	if [ "$component" == "exm-diagnostic-app" ]
 	then
+			if [ ! -d /apps/exm-diagnostic-app/releases ]
+			then
+				mkdir -p /apps/exm-diagnostic-app/releases
+			fi
 			current_build=`ls -la /apps/exm-diagnostic-app/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
 			releases_path='/apps/exm-diagnostic-app'
 	fi
 
 	if  [ "$component" == "exm-client-lite" ]
 	then
+			if [ ! -d /apps/clientmap/exm-client-lite/releases ]
+			then
+				mkdir -p /apps/clientmap/exm-client-lite/releases
+			fi
 			current_build=`ls -la /apps/clientmap/exm-client-lite/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
 			releases_path='/apps/clientmap/exm-client-lite'
 	fi
 
 	if  [ "$component" == "mute" ]
 	then
-			current_build=`ls -la /apps/mute/ | grep current | cut -d '>' -f 2 | cut -d '/' -f 1-5| sed 's/ //g'`
+			if [ ! -d /apps/mute/releases ]
+			then
+				mkdir -p /apps/mute/releases
+			fi
+			current_build=`ls -la /apps/mute/current | grep "server.js" | cut -d '>' -f 2 | cut -d '/' -f 1-5| sed 's/ //g'`
 			releases_path='/apps/mute'
 	fi
 
@@ -161,12 +194,20 @@ get_current_build() {
 
 	if [ "$component" == "nacos" ]
 	then
+			if [ ! -d /usr/local/nacos/releases ]
+			then
+				mkdir -p /usr/local/nacos/releases
+			fi
 			current_build=`ls -la /usr/local/nacos/ | grep nacos.daemon.jar | cut -d '>' -f 2 | sed 's/ //g' | cut -d '/' -f 6`
 			releases_path='/usr/local/nacos'
 	fi
 
 	if [ "$component" == "mutedaemon" ]
 	then
+			if [ ! -d /usr/local/mutedaemon/releases ]
+			then
+				mkdir -p /usr/local/mutedaemon/releases
+			fi
 			current_build=`ls -la /usr/local/mutedaemon/ | grep mutedaemon.jar | cut -d '>' -f 2 | sed 's/ //g' | cut -d '/' -f 6`
 			releases_path='/usr/local/mutedaemon'
 	fi	
@@ -189,7 +230,7 @@ restart_services() {
 		sleep 5
 
 		log
-		log "============================================================================================================================="
+		log "================================================================================================================"
 		log	
 	fi
 
@@ -209,7 +250,7 @@ restart_services() {
 		fi	
 
 		log
-		log "============================================================================================================================="
+		log "================================================================================================================"
 		log	
 	fi
 	
@@ -221,7 +262,7 @@ restart_services() {
 		log
 		sleep 5
 		log
-		log "============================================================================================================================="
+		log "================================================================================================================"
 		log	
 	fi
 
@@ -244,7 +285,7 @@ restart_services() {
 		fi
 
 		log
-		log "============================================================================================================================="
+		log "================================================================================================================"
 		log
 	fi
 }
@@ -316,6 +357,8 @@ deploy_new_build() {
 			log "Setting permission on new release folder for cruise client..."
 			log
 			chmod -R 777 $releases_path/releases/$new_build
+			chown -R apache:apache $releases_path/releases/$new_build
+
 		fi
 	fi
 
@@ -332,17 +375,17 @@ deploy_new_build() {
 		log "Taking backup of the current build."
 		log
 
-		if [ ! -d $releases_path/Backup/$component ]
+		if [ ! -d /root/War_Backup/$component ]
 		then
-			mkdir -p $releases_path/Backup/$component
-		elif [ -d $releases_path/Backup/$component ]
+			mkdir -p /root/War_Backup/$component
+		elif [ -d /root/War_Backup/$component ]
 		then
-			for i in `ls $releases_path/Backup/$component`
+			for i in `ls /root/War_Backup/$component`
 			do
-				rm -rf $releases_path/Backup/$component/$i
+				rm -rf /root/War_Backup/$component/$i
 			done
 		fi
-		cp -r $releases_path/$component* $releases_path/Backup/
+		cp -r $releases_path/$component* /root/War_Backup/$component
 		#cp $releases_path/$component.war /tmp/
 		rm -rf $releases_path/$component*
 
@@ -485,16 +528,7 @@ deploy_new_build() {
 			mkdir -p $releases_path/releases
 		elif [ -d $releases_path/releases ]
 		then
-			if [ ! -d $releases_path/releases/$new_release ]
-			then
-				mkdir -p $releases_path/releases/$new_release
-			elif [ -d $releases_path/releases/$new_release ]
-			then
-				for i in `ls $releases_path/releases/$new_release`
-				do
-					rm -rf $releases_path/releases/$new_release/$i
-				done
-			fi
+			mkdir -p $releases_path/releases/
 		fi
 
 		file_name=`ls /root/Releases/$new_release/$component/*.zip | cut -d "/" -f 6`
@@ -506,31 +540,31 @@ deploy_new_build() {
 
 		new_build=`cd /root/Releases/$new_release/$component/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
 
-		log "Copying $new_build to $releases_path/releases"
+		log "Copying $new_build to $releases_path/releases/"
 		log
 
 		cp -r /root/Releases/$new_release/$component/$new_build $releases_path/releases/
 
-		link_present=`ls $releases_path | grep current | wc -l`
+		link_present=`ls $releases_path/current | grep "server.js" | wc -l`
 
 		if [ $link_present == 1 ]
 		then 
 			log "Unlinking current symlink..."
 			log
 			log "current symlink is :"
-			log "`ls -l $releases_path | grep current`"
+			log "`ls -l $releases_path/current | grep 'server.js'`"
 			log
 
-			unlink $releases_path/current
+			unlink $releases_path/current/server.js
 		fi
 
 		log "Creating new symlink current ..."
 		log
 
-		ln -s $releases_path/releases/$new_build/*.js $releases_path/current
+		ln -s $releases_path/releases/$new_build/*.js $releases_path/current/server.js
 
 		log "New symlink is:"
-		log "`ls -l $releases_path | grep current`"
+		log "`ls -l $releases_path/current | grep 'server.js'`"
 		log
 	fi
 
@@ -585,7 +619,7 @@ rollback() {
 
 		log "Copying rollbcak build to $releases_path"
 		log
-		cp $releases_path/Backup/$component.war $releases_path/$component.war
+		cp /root/War_Backup/$component/$component.war $releases_path/$component.war
 	fi
 
 
@@ -639,7 +673,36 @@ rollback() {
 		log
 
 	fi
-	
+
+	if  [ "$component"  == "mute" ]
+	then
+		log "Starting rollback of $component"
+		log
+
+		rollback_build=`cd /$releases_path/Backup/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
+
+		link_present=`ls $releases_path/current | grep "server.js" | wc -l`
+
+		if [ $link_present == 1 ]
+		then 
+			log "Unlinking current symlink..."
+			log
+			log "current symlink is :"
+			log "`ls -l $releases_path/current | grep 'server.js'`"
+			log
+
+			unlink $releases_path/current/server.js
+		fi
+
+		log "Creating new symlink current ..."
+		log
+
+		ln -s $releases_path/releases/$rollback_build/*.js $releases_path/current/server.js
+
+		log "New symlink is:"
+		log "`ls -l $releases_path/current | grep 'server.js'`"
+		log
+	fi
 }
 
 verify() {
@@ -673,7 +736,7 @@ verify() {
 		then
 			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep -w "$component " | cut -d ":" -f 2 | sed 's/ //g'`
 		else
-			release_build=`cat cat $releases_path/Backup/$component/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
+			release_build=`cat cat /root/War_Backup/$component/$component/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
 		fi
 	fi
 
@@ -809,22 +872,22 @@ verify() {
 
 	if [ $timestamp_status -eq 1 ] && [ $services_status -eq 1 ]
 	then
-		statusArray[$component]="Successful( Build Number : $timestamp_build )"
+		statusArray[$component]="Successful( Deployed Build Number : $timestamp_build, Build Number on Confluence :  $release_build )"
 		log
 		log
 		log
-		log "============================================================================================================================="
+		log "================================================================================================================"
 		log "The deployment/rollback of $component was successful."
-		log "============================================================================================================================="
+		log "================================================================================================================"
 		log
 		log
 		#echo "Successful( Version : $timestamp_release )"
 	else
-		statusArray[$component]="Failed( Build Number : $timestamp_build )"
+		statusArray[$component]="Failed( Deployed Build Number : $timestamp_build, Build Number on Confluence :  $release_build )"
 		log
 		log
 		log
-		log "============================================================================================================================="
+		log "================================================================================================================"
 		log "The deployment/rollback of $component has failed."
 		if [ $timestamp_status -eq 1 ]
 		then
@@ -833,7 +896,7 @@ verify() {
 		then
 			log "The desired build of $component has not been deployed/rolled back. Please check the symlink at $releases_path."
 		fi
-		log "============================================================================================================================="
+		log "================================================================================================================"
 		log
 		log
 		#echo "Failed( Version : $timestamp_release )"
@@ -874,7 +937,7 @@ deploy_master() {
 #main script
 		log
 		log
-		log "==================================================`date`========================================================="
+		log "================================`date`================================"
 
 if [[ $# -eq 0 ]]; then
 	err "Usage: ${0} {option}"
@@ -899,6 +962,9 @@ case "${1}" in
 		  	deploy_master $component $abort_on_fail deploy
 			iter=$((iter+1))
 		  done
+		  log
+		  log
+		  log "=================================FINAL DEPLOYMENT STATUS( $server )================================"
 	  else
 	  	  iter=1
 	  	  for component in "${choice_list[@]}"
@@ -911,6 +977,9 @@ case "${1}" in
 			deploy_master $component $abort_on_fail deploy
 			iter=$((iter+1))
 		  done
+		  log
+		  log
+		  log "=================================FINAL DEPLOYMENT STATUS( $server )================================"
 	  fi
 	  ;;
 	-r|--rollback)
@@ -927,6 +996,9 @@ case "${1}" in
 			  deploy_master $component $abort_on_fail rollback
 			  iter=$((iter+1))
 		  done
+		  log
+		  log
+		  log "=================================FINAL ROLLBACK STATUS( $server )================================"
 	  else
 	  	  iter=1
 	  	  for component in "${choice_list[@]}"
@@ -939,6 +1011,9 @@ case "${1}" in
 			  deploy_master $component $abort_on_fail rollback
 			  iter=$((iter+1))
 		  done
+		  log
+		  log
+		  log "=================================FINAL ROLLBACK STATUS( $server )================================"
 	  fi
 	  ;;
 	*)
@@ -947,16 +1022,6 @@ case "${1}" in
 	  ;;
 esac
 
-log
-log
-log
-if [ "$action" == "-d" ]
-then
-	log "=================================FINAL DEPLOYMENT STATUS( $server )================================"
-elif [ "$action" == "-r" ]
-then
-	log "=================================FINAL ROLLBACK STATUS( $server )================================"
-fi
 log
 log
 log "=============================================================="

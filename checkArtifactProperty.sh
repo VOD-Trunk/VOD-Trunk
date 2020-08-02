@@ -1,60 +1,125 @@
 #!/bin/bash
 
-Deployment_env=$1
+Deployment_Env=$1
 Activity=$2
-Release_version=$3
-UserName=$4
-Password=$5
-user_type=$6
-Promoting_from=$7
+ReleaseVersion=$3
+ArtifactoryUser=$4
+ArtifactoryPassword=$5
+UserType=$6
+PromotingFrom=$7
+JenkinsWorkspace=$8
+LoginUser=$9
 
+export DateTimeStamp=$(date +%Y%m%d-%H%M)
 
-if [ "$Deployment_env" == "Support" ] && [ "$Activity" == "Deploy" ]
-then
-    #isQADone=`curl -sS -u "$UserName":"$Password" -X GET 'http://artifactory.tools.ocean.com/artifactory/api/storage/libs-release-local/com/uievolution/exm/exm/"$Release_version"?properties=QA' | grep "Done" | wc -l`
-    isQADone=1
+UrlPart1="http://artifactory.tools.ocean.com/artifactory/api/storage"
+urls=`cat $JenkinsWorkspace/tmp/urls.txt`
+IFS=$'\n'
+printf "Current Date: $DateTimeStamp\n"
+for row in $urls
+do
+    Component=`echo $row | cut -d '>' -f 1 | awk '{$1=$1};1'`
+    UrlPart2=`echo $row | cut -d '>' -f 2 | awk '{$1=$1};1' | cut -d '/' -f5-`
 
-    if [ ${isQADone} -eq 1 ]
+    if [ "$Deployment_Env" == "SUPPORT" ] && [ "$Activity" == "Deploy" ]
     then
-        echo "We are good to deploy in Support environment."
-    else
-         exit 1
-    fi
+        isQADone=`curl -sS -u "$ArtifactoryUser":"$ArtifactoryPassword" -X GET ''${UrlPart1}/${UrlPart2}'?properties=QA_PROMOTION_TIME' | grep "QA_PROMOTION_TIME" | wc -l`
+        #isQADone=1
 
-elif [ "$Deployment_env" == "Production" ] && [ "$Activity" == "Deploy" ]
-then
-    #isSupportDone=`curl -sS -u "${UserName}":"${Password}" -X GET 'http://artifactory.tools.ocean.com/artifactory/api/storage/libs-release-local/com/uievolution/exm/exm/"${Release_version}"?properties=Support' | grep "Done" | wc -l`
-    isSupportDone=1
-    if [ $isSupportDone -eq 1 ]
+        if [ ${isQADone} -eq 1 ]
+        then
+            printf "\n\nQA=Done is the property set on $Component of $ReleaseVersion\n\n"
+            continue
+            #echo "We are good to deploy in Support environment."
+        else
+            printf "\n\nTesting not completed in QA environment for $Component of ${ReleaseVersion}. $ReleaseVersion is not ready to be deployed in Support setup.\n\n"
+            echo `curl -sS -v -u "${ArtifactoryUser}":"${ArtifactoryPassword}" -X GET ''${UrlPart1}/${UrlPart2}'?properties=QA_PROMOTION_TIME'`
+            exit 1
+        fi
+
+    elif [ "$Deployment_Env" == "PRODUCTION" ] && [ "$Activity" == "Deploy" ]
     then
-        echo "We are good to deploy in Production environment."
-    else
-         exit 1
+        isSupportDone=`curl -sS -u "${ArtifactoryUser}":"${ArtifactoryPassword}" -X GET ''${UrlPart1}/${UrlPart2}'?properties=SUPPORT_PROMOTION_TIME' | grep "SUPPORT_PROMOTION_TIME" | wc -l`
+        #isSupportDone=1
+        if [ $isSupportDone -eq 1 ]
+        then
+            printf "\n\nSupport=Done is the property set on $Component of $ReleaseVersion\n\n"
+            continue
+            #echo "We are good to deploy in Production environment."
+        else
+             printf "\n\nDeployment is not completed in Support environment for $Component of ${ReleaseVersion}. $ReleaseVersion is not ready to be deployed in Production.\n\n"
+             
+             echo `curl -sS -v -u "${ArtifactoryUser}":"${ArtifactoryPassword}" -X GET ''${UrlPart1}/${UrlPart2}'?properties=SUPPORT_PROMOTION_TIME'`
+             exit 1
+        fi
+    elif [ "$Deployment_Env" == "QA" ] && [ "$Activity" == "Deploy" ]
+    then
+        isDevDone=`curl -sS -u "${ArtifactoryUser}":"${ArtifactoryPassword}" -X GET ''${UrlPart1}/${UrlPart2}'?properties=DEV_PROMOTION_TIME' | grep "DEV_PROMOTION_TIME" | wc -l`
+        #isSupportDone=1
+        if [ $isDevDone -eq 1 ]
+        then
+            printf "\n\Development=Done is the property set on $Component of $ReleaseVersion\n\n"
+            continue
+            #echo "We are good to deploy in Production environment."
+        else
+             printf "\n\nDeployment is not completed in Development environment for $Component of ${ReleaseVersion}. $ReleaseVersion is not ready to be deployed in QA.\n\n"
+             
+             echo `curl -sS -v -u "${ArtifactoryUser}":"${ArtifactoryPassword}" -X GET ''${UrlPart1}/${UrlPart2}'?properties=DEV_PROMOTION_TIME'`
+             exit 1
+        fi
+    elif ([ "$Deployment_Env" == "NA" ] || [ "$Deployment_Env" == "DEV" ]) && [ "$Activity" == "Deploy" ]
+    then
+    	printf "\n\nProperty checking not required.\n\n"
     fi
-elif ([ "$Deployment_env" == "NA" ] || [ "$Deployment_env" == "QA" ]) && [ "$Activity" == "Deploy" ]
-then
-	echo "Property checking not required."
-fi
 
 
-if [ "$Activity" == "Promote" ] && [ "$Promoting_from" == "QA" ]
-then
-	if [ "$user_type" == "QA" ] || [ "$user_type" == "Super" ]
-	then
-		echo "Setting QA = Done."
-    	#curl -sS -u "${UserName}":"${Password}" -X PUT "http://artifactory.tools.ocean.com/artifactory/api/storage/libs-release-local/com/uievolution/exm/exm/'${Release_version}'?properties=QA=Done"
-    else
-    	echo "This user is not allowed to set property QA = Done."
-    	exit 1
+    if [ "$Activity" == "Promote" ] && [ "$PromotingFrom" == "QA" ]
+    then
+    	printf "\nPromoting $Component of $ReleaseVersion to Support Setup ...\n\n"
+        curl -sS -u "${ArtifactoryUser}":"${ArtifactoryPassword}" -X PUT ''${UrlPart1}/${UrlPart2}'?properties=XS=Done;QA_PROMOTION_TIME='${DateTimeStamp}';QA_USER='${LoginUser}''
+        isQADone=`curl -sS -u "$ArtifactoryUser":"$ArtifactoryPassword" -X GET ''${UrlPart1}/${UrlPart2}'?properties=QA_PROMOTION_TIME' | grep "QA_PROMOTION_TIME" | wc -l`
+        echo `curl -sS  -u "${ArtifactoryUser}":"${ArtifactoryPassword}" -X GET ''${UrlPart1}/${UrlPart2}'?properties=QA_PROMOTION_TIME'`
+    	if [ ${isQADone} -eq 1 ]
+        then
+           	printf "\n\nSuccessfully set property QA = Done on $Component of $ReleaseVersion\n\n"
+        else
+           	printf "\n\nError in setting Property for QA environment for $Component of $ReleaseVersion. Please try again.\n\n"
+           	continue
+        fi
+    elif [ "$Activity" == "Promote" ] && [ "$PromotingFrom" == "SUPPORT" ]
+    then
+    	printf "Promoting $Component of $ReleaseVersion to Production ...\n\n"
+        isQADone=`curl -sS -u "$ArtifactoryUser":"$ArtifactoryPassword" -X GET ''${UrlPart1}/${UrlPart2}'?properties=QA_PROMOTION_TIME' | grep "QA_PROMOTION_TIME" | wc -l`
+    	if [ ${isQADone} -eq 1 ]
+        then
+            curl -sS -u "${ArtifactoryUser}":"${ArtifactoryPassword}" -X PUT ''${UrlPart1}/${UrlPart2}'?properties=SUPPORT=Done;SUPPORT_PROMOTION_TIME='${DateTimeStamp}';SUPPORT_USER='${LoginUser}''
+        	isSupportDone=`curl -sS -u "$ArtifactoryUser":"$ArtifactoryPassword" -X GET ''${UrlPart1}/${UrlPart2}'?properties=SUPPORT_PROMOTION_TIME' | grep "SUPPORT_PROMOTION_TIME" | wc -l`
+            echo `curl -sS -u "${ArtifactoryUser}":"${ArtifactoryPassword}" -X GET ''${UrlPart1}/${UrlPart2}'?properties=SUPPORT_PROMOTION_TIME'`
+    		if [ ${isSupportDone} -eq 1 ]
+           	then
+           		printf "\n\nSuccessfully set property SUPPORT = Done on $Component of $ReleaseVersion\n\n"
+        	else
+           		printf "\n\nError in setting Property SUPPORT=Done on $Component of $ReleaseVersion. Please try again.\n\n"
+          		exit 1
+        	fi	
+        else
+           	printf "\n\n$Component of $ReleaseVersion is not promoted in QA environment, can't be promoted directly from Support Environment to Production\n\n"
+           	exit 1
+        fi
+
+	elif [ "$Activity" == "Promote" ] && [ "$PromotingFrom" == "DEV" ]
+    then
+   		printf "Promoting $Component of $ReleaseVersion to QA ...\n\n"
+        curl -sS -u "${ArtifactoryUser}":"${ArtifactoryPassword}" -X PUT ''${UrlPart1}/${UrlPart2}'?properties=DEV=Done;DEV_PROMOTION_TIME='${DateTimeStamp}';DEV_USER='${LoginUser}''
+        isDevDone=`curl -sS -u "$ArtifactoryUser":"$ArtifactoryPassword" -X GET ''${UrlPart1}/${UrlPart2}'?properties=DEV_PROMOTION_TIME' | grep "DEV_PROMOTION_TIME" | wc -l`
+        echo `curl -sS -u "${ArtifactoryUser}":"${ArtifactoryPassword}" -X GET ''${UrlPart1}/${UrlPart2}'?properties=DEV_PROMOTION_TIME'`
+    	if [ ${isDevDone} -eq 1 ]
+        then
+           	printf "\n\nSuccessfully set property DEV = Done on $Component of $ReleaseVersion\n\n"
+        else
+           	printf "\n\nError in setting Property DEV=Done on $Component of $ReleaseVersion. Please try again.\n\n"
+           	exit 1
+        fi	
     fi
-elif [ "$Activity" == "Promote" ] && [ "$Promoting_from" == "Support" ]
-then
-	if [ "$user_type" == "Support" ] || [ "$user_type" == "Super" ]
-	then
-		echo "Setting Support = Done."
-	    #curl -sS -u "${UserName}":"${Password}" -X PUT "http://artifactory.tools.ocean.com/artifactory/api/storage/libs-release-local/com/uievolution/exm/exm/'${Release_version}'?properties=Support=Done"
-	else
-		echo "This user is not allowed to set property Support = Done."
-		exit 1
-	fi
-fi
+done
+
