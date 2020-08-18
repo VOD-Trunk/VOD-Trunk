@@ -5,10 +5,9 @@ Activity=$2
 ReleaseVersion=$3
 ArtifactoryUser=$4
 ArtifactoryPassword=$5
-UserType=$6
-PromotingFrom=$7
-JenkinsWorkspace=$8
-LoginUser=$9
+PromotingFrom=$6
+JenkinsWorkspace=$7
+LoginUser=$8
 
 export DateTimeStamp=$(date +%Y%m%d-%H%M)
 
@@ -73,7 +72,7 @@ do
     fi
 
 
-    if [ "$Activity" == "Promote" ] && [ "$PromotingFrom" == "QA" ]
+    if [ "$Activity" == "Promote" ] && [ "$PromotingFrom" == "QA_TO_SUPPORT" ]
     then
     	printf "\nPromoting $Component of $ReleaseVersion to Support Setup ...\n\n"
         curl -sS -u "${ArtifactoryUser}":"${ArtifactoryPassword}" -X PUT ''${UrlPart1}/${UrlPart2}'?properties=XS=Done;QA_PROMOTION_TIME='${DateTimeStamp}';QA_USER='${LoginUser}''
@@ -86,7 +85,7 @@ do
            	printf "\n\nError in setting Property for QA environment for $Component of $ReleaseVersion. Please try again.\n\n"
            	continue
         fi
-    elif [ "$Activity" == "Promote" ] && [ "$PromotingFrom" == "SUPPORT" ]
+    elif [ "$Activity" == "Promote" ] && [ "$PromotingFrom" == "SUPPORT_TO_PROD" ]
     then
     	printf "Promoting $Component of $ReleaseVersion to Production ...\n\n"
         isQADone=`curl -sS -u "$ArtifactoryUser":"$ArtifactoryPassword" -X GET ''${UrlPart1}/${UrlPart2}'?properties=QA_PROMOTION_TIME' | grep "QA_PROMOTION_TIME" | wc -l`
@@ -107,7 +106,7 @@ do
            	exit 1
         fi
 
-	elif [ "$Activity" == "Promote" ] && [ "$PromotingFrom" == "DEV" ]
+	elif [ "$Activity" == "Promote" ] && [ "$PromotingFrom" == "DEV_TO_QA" ]
     then
    		printf "Promoting $Component of $ReleaseVersion to QA ...\n\n"
         curl -sS -u "${ArtifactoryUser}":"${ArtifactoryPassword}" -X PUT ''${UrlPart1}/${UrlPart2}'?properties=DEV=Done;DEV_PROMOTION_TIME='${DateTimeStamp}';DEV_USER='${LoginUser}''
@@ -122,4 +121,3 @@ do
         fi	
     fi
 done
-

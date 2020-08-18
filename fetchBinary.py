@@ -5,6 +5,8 @@ import json
 import re
 import os
 import shutil
+import datetime
+import ast
 
 
 def CheckConfluencePage(pageName):
@@ -23,7 +25,7 @@ def CheckConfluencePage(pageName):
     print(response.request.url)
 
     if response.status_code == 200:
-        print ("HTTP Query successful:")
+        print ("HTTP Query successful: Confluence page exists ::" +pageName)
         searchResult=json.loads(response.text)['results']
 
         if len(searchResult)==0:
@@ -74,6 +76,7 @@ def GetContentInformation(ContentId,headers):
     applicationVersion=[]
     applicationBuild=[]
     artifactoryUrl=[]
+    confluence_md5sum=[]
     yesNo=[]
     test=[]
     TAG_RE = re.compile(r'<[^>]+>')
@@ -95,26 +98,109 @@ def GetContentInformation(ContentId,headers):
                 #print("applicationBuild:"+ columnValue)
         elif recordCount%7== 4:
                 artifactoryUrl.append(columnValue)
+        elif recordCount%7== 5:
+                confluence_md5sum.append(columnValue)
         elif recordCount%7== 6:
                 yesNo.append(columnValue)
 
 
         recordCount= recordCount + 1
-        #print(recordCount)
-    return (applicationName,applicationVersion,applicationBuild,artifactoryUrl,yesNo)
+    return (applicationName,applicationVersion,applicationBuild,artifactoryUrl,confluence_md5sum,yesNo)
 
 # end of function //GetContentInformation
 
+def GetScheduleContentInformation(ContentId,headers):
+
+    url = "https://carnival.atlassian.net/wiki/rest/api/content/" +str(ContentId) + "?expand=body.storage"
+
+    response = requests.request(
+       "GET",
+       url,
+       headers=headers
+    )
+
+    if response.status_code == 200:
+        print ("Query successful:Confluence page exist")
+    else:
+        print(response)
+        print ("Confluence page not exist or other error::",url)
+        exit(1)
+
+    searchString = response.text
+    subTable = re.findall(r'<td>(.+?)</td>',searchString)
+    recordCount=0
+    columnCount=0
+    shipName=[]
+    releasePage=[]
+    releaseVersion=[]
+    deploymentDate=[]
+    deploymentStatus=[]
+
+    TAG_RE = re.compile(r'<[^>]+>')
+    for x in subTable:
+
+        columnValue=TAG_RE.sub('', x)
+
+        if recordCount%7 == 0:  
+                shipName.append(columnValue)
+                #print("applicationName:"+ columnValue)
+        elif recordCount%7== 1:
+                releasePage.append(columnValue)
+                #print("applicationVersion:"+ columnValue)
+        elif recordCount%7== 2:
+                releaseVersion.append(columnValue)
+                #print("applicationBuild:"+ columnValue)
+        elif recordCount%7== 3:
+                deploymentDate.append(columnValue)
+        elif recordCount%7== 4:
+                deploymentStatus.append(columnValue)
 
 
-pageName = sys.argv[1]
+        recordCount= recordCount + 1
+    return (shipName,releasePage,releaseVersion,deploymentDate,deploymentStatus)
+
+# end of function //GetScheduleContentInformation
+
+#Main script
+print("Starting...\n")
+
+headers = {
+           "Accept": "application/json",
+           "Content-Type": "application/json",
+           "Authorization": "Basic ZGVlcGFrLnJvaGlsbGFAaHNjLmNvbTpkMnl0NWJ4TGdmcFA4cG93S3VsOUQyNTE="
+          }
+
+today = datetime.date.today()
+print("Today's date:", today)
+
+now = datetime.datetime.now()
+
+currentDate = now.strftime("%m/%d/%Y")
+
+pageNameRelease = sys.argv[1]
 relName = sys.argv[2]
 action = sys.argv[3]
 workspace = sys.argv[4]
 components = sys.argv[5]
 username = sys.argv[6]
 password = sys.argv[7]
+transfer_flag = sys.argv[8]
+pageNameMW = sys.argv[9]
+deploymentEnv = sys.argv[10]
+targetShipName = sys.argv[11]
 partial_deploy = 2
+
+releasesPath = workspace + '/Releases/'
+newReleaseDir = releasesPath + relName
+
+if os.path.isdir(newReleaseDir) == True:
+    shutil.rmtree(newReleaseDir)
+
+scheduled_ships_path = workspace + "/tmp/scheduled_ships.txt"
+
+if os.path.exists(scheduled_ships_path):
+    with open(scheduled_ships_path, 'w') as f:
+        f.truncate()
 
 builds_file_path = workspace + "/tmp/component_build_mapping.txt"
 
@@ -127,12 +213,6 @@ url_file_path = workspace + "/tmp/urls.txt"
 if os.path.exists(url_file_path):
     with open(url_file_path, 'w') as f:
         f.truncate()
-
-releasesPath = workspace + '/Releases/'
-newReleaseDir = releasesPath + relName
-
-if os.path.isdir(newReleaseDir) == True:
-    shutil.rmtree(newReleaseDir)
 
 log_path = 'logs'
 path = os.path.join(workspace,log_path)
@@ -153,69 +233,116 @@ path = os.path.join(workspace,tmp_path)
 if os.path.isdir(path) != True:
     os.makedirs(path)
 
-
-if action == "Deploy" or action == "Promote":
-    applicationName=[]
-    applicationVersion=[]
-    applicationBuild=[]
-    yesNo=[]
-    finalArtifactoryUrl={}
-    
-
-    #Main script
-    print("Starting...\n")
-
-    headers = {
-               "Accept": "application/json",
-               "Content-Type": "application/json",
-               "Authorization": "Basic ZGVlcGFrLnJvaGlsbGFAaHNjLmNvbTpkMnl0NWJ4TGdmcFA4cG93S3VsOUQyNTE="
-            }
-
-    releaseComponents=[]
-    releaseArtifactsUrl=[]
-    releaseBuildNumbers=[]
-
+if action == "ScheduleDeploy" or action == "Deploy":
     #Page ID to get the page details
     contentID=0
+    pageName = pageNameMW
     contentID,errorValue = CheckConfluencePage(pageName)
-    if contentID ==0:
-            print(errorValue)
+    shipNames=[]
+    releasePage=[]
+    releaseVersion=[]
+    deploymentDate=[]
+    deploymentStatus=[]
+    shipNamesFinal=[]
+    if contentID == 0:
+      print(errorValue)
     else:
-            applicationName,applicationVersion,applicationBuild,artifactoryUrl,yesNo =GetContentInformation(contentID,headers)
+      shipNames,releasePage,releaseVersion,deploymentDate,deploymentStatus =GetScheduleContentInformation(contentID,headers)
+      for i, shipName in enumerate(shipNames):
+        if i == 0 :
+            continue
+        if len(deploymentDate[i]) != 0:
+            if action == "Deploy":
+                date_obj = datetime.datetime.strptime(deploymentDate[i], '%m/%d/%Y').strftime('%Y-%m-%d')
+                print(date_obj)
+                print(now.strftime('%Y-%m-%d'))
+                if date_obj == now.strftime('%Y-%m-%d'):
+                    shipNamesFinal.append(shipName)
+            elif action == "ScheduleDeploy":
+                date_time_obj = datetime.datetime.strptime(deploymentDate[i], '%m/%d/%Y')
+                if date_time_obj >= now:
+                    shipNamesFinal.append(shipName)
+                    jenkinsconfig_path = workspace + "/jenkinsconfig.json"
+                    with open(jenkinsconfig_path) as f:
+                        r = json.load(f)
+                        ipaddr_json = ast.literal_eval(json.dumps(r))
+                        if shipName == "XS":
+                            ipaddr = ipaddr_json["jenkins"]["environments"]["QA"][shipName]
+                        else:
+                            ipaddr = ipaddr_json["jenkins"]["environments"]["PRODUCTION"][shipName]
+                        print("\nShip " + shipName + " is ready for release deployment. Initiating transfer of artifacts to " + ipaddr)
 
-    if components == "All":
-        partial_deploy = 2
-    else:
-        component_list = components.split(",")
-        partial_deploy = 1
+                    with open(scheduled_ships_path, 'a+') as f:
+                        f.write(shipName + ":" + ipaddr +"\n")
+                else:
+                    print("\nShip " +shipName +" is not ready for release Deployment.")
 
-    if partial_deploy == 2:
-        for index, element in enumerate(yesNo):
-                if element == "Y":
-                    releaseComponents.append(applicationName[index])
-                    releaseBuildNumbers.append(applicationBuild[index])
-                    releaseArtifactsUrl.append(artifactoryUrl[index])
-                    finalArtifactoryUrl = dict(zip(releaseComponents,releaseArtifactsUrl))
-                    component_build_mapping = dict(zip(releaseComponents,releaseBuildNumbers))
-    else:
-        for index, element in enumerate(yesNo):
-                if element == "Y" and applicationName[index] in component_list:
-                    releaseComponents.append(applicationName[index])
-                    releaseBuildNumbers.append(applicationBuild[index])
-                    releaseArtifactsUrl.append(artifactoryUrl[index])
-                    finalArtifactoryUrl = dict(zip(releaseComponents,releaseArtifactsUrl))
-                    component_build_mapping = dict(zip(releaseComponents,releaseBuildNumbers))
-                elif element == "N" and applicationName[index] in component_list:
-                    print("INFO--->  Selected component " + applicationName[index] + " is not a part of Release : " + relName)
-                    continue
+if action == "Deploy" or action == "Promote" or (action == "ScheduleDeploy" and len(shipNamesFinal) != 0):
 
-    if len(finalArtifactoryUrl) == 0:
-        print("None of the selected components is a part of Release : " + relName)
+    if action == "Deploy" and targetShipName not in shipNamesFinal:
+        print("\n\nThe MW for deployment of " + relName + " on " + targetShipName + " is not scheduled for today.\n\n")
         exit(1)
+    else:
+    
+        applicationName=[]
+        applicationVersion=[]
+        applicationBuild=[]
+        yesNo=[]
+        finalArtifactoryUrl={}
+        component_md5sum_mapping={}
+        component_build_mapping={}
+        
 
-    print("\n\nFollowing are the artifacts in: " + relName + "\n\n")
-    for key, value in finalArtifactoryUrl.items():
-            
+        releaseComponents=[]
+        releaseArtifactsUrl=[]
+        releaseBuildNumbers=[]
+        releaseArtifactMd5sum=[]
+
+        #Page ID to get the page details
+        contentID=0
+        pageName = pageNameRelease
+        contentID,errorValue = CheckConfluencePage(pageName)
+        if contentID ==0:
+                print(errorValue)
+        else:
+                applicationName,applicationVersion,applicationBuild,artifactoryUrl,confluence_md5sum,yesNo =GetContentInformation(contentID,headers)
+
+        if components == "All":
+            partial_deploy = 2
+        else:
+            component_list = components.split(",")
+            partial_deploy = 1
+
+        if partial_deploy == 2:
+            for index, element in enumerate(yesNo):
+                    if element == "Y":
+                        releaseComponents.append(applicationName[index])
+                        releaseBuildNumbers.append(applicationBuild[index])
+                        releaseArtifactsUrl.append(artifactoryUrl[index])
+                        releaseArtifactMd5sum.append(confluence_md5sum[index])
+                        finalArtifactoryUrl = dict(zip(releaseComponents,releaseArtifactsUrl))
+                        component_build_mapping = dict(zip(releaseComponents,releaseBuildNumbers))
+        else:
+            for index, element in enumerate(yesNo):
+                    if element == "Y" and applicationName[index] in component_list:
+                        releaseComponents.append(applicationName[index])
+                        releaseBuildNumbers.append(applicationBuild[index])
+                        releaseArtifactsUrl.append(artifactoryUrl[index])
+                        releaseArtifactMd5sum.append(confluence_md5sum[index])
+                        finalArtifactoryUrl = dict(zip(releaseComponents,releaseArtifactsUrl))
+                        component_build_mapping = dict(zip(releaseComponents,releaseBuildNumbers))
+                        component_md5sum_mapping = dict(zip(releaseComponents,releaseArtifactMd5sum))
+                    elif element == "N" and applicationName[index] in component_list:
+                        print("INFO--->  Selected component " + applicationName[index] + " is not a part of Release : " + relName)
+                        continue
+
+        if len(finalArtifactoryUrl) == 0:
+            print("None of the selected components is a part of Release : " + relName)
+            exit(1)
+
+        print("\n\nFollowing are the artifacts in: " + relName + "\n\n")
+        for key, value in finalArtifactoryUrl.items():
+                
             componentConfluence = str(key)
             url = str(value)
             
@@ -262,7 +389,7 @@ if action == "Deploy" or action == "Promote":
 
             target_path = releasesPath + relName + '/' + component + '/' + url.split("/")[-1]
 
-            if action == "Deploy":
+            if (action == "Deploy" and transfer_flag == "true") or action == "ScheduleDeploy":
 
                 print("\nDownloading " + component +" ...\n")
 
@@ -273,9 +400,11 @@ if action == "Deploy" or action == "Promote":
                         print("File successfully stored at : " + target_path + "\n")
                 else:
                     print("Couldn't reach the provided url with response : "+ str(response.status_code) + "\n")
-                    exit(1)
+                    continue
 
-                with open(builds_file_path, 'a+') as f:
-                    f.write(component + " : " + str(component_build_mapping[componentConfluence]) + "\n")
+            with open(builds_file_path, 'a+') as f:
+                f.write(component + " : " + str(component_build_mapping[componentConfluence]) + "\n") #+ " : " + str(component_md5sum_mapping[componentConfluence]) + "\n")
+elif action == "Rollback":
+    print("\n\nfetchBinary stage is not required for Rollback.\n\n")
 else:
-    print("fetchBinary stage is not required for Rollback.")
+    print("\n\nThere is no ship currently scheduled for deployment.\n\n")

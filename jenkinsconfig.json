@@ -2,43 +2,34 @@
 	"jenkins": {
 		"Release": {
 			"2.63.0": "xiCMS 2.63.0: Artifacts + Installation Manual",	
-            		"2.64.0": "xiCMS 2.64.0 : Artifacts + Installation Manual"
+            "2.64.0": "xiCMS 2.64.0 : Artifacts + Installation Manual"
 		},
 
 	"user_access": {
-    		"dro7535": {
-	        	"operations": "Build,Deploy,Promote,Rollback",
-	        	"env": "DEV,QA,SUPPORT,PRODUCTION"
-     	},
-    		"dsa9123": {
-	        	"operations": "Deploy,Promote",
-	        	"env": "DEV,QA"
-      	},
+    	"dro7535": {
+	        "operations": "Build,Deploy,Promote,Rollback",
+	        "env": "DEV,QA,SUPPORT,PRODUCTION"
+      },
+    	"dsa9123": {
+	        "operations": "Deploy,Promote",
+	        "env": "DEV,QA"
+      },
 		"sga9397": {
-	   	     	"operations": "Build,Deploy,Promote,Rollback",
-	        	"env": "DEV,QA,SUPPORT,PRODUCTION"
-      	},
+	        "operations": "Build,Deploy,Promote,Rollback",
+	        "env": "DEV,QA,SUPPORT,PRODUCTION"
+      },
 	  
 		"abh5436": {
-	        	"operations": "Deploy,Promote",
-	        	"env": "SUPPORT,PRODUCTION"
-      	}
+	        "operations": "Deploy,Promote",
+	        "env": "SUPPORT,PRODUCTION"
+      }
 	  
 	},
-
-      "user_env": {
-		"ach5776": "Support",
-		"dro7535": "Super",
-		"sa-jenkins": "Super",
-		"dsa9123": "QA",
-        	"rsa2826": "Development",
-        	"sga9397": "Super"
-		},
-		
+   
 	"environments": {
 		"NA": { "NA": "000.000.000.000" },
       	"DEV": { "DEV": "000.000.000.000" },
-		"QA": { "QA": "10.127.136.31" },
+		"QA": { "XS": "10.127.136.31" },
 		"SUPPORT": { "SUPPORT": "192.168.248.161" },
 		"PRODUCTION": {
 			"NA": "000.000.000.000",
@@ -56,7 +47,7 @@
 			"Diamond": "172.29.204.194",
 			"Emerald": "172.29.124.233",
 			"Coral": "10.120.69.150",
- 		        "Enchanted": "10.125.69.144",
+            "Enchanted": "10.125.69.145",
 			"KODM": "10.115.50.52",
 			"NADM": "10.9.200.52",
 			"EUDM": "10.9.196.53",

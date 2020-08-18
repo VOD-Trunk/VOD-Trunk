@@ -53,7 +53,7 @@ else
 		elif [ "${choice_list[$i]}" == "LeftNav Signage" ]
 		then
 			choice_list[$i]="exm-client-leftnav2-signage"
-		elif [ "${choice_list[$i]}" == "Exm-v2-plugin-location" ]
+		elif [ "${choice_list[$i]}" == "Exm-v2-plugin-location " ]
 		then
 			choice_list[$i]="location"
 		elif [ "${choice_list[$i]}" == "EXM Diagnostic Application" ]
@@ -198,7 +198,7 @@ get_current_build() {
 			then
 				mkdir -p /usr/local/nacos/releases
 			fi
-			current_build=`ls -la /usr/local/nacos/ | grep nacos.daemon.jar | cut -d '>' -f 2 | sed 's/ //g' | cut -d '/' -f 6`
+			current_build=`ls -la /usr/local/nacos/ | grep "nacos.daemon.jar " | cut -d '>' -f 2 | sed 's/ //g' | cut -d '/' -f 6`
 			releases_path='/usr/local/nacos'
 	fi
 
@@ -208,7 +208,7 @@ get_current_build() {
 			then
 				mkdir -p /usr/local/mutedaemon/releases
 			fi
-			current_build=`ls -la /usr/local/mutedaemon/ | grep mutedaemon.jar | cut -d '>' -f 2 | sed 's/ //g' | cut -d '/' -f 6`
+			current_build=`ls -la /usr/local/mutedaemon/ | grep "mutedaemon.jar " | cut -d '>' -f 2 | sed 's/ //g' | cut -d '/' -f 6`
 			releases_path='/usr/local/mutedaemon'
 	fi	
 
@@ -239,7 +239,7 @@ restart_services() {
 		log "Starting tomcat7 service for $component..."
 		log
 		service tomcat7 start #Start_Tomcat_Service
-		sleep 25
+		sleep 35
 		tomcat_status=`service tomcat7 status | grep running | wc -l`
 		
 		if [ $tomcat_status == 1 ]
@@ -303,6 +303,7 @@ deploy_new_build() {
 
 	if  [ "$component" == "exm-admin-tool" ] || [ "$component" == "exm-client-cruise" ] || [ "$component" == "exm-client-startup" ] || [ "$component" == "exm-client-leftnav2" ] || [ "$component" == "exm-client-leftnav2-signage" ] || [ "$component" == "exm-client-lite" ] || [ "$component" == "exm-diagnostic-app" ]
 	then
+
 		log "Starting the deployment of $component"
 		log
 		log "Taking backup of the current build."
@@ -454,7 +455,7 @@ deploy_new_build() {
 
 		log "Current $jar_symlink symlink is :"
 		log
-		log "`ls -l $releases_path | grep "$jar_symlink"`"
+		log "`ls -l $releases_path | grep "$jar_symlink "`"
 		log
 		log "Unlinking $jar_symlink symlink..."
 		log
@@ -913,6 +914,7 @@ deploy_master() {
 
 	releases_path=$(get_current_build $component | cut -d ":" -f 2)
 	current_build=$(get_current_build $component | cut -d ":" -f 1)
+    
 
 	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "nacos" ] || [ "$component"  == "excursion" ] || [  "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]
 	then
@@ -934,6 +936,24 @@ deploy_master() {
 	verify $component $releases_path $current_build $abort_on_fail $action
 }
 
+checkComponent() {
+
+	component=$1
+	
+	log "Checking if $component has been transferred..."
+    log
+    DIR="/root/Releases/$new_release/$component"
+    if [ "$(ls -A $DIR)" ]
+    then
+        log "$component has been transferred."
+        log
+    else
+        log "$component has not been transferred. Please transfer it from artifactory and then deploy."
+        log
+        exit 1
+    fi
+}
+
 #main script
 		log
 		log
@@ -952,8 +972,17 @@ case "${1}" in
 	  if [ $partial_flag == 2 ]
 	  then
 	  	  iter=1
-	  	  for component in `ls /root/Releases/$new_release`
+          components=`cat /root/Releases/tmp/component_build_mapping.txt`
+          IFS=$'\n'
+          
+          for row in $components
 		  do
+          	component=`echo $row | cut -d' ' -f1`
+          	checkComponent $component
+          done
+	  	  for row in $components
+		  do
+          	component=`echo $row | cut -d' ' -f1`
 		  	if [ $iter == 1 ]
 			then
 			log "Starting deployment of $new_release all components"
@@ -966,6 +995,10 @@ case "${1}" in
 		  log
 		  log "=================================FINAL DEPLOYMENT STATUS( $server )================================"
 	  else
+          for component in "${choice_list[@]}"
+	  	  do
+          	checkComponent $component
+          done
 	  	  iter=1
 	  	  for component in "${choice_list[@]}"
 		  do
@@ -1024,9 +1057,9 @@ esac
 
 log
 log
-log "=============================================================="
+log "==============================================================================================="
 for key in ${!statusArray[@]};
 do
 	log "${key} : ${statusArray[${key}]}"
-	log "=============================================================="
+	log "==============================================================================================="
 done
