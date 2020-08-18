@@ -965,6 +965,12 @@ fi
 
 case "${1}" in
 	-d|--deploy)
+	  if [ "$server" == "app01" ]
+	  then
+		  log "Transferring artifacts to app02."
+		  ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi' && scp -r /root/Releases/$new_release /root/Releases/tmp  app02:/root/Releases
+	  fi
+
 	  if [ $partial_flag == 2 ]
 	  then
 	  	  iter=1
@@ -1065,11 +1071,3 @@ do
 	log "${key} : ${statusArray[${key}]}"
 	log "==============================================================================================="
 done
-
-if [ "$server" == "app01" ] && [ "$action" == "-d" ] #&& [ "$transfer_flag" == "true" ]
-then
-
-	log "Transferring artifacts to app02."
-
-	ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi' && scp -r /root/Releases/$new_release /root/Releases/tmp  app02:/root/Releases
-fi
