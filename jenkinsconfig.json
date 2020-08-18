@@ -1,8 +1,8 @@
 {
 	"jenkins": {
 		"Release": {
-			"2.63.0": "xiCMS 2.63.0: Artifacts + Installation Manual",	
-            "2.64.0": "xiCMS 2.64.0 : Artifacts + Installation Manual"
+			"2.63.0": "xiCMS 2.63.0: Artifacts for Jenkins testing",	
+            "2.64.0": "xiCMS 2.64.0: Artifacts for Jenkins testing"
 		},
 
 	"user_access": {
@@ -14,7 +14,7 @@
 	        "operations": "Deploy,Promote",
 	        "env": "DEV,QA"
       },
-		"sga9397": {
+		"hsctest": {
 	        "operations": "Build,Deploy,Promote,Rollback",
 	        "env": "DEV,QA,SUPPORT,PRODUCTION"
       },

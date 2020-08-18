@@ -97,6 +97,8 @@ node {
                         """
                     }
 
+                    /*
+
                     stage('Check artifact property') {
                         
                         last_started = env.STAGE_NAME
@@ -107,6 +109,8 @@ node {
 
                         """
                     }
+
+                    */
                    
                    stage('Deploy'){
 
@@ -155,6 +159,8 @@ node {
 
 }
 
+/*
+
 def notifyBuild(String buildStatus = 'STARTED') {
   // build status of null means successful
   buildStatus = buildStatus ?: 'SUCCESS'
@@ -191,3 +197,4 @@ def notifyBuild(String buildStatus = 'STARTED') {
       recipientProviders: [[$class: 'DevelopersRecipientProvider']]
     )
 }
+*/
