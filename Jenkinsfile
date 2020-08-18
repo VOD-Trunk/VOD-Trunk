@@ -152,10 +152,12 @@ node {
         currentBuild.result = 'FAILURE'
         throw error
     }
+    /*
     finally {
         // Success or failure, always send notifications
         notifyBuild(currentBuild.result)
     }
+    */
 
 }
 
