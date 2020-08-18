@@ -9,10 +9,10 @@ action=$1
 
 server=$5
 
-#if [ "$server" == "app01" ] || [ "action" == "-d" ]
-#then
-#	scp -r /root/Releases/ app02:/root/
-#fi
+if [ "$server" == "app01" ] || [ "action" == "-d" ]
+then
+	scp -r /root/Releases/$new_release /root/Releases/tmp  app02:/root/
+fi
 
 
 declare -A statusArray
