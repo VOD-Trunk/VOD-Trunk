@@ -9,12 +9,6 @@ action=$1
 
 server=$5
 
-if [ "$server" == "app01" ] || [ "action" == "-d" ]
-then
-	scp -r /root/Releases/$new_release /root/Releases/tmp  app02:/root/
-fi
-
-
 declare -A statusArray
 
 if [ "$component_choice" == "All" ]
@@ -969,6 +963,13 @@ fi
 
 case "${1}" in
 	-d|--deploy)
+
+	  if [ "$server" == "app01" ]
+	  then
+		ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
+		scp -r /root/Releases/$new_release /root/Releases/tmp  app02:/root/
+	  fi
+
 	  if [ $partial_flag == 2 ]
 	  then
 	  	  iter=1
@@ -1049,6 +1050,14 @@ case "${1}" in
 		  log "=================================FINAL ROLLBACK STATUS( $server )================================"
 	  fi
 	  ;;
+	-t|--transfer)
+	  
+	  if [ "$server" == "app01" ]
+	  then
+		ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
+		scp -r /root/Releases/$new_release /root/Releases/tmp  app02:/root/
+	  fi
+
 	*)
 	  echo Unknown option ${1}
 	  exit 1
