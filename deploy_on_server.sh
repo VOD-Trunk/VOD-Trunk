@@ -983,11 +983,7 @@ case "${1}" in
 	        	log "$component could not be transferred successfully. Aborting Build !!"
 	            exit 1
 	        fi
-	      done	  
-	  	  log
-		  log "Transferring artifacts to app02."
-		  log
-		  ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi' && scp -r /root/Releases/$new_release /root/Releases/tmp  app02:/root/Releases
+	      done
 	  fi
 
 	  if [ $partial_flag == 2 ]
@@ -1110,3 +1106,12 @@ do
 	log "${key} : ${statusArray[${key}]}"
 	log "==============================================================================================="
 done
+
+
+if [ "$server" == "app01" ] && [ "$transfer_flag" == "true" ] || [ "$action" == "-d" ]
+then
+	log
+	log "Transferring artifacts to app02."
+	log
+	ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi' && scp -r /root/Releases/$new_release /root/Releases/tmp  app02:/root/Releases
+fi
