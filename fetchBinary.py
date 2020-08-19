@@ -320,6 +320,7 @@ if action == "Deploy" or action == "Promote" or (action == "ScheduleDeploy" and 
                         releaseArtifactMd5sum.append(confluence_md5sum[index])
                         finalArtifactoryUrl = dict(zip(releaseComponents,releaseArtifactsUrl))
                         component_build_mapping = dict(zip(releaseComponents,releaseBuildNumbers))
+                        component_md5sum_mapping = dict(zip(releaseComponents,releaseArtifactMd5sum))
         else:
             for index, element in enumerate(yesNo):
                     if element == "Y" and applicationName[index] in component_list:
