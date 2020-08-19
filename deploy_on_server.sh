@@ -935,28 +935,19 @@ deploy_master() {
 checkComponent() {
 
 	component=$1
-	transfer_flag=$2
 
-	if [ "$transfer_flag" == "false" ]
-	then
-	
-		log "Checking if $component has been transferred..."
-	    log
-	    DIR="/root/Releases/$new_release/$component"
-	    if [ "$(ls -A $DIR)" ]
-	    then
-	        log "$component has been transferred."
-	        log
-	    else
-	        log "$component has not been transferred. Please transfer it from artifactory and then deploy."
-	        log
-	        exit 1
-	    fi
-	else
-		log "Transfer checking already completed. This step is triggered only when Transfer_Of_Artifacts is unchecked."
-		log
-		log
-	fi
+	log "Checking if $component has been transferred..."
+    log
+    DIR="/root/Releases/$new_release/$component"
+    if [ "$(ls -A $DIR)" ]
+    then
+        log "$component has been transferred."
+        log
+    else
+        log "$component has not been transferred. Please transfer it from artifactory and then deploy."
+        log
+        exit 1
+    fi
 }
 
 #main script
@@ -1001,11 +992,14 @@ case "${1}" in
           components=`cat /root/Releases/tmp/component_build_mapping.txt`
           IFS=$'\n'
           
-          for row in $components
-		  do
-          	component=`echo $row | cut -d' ' -f1`
-          	checkComponent $component $transfer_flag
-          done
+          if [ "$transfer_flag" == "false" ]
+		  then
+	          for row in $components
+			  do
+	          	component=`echo $row | cut -d' ' -f1`
+	          	checkComponent $component
+	          done
+	      fi
 	  	  for row in $components
 		  do
           	component=`echo $row | cut -d' ' -f1`
@@ -1021,10 +1015,13 @@ case "${1}" in
 		  log
 		  log "=================================FINAL DEPLOYMENT STATUS( $server )================================"
 	  else
-          for component in "${choice_list[@]}"
-	  	  do
-          	checkComponent $component $transfer_flag
-          done
+	  	  if [ "$transfer_flag" == "false" ]
+		  then
+	          for component in "${choice_list[@]}"
+		  	  do
+	          	checkComponent $component
+	          done
+	      fi
 	  	  iter=1
 	  	  for component in "${choice_list[@]}"
 		  do
@@ -1124,7 +1121,3 @@ then
 	log
 	ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi' && scp -r /root/Releases/$new_release /root/Releases/tmp  app02:/root/Releases
 fi
-
-
-rm -rf /root/Releases/tmp
-rm -f /root/Releases/*.log
