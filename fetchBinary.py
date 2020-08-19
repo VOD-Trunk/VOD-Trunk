@@ -254,8 +254,6 @@ if action == "ScheduleDeploy" or action == "Deploy":
         if len(deploymentDate[i]) != 0:
             if action == "Deploy":
                 date_obj = datetime.datetime.strptime(deploymentDate[i], '%m/%d/%Y').strftime('%Y-%m-%d')
-                print(date_obj)
-                print(now.strftime('%Y-%m-%d'))
                 if date_obj == now.strftime('%Y-%m-%d'):
                     shipNamesFinal.append(shipName)
             elif action == "ScheduleDeploy":
