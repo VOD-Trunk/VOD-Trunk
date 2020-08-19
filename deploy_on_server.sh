@@ -935,19 +935,28 @@ deploy_master() {
 checkComponent() {
 
 	component=$1
+	transfer_flag=$2
+
+	if [ "$transfer_flag" == "false" ]
+	then
 	
-	log "Checking if $component has been transferred..."
-    log
-    DIR="/root/Releases/$new_release/$component"
-    if [ "$(ls -A $DIR)" ]
-    then
-        log "$component has been transferred."
-        log
-    else
-        log "$component has not been transferred. Please transfer it from artifactory and then deploy."
-        log
-        exit 1
-    fi
+		log "Checking if $component has been transferred..."
+	    log
+	    DIR="/root/Releases/$new_release/$component"
+	    if [ "$(ls -A $DIR)" ]
+	    then
+	        log "$component has been transferred."
+	        log
+	    else
+	        log "$component has not been transferred. Please transfer it from artifactory and then deploy."
+	        log
+	        exit 1
+	    fi
+	else
+		log "Transfer checking already completed. This step is triggered only when Transfer_Of_Artifacts is unchecked."
+		log
+		log
+	fi
 }
 
 #main script
@@ -995,7 +1004,7 @@ case "${1}" in
           for row in $components
 		  do
           	component=`echo $row | cut -d' ' -f1`
-          	checkComponent $component
+          	checkComponent $component $transfer_flag
           done
 	  	  for row in $components
 		  do
@@ -1014,7 +1023,7 @@ case "${1}" in
 	  else
           for component in "${choice_list[@]}"
 	  	  do
-          	checkComponent $component
+          	checkComponent $component $transfer_flag
           done
 	  	  iter=1
 	  	  for component in "${choice_list[@]}"
