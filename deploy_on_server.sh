@@ -936,12 +936,12 @@ checkComponent() {
 
 	component=$1
 
-	log "Checking if $component has been transferred..."
+	log "Checking if $component is present..."
     log
     DIR="/root/Releases/$new_release/$component"
     if [ "$(ls -A $DIR)" ]
     then
-        log "$component has been transferred."
+        log "$component has been present."
         log
     else
         log "$component has not been transferred. Please transfer it from artifactory and then deploy."
@@ -977,10 +977,10 @@ case "${1}" in
 
 	        if [ "$confluence_md5sum" == "$comp_md5sum" ]
 	        then
-	          	log "$component has been transferred to app01 successfully."
+	          	log "md5sum is same on confluence and server. $component has been transferred to app01 successfully."
 	          	log
 	        else
-	        	log "$component could not be transferred successfully. Aborting Build !!"
+	        	log "$component could not be transferred successfully. md5sum is not matching between confluence and server. Aborting Build !!"
 	            exit 1
 	        fi
 	      done
@@ -1000,6 +1000,7 @@ case "${1}" in
 	          	checkComponent $component
 	          done
 	      fi
+
 	  	  for row in $components
 		  do
           	component=`echo $row | cut -d' ' -f1`
@@ -1093,10 +1094,10 @@ case "${1}" in
 
 	        if [ "$confluence_md5sum" == "$comp_md5sum" ]
 	        then
-	          	log "$component has been transferred to app01 successfully."
+	          	log "md5sum is same on confluence and server. $component has been transferred to app01 successfully."
 	          	log
 	        else
-	        	log "$component could not be transferred successfully. Aborting Build !!"
+	        	log "$component could not be transferred successfully. md5sum is not matching between confluence and server. Aborting Build !!"
 	            exit 1
 	        fi
 	      done	  	
