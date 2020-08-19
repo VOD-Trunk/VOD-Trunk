@@ -971,9 +971,9 @@ case "${1}" in
 	      IFS=$'\n'
 	      for row in $rows
 	      do
-	        component=`echo $row | cut -d '>' -f 1 | awk '{$1=$1};1'`
-	        confluence_md5sum=`echo $row | cut -d '>' -f 3 | awk '{$1=$1};1'`
-	        comp_md5sum=`cd /root/Releases/$ReleaseVersion/$component && find -type f -exec md5sum "{}" + | cut -d' ' -f1`
+	        component=`echo $row | cut -d ':' -f 1`
+	        confluence_md5sum=`echo $row | cut -d ':' -f 3`
+	        comp_md5sum=`cd /root/Releases/$new_release/$component && find -type f -exec md5sum "{}" + | cut -d' ' -f1`
 
 	        if [ "$confluence_md5sum" == "$comp_md5sum" ]
 	        then
