@@ -936,8 +936,6 @@ checkComponent() {
 
 	component=$1
 
-	log "Checking if $component is present..."
-    log
     DIR="/root/Releases/$new_release/$component"
     if [ "$(ls -A $DIR)" ]
     then
@@ -987,6 +985,8 @@ case "${1}" in
 
 	  if [ $partial_flag == 2 ]
 	  then
+		  log "Checking if components are present..."
+	      log
 	  	  iter=1
           components=`cat /root/Releases/tmp/component_build_mapping.txt`
           IFS=$'\n'
@@ -1013,6 +1013,8 @@ case "${1}" in
 		  log
 		  log "=================================FINAL DEPLOYMENT STATUS( $server )================================"
 	  else
+	  	  log "Checking if components are present..."
+	      log
           for component in "${choice_list[@]}"
 	  	  do
           	checkComponent $component
