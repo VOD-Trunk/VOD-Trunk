@@ -2,16 +2,17 @@
 
 LoginUser=$1
 AllowedUsers=$2
-UserAccessEnv=$3
-Activity=$4
-Deployment_Environment=$5
-Promoting_From=$6
+Activity=$3
+Deployment_Environment=$4
+Promoting_From=$5
 Promoting_From=`echo $Promoting_From |cut -d'_' -f1`
+UserAccessEnv=$6
+UserAllowedOperation=$7
 
 isUserListed=`echo "$AllowedUsers" | grep "$LoginUser" | wc -l`
 isAllowedOperation=`echo "$UserAllowedOperation" | grep "$Activity" | wc -l`
 
-printf "Logged in user is : ${LoginUser}"
+printf "Logged in user is : $LoginUser"
 
 if [ "$isUserListed" -eq 1 ] 
 then
