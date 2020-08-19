@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ts=`date +'%s'`
-logfile='/root/Releases/exm-deployment.log'
+logfile='/root/Releases/tmp/exm-deployment.log'
 new_release=$2
 component_choice=$3
 abort_on_fail=$4
