@@ -936,18 +936,26 @@ checkComponent() {
 
 	component=$1
 
-	log "Checking if $component is present..."
-    log
-    DIR="/root/Releases/$new_release/$component"
-    if [ "$(ls -A $DIR)" ]
-    then
-        log "$component has been present."
-        log
-    else
-        log "$component has not been transferred. Please transfer it from artifactory and then deploy."
-        log
-        exit 1
-    fi
+	if [ "$transfer_flag" == "false" ]
+	then
+
+		log "Checking if $component is present..."
+	    log
+	    DIR="/root/Releases/$new_release/$component"
+	    if [ "$(ls -A $DIR)" ]
+	    then
+	        log "$component is present."
+	        log
+	    else
+	        log "$component has not been transferred. Please transfer it from artifactory and then deploy."
+	        log
+	        exit 1
+	    fi
+	else
+		log
+		log "md5sum has already been compared for all components. Do not need to check again. Moving ahead.."
+		log
+	fi
 }
 
 #main script
@@ -991,15 +999,11 @@ case "${1}" in
 	  	  iter=1
           components=`cat /root/Releases/tmp/component_build_mapping.txt`
           IFS=$'\n'
-          
-          if [ "$transfer_flag" == "false" ]
-		  then
-	          for row in $components
-			  do
-	          	component=`echo $row | cut -d' ' -f1`
-	          	checkComponent $component
-	          done
-	      fi
+          for row in $components
+		  do
+          	component=`echo $row | cut -d' ' -f1`
+          	checkComponent $component
+          done
 
 	  	  for row in $components
 		  do
@@ -1018,13 +1022,10 @@ case "${1}" in
 		  log
 		  log "=================================FINAL DEPLOYMENT STATUS( $server )================================"
 	  else
-	  	  if [ "$transfer_flag" == "false" ]
-		  then
-	          for component in "${choice_list[@]}"
-		  	  do
-	          	checkComponent $component
-	          done
-	      fi
+          for component in "${choice_list[@]}"
+	  	  do
+          	checkComponent $component
+          done
 	  	  iter=1
 	  	  for component in "${choice_list[@]}"
 		  do
