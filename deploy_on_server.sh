@@ -1005,6 +1005,8 @@ case "${1}" in
           	component=`echo $row | cut -d' ' -f1`
 		  	if [ $iter == 1 ]
 			then
+			log
+			log "================================================================================================================"
 			log "Starting deployment of $new_release all components"
 			log
 			fi
@@ -1027,6 +1029,8 @@ case "${1}" in
 		  do
 			if [ $iter == 1 ]
 			then
+			log
+			log "================================================================================================================"
 			log "Starting deployment of $new_release selected components"
 			log
 			fi
@@ -1046,6 +1050,8 @@ case "${1}" in
 		  do
 		  	 if [ $iter == 1 ]
 			  then
+			  	log
+				log "================================================================================================================"
 				log "Starting rollback of $new_release : All components"
 				log
 			  fi
@@ -1061,6 +1067,8 @@ case "${1}" in
 	  	  do
 	  	  	  if [ $iter == 1 ]
 			  then
+			  	log
+				log "================================================================================================================"
 				log "Starting rollback of $new_release : Selected components"
 				log
 			  fi
