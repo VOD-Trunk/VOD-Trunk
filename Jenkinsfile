@@ -18,9 +18,9 @@ node {
                 def Jconf = readJSON file: "${env.WORKSPACE}/jenkinsconfig.json"
                 def Confluence_Page = Jconf.jenkins.Release."${Release_Version}"
                 def IpAddr = Jconf.jenkins.environments."${Deployment_Environment}"."${Ship_Name}"
-                def AllowedUsers = Jconf.jenkins.user_access
+                def AllowedUsers = Jconf.jenkins.user_access.keySet()
                 UserAllowedOperation = Jconf.jenkins.user_access."${LoginUser}".operations
-                    UserAccessEnv = Jconf.jenkins.user_access."${LoginUser}".env
+                UserAccessEnv = Jconf.jenkins.user_access."${LoginUser}".env
 
                 stage('Check User Access Rights') {
                     
