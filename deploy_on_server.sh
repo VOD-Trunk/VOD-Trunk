@@ -967,6 +967,23 @@ case "${1}" in
 	-d|--deploy)
 	  if [ "$server" == "app01" ] && [ "$transfer_flag" == "true" ]
 	  then
+	  	  rows=`cat /root/Releases/tmp/component_build_mapping.txt`
+	      IFS=$'\n'
+	      for row in $rows
+	      do
+	        component=`echo $row | cut -d '>' -f 1 | awk '{$1=$1};1'`
+	        confluence_md5sum=`echo $row | cut -d '>' -f 3 | awk '{$1=$1};1'`
+	        comp_md5sum=`cd /root/Releases/$ReleaseVersion/$component && find -type f -exec md5sum "{}" + | cut -d' ' -f1`
+
+	        if [ "$confluence_md5sum" == "$comp_md5sum" ]
+	        then
+	          	log "$component has been transferred to app01 successfully."
+	          	log
+	        else
+	        	log "$component could not be transferred successfully. Aborting Build !!"
+	            exit 1
+	        fi
+	      done	  
 	  	  log
 		  log "Transferring artifacts to app02."
 		  log
@@ -1056,6 +1073,23 @@ case "${1}" in
 	-t|--transfer)
 	  if [ "$server" == "app01" ] && [ "$transfer_flag" == "true" ]
 	  then
+		  rows=`cat /root/Releases/tmp/component_build_mapping.txt`
+	      IFS=$'\n'
+	      for row in $rows
+	      do
+	        component=`echo $row | cut -d '>' -f 1 | awk '{$1=$1};1'`
+	        confluence_md5sum=`echo $row | cut -d '>' -f 3 | awk '{$1=$1};1'`
+	        comp_md5sum=`cd /root/Releases/$ReleaseVersion/$component && find -type f -exec md5sum "{}" + | cut -d' ' -f1`
+
+	        if [ "$confluence_md5sum" == "$comp_md5sum" ]
+	        then
+	          	log "$component has been transferred to app01 successfully."
+	          	log
+	        else
+	        	log "$component could not be transferred successfully. Aborting Build !!"
+	            exit 1
+	        fi
+	      done	  	
 	  	  log
 		  log "Transferring artifacts to app02."
 		  log
