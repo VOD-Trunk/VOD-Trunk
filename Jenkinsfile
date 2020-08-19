@@ -27,8 +27,8 @@ node {
                     //last_started = env.STAGE_NAME
 
                     sh """
-                            #!/bin/bash
-                            ${env.WORKSPACE}/checkUserAccessRights.sh "${LoginUser}" "${AllowedUsers}" "${Activity}" "${Deployment_Environment}" "${Promoting_From}" "${UserAccessEnv}" "${UserAllowedOperation}"
+                        #!/bin/bash
+                        ${env.WORKSPACE}/checkUserAccessRights.sh "${LoginUser}" "${AllowedUsers}" "${Activity}" "${Deployment_Environment}" "${Promoting_From}" "${UserAccessEnv}" "${UserAllowedOperation}"
                             
                     """
 

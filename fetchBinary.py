@@ -401,7 +401,7 @@ if action == "Deploy" or action == "Promote" or (action == "ScheduleDeploy" and 
                     continue
 
             with open(builds_file_path, 'a+') as f:
-                f.write(component + " : " + str(component_build_mapping[componentConfluence]) + "\n") #+ " : " + str(component_md5sum_mapping[componentConfluence]) + "\n")
+                f.write(component + " : " + str(component_build_mapping[componentConfluence]) + " : " + str(component_md5sum_mapping[componentConfluence]) + "\n")
 elif action == "Rollback":
     print("\n\nfetchBinary stage is not required for Rollback.\n\n")
 else:
