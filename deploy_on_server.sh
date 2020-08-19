@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ts=`date +'%s'`
-logfile='/root/Releases/tmp/exm-deployment-logs_`date +%Y_%m_%d__%H_%M_%S`'
+logfile='/root/Releases/tmp/exm-deployment.log'
 new_release=$2
 component_choice=$3
 abort_on_fail=$4
@@ -1125,4 +1125,4 @@ then
 	ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi' && scp -r /root/Releases/$new_release /root/Releases/tmp  app02:/root/Releases
 fi
 
-rm -f /root/Releases/*.log
+#rm -f /root/Releases/*.log
