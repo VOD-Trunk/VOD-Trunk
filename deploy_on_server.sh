@@ -936,26 +936,17 @@ checkComponent() {
 
 	component=$1
 
-	if [ "$transfer_flag" == "false" ]
-	then
-
-		log "Checking if $component is present..."
-	    log
-	    DIR="/root/Releases/$new_release/$component"
-	    if [ "$(ls -A $DIR)" ]
-	    then
-	        log "$component is present."
-	        log
-	    else
-	        log "$component has not been transferred. Please transfer it from artifactory and then deploy."
-	        log
-	        exit 1
-	    fi
-	else
-		log
-		log "md5sum has already been compared for all components. Do not need to check again. Moving ahead.."
-		log
-	fi
+	log "Checking if $component is present..."
+    log
+    DIR="/root/Releases/$new_release/$component"
+    if [ "$(ls -A $DIR)" ]
+    then
+        :
+    else
+        log "$component has not been transferred. Please transfer it from artifactory and then deploy."
+        log
+        exit 1
+    fi
 }
 
 #main script
