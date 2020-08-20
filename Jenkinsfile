@@ -129,6 +129,7 @@ def notifyBuild(String buildStatus = 'STARTED') {
   // Override default values based on build status
   if (buildStatus == 'STARTED') {
     color = 'YELLOW'
+    
     colorCode = '#FFFF00'
   } else if (buildStatus == 'SUCCESS') {
     color = 'GREEN'

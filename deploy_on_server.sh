@@ -1078,27 +1078,37 @@ case "${1}" in
 	-t|--transfer)
 	  if [ "$server" == "app01" ] && [ "$transfer_flag" == "true" ]
 	  then
-		  rows=`cat /root/Releases/tmp/component_build_mapping.txt`
-	      IFS=$'\n'
-	      for row in $rows
-	      do
-	        component=`echo $row | cut -d ':' -f 1 | awk '{$1=$1};1'`
-	        confluence_md5sum=`echo $row | cut -d ':' -f 3 | awk '{$1=$1};1'`
-	        comp_md5sum=`cd /root/Releases/$new_release/$component && find -type f -exec md5sum "{}" + | cut -d' ' -f1`
+	  	  if [ -f /root/Releases/tmp/component_build_mapping.txt ]
+	  	  then
+			  rows=`cat /root/Releases/tmp/component_build_mapping.txt`
+		      IFS=$'\n'
+		      for row in $rows
+		      do
+		        component=`echo $row | cut -d ':' -f 1 | awk '{$1=$1};1'`
+		        confluence_md5sum=`echo $row | cut -d ':' -f 3 | awk '{$1=$1};1'`
+		        comp_md5sum=`cd /root/Releases/$new_release/$component && find -type f -exec md5sum "{}" + | cut -d' ' -f1`
 
-	        if [ "$confluence_md5sum" == "$comp_md5sum" ]
-	        then
-	          	log "md5sum is same on confluence and server. $component has been transferred to app01 successfully."
-	          	log
-	        else
-	        	log "$component could not be transferred successfully. md5sum is not matching between confluence and server. Aborting Build !!"
-	            exit 1
-	        fi
-	      done	  	
-	  	  log
-		  log "Transferring artifacts to app02."
-		  log
-		  ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi' && scp -r /root/Releases/$new_release /root/Releases/tmp  app02:/root/Releases
+		        if [ "$confluence_md5sum" == "$comp_md5sum" ]
+		        then
+		          	log "md5sum is same on confluence and server. $component has been transferred to app01 successfully."
+		          	log
+		          	
+			    else
+		        	log "$component could not be transferred properly. md5sum is not matching between confluence and server. Aborting Build !!"
+		            exit 1
+		        fi
+		      done
+
+		      log
+		      log "Transferring artifacts to app02."
+		      log
+		      ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi' && scp -r /root/Releases/$new_release /root/Releases/tmp  app02:/root/Releases
+		  else
+		  	  log
+		  	  log "Aborting build. Files have not been transferred."
+		  	  exit 1
+		  fi	
+	  	  
 	  fi
 	  ;;
 	  *)
@@ -1124,5 +1134,3 @@ then
 	log
 	ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi' && scp -r /root/Releases/$new_release /root/Releases/tmp  app02:/root/Releases
 fi
-
-#rm -f /root/Releases/*.log
