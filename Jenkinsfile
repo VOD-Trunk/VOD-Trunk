@@ -107,7 +107,6 @@ node {
 
       echo "An exception has occured in one of the stages. This build has FAILED !! ${error}"
         currentBuild.result = 'FAILURE'
-        throw error
     }
     /*
     finally {
