@@ -311,6 +311,10 @@ if action == "Deploy" or action == "Promote" or (action == "ScheduleDeploy" and 
             component_list = components.split(",")
             partial_deploy = 1
 
+        if len(component_list) == 0:
+            print("No component selected. Please select atleast one component.")
+            exit(1)
+
         if partial_deploy == 2:
             for index, element in enumerate(yesNo):
                     if element == "Y":

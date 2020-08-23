@@ -367,7 +367,7 @@ deploy_new_build() {
 	then
 		log "Starting deployment of $component"
 		log
-		log "Copying $releases_path/$component.war file to $releases_path/Backup for backup."
+		log "Copying $releases_path/$component.war and $releases_path/$component to /root/War_Backup/ for backup."
 		log
 		log "Taking backup of the current build."
 		log
