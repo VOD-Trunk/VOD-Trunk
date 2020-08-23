@@ -3,6 +3,11 @@ node {
     try {
 
         wrap([$class: 'BuildUser']) {
+
+            if("$Components" == "")
+            {
+              echo "\n\nNo component selected. Please select atleast one component to move ahead.\n\n"
+            }
         
             def LoginUser = env.BUILD_USER_ID
           
