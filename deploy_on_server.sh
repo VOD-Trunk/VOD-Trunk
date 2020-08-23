@@ -49,7 +49,7 @@ else
 		elif [ "${choice_list[$i]}" == "LeftNav Signage" ]
 		then
 			choice_list[$i]="exm-client-leftnav2-signage"
-		elif [ "${choice_list[$i]}" == "Exm-v2-plugin-location " ]
+		elif [ "${choice_list[$i]}" == "Exm-v2-plugin-location" ]
 		then
 			choice_list[$i]="location"
 		elif [ "${choice_list[$i]}" == "EXM Diagnostic Application" ]
