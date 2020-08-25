@@ -147,7 +147,7 @@ node {
         colorCode = '#FF0000'
         }
         
-        def data = readFile(file: '${env.WORKSPACE}/logs/email_body.txt')
+        def data = readFile(file: 'logs/email_body.txt')
         slack_body = "Job Name : ${env.JOB_NAME} \nLogin User : ${LoginUser} \nShip Name : ${Ship_Name} \nOperation : ${Activity} \nBuild# : ${BUILD_NUMBER} \nBuild URL : ${env.BUILD_URL} \nBuild Result : ${buildStatus}"
         email_body = "Job Name : ${env.JOB_NAME} \nLogin User : ${LoginUser} \nShip Name : ${Ship_Name} \nOperation : ${Activity} \nBuild# : ${BUILD_NUMBER} \nBuild URL : ${env.BUILD_URL} \nBuild Result : ${buildStatus}\n\n" + data + "\n\nPlease find attached the console logs for this build.\n\n\nThank you."
 
