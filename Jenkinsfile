@@ -7,7 +7,7 @@ node {
             if("$Components" == "")
             {
               echo "\n\nNo component selected. Please select atleast one component to move ahead.\n\n"
-              throw new Exception("Throw to stop pipeline")
+              error("Throw to stop pipeline")
             }
         
             def LoginUser = env.BUILD_USER_ID
