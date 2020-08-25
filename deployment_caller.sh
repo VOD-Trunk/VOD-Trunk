@@ -186,7 +186,6 @@ if [ -f $workspace/logs/${logfile} ] && ([ "$action" == "Deploy" ] || [ "$action
 then
     sed -n '/STATUS( app01 )/,/Checking if components/p' $workspace/logs/${logfile} > $workspace/logs/email_body.txt
     sed -n '/STATUS( app02 )/,$p' $workspace/logs/${logfile} >> $workspace/logs/email_body.txt
-    tac $workspace/logs/email_body.txt | sed -i '/STATUS( app02 )/,/====/d'
 fi
 
 } || { # catch
