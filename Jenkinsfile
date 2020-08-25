@@ -16,7 +16,7 @@ node {
                     usernameVariable: 'ArtifactoryUser', passwordVariable: 'ArtifactoryPassword']]) {
         
                 stage('Git Checkout') {
-                        last_started = env.STAGE_NAME
+                        //last_started = env.STAGE_NAME
                         checkout scm
                         sh "chmod 755 ${env.WORKSPACE}/*"
                 }
@@ -30,7 +30,7 @@ node {
 
                 stage('Check User Access Rights') {
                     
-                    last_started = env.STAGE_NAME
+                    //last_started = env.STAGE_NAME
 
                     sh """
                         #!/bin/bash
@@ -70,7 +70,7 @@ node {
                    
                    stage('Deploy'){
 
-                        last_started = env.STAGE_NAME
+                        //last_started = env.STAGE_NAME
 
                         Artifacts = "$Components"
 
@@ -86,7 +86,7 @@ node {
                 } else {
                     stage('Promote'){
 
-                        last_started = env.STAGE_NAME
+                        //last_started = env.STAGE_NAME
 
                         sh """
                             #!/bin/bash -e
@@ -104,7 +104,7 @@ node {
        
     } catch(error) {
 
-      echo "An exception has occured in stage '$last_started'. This build has FAILED !! ${error}"
+      echo "An exception has occured. This build has FAILED !! ${error}"
         currentBuild.result = 'FAILURE'
         throw error
     }
