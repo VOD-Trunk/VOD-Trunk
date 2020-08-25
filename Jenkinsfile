@@ -7,7 +7,7 @@ node {
             if("$Components" == "")
             {
               echo "\n\nNo component selected. Please select atleast one component to move ahead.\n\n"
-              error("Throw to stop pipeline")
+              error("No component selected.")
             }
         
             def LoginUser = env.BUILD_USER_ID
@@ -109,7 +109,7 @@ node {
         throw error
     }
     
-    /*
+    
     finally {
 
         wrap([$class: 'BuildUser']) {
@@ -146,17 +146,20 @@ node {
         color = 'RED'
         colorCode = '#FF0000'
         }
-
+        
+        def data = readFile(file: '${env.WORKSPACE}/logs/email_body.txt')
         slack_body = "Job Name : ${env.JOB_NAME} \nLogin User : ${LoginUser} \nShip Name : ${Ship_Name} \nOperation : ${Activity} \nBuild# : ${BUILD_NUMBER} \nBuild URL : ${env.BUILD_URL} \nBuild Result : ${buildStatus}"
-        email_body = "Job Name : ${env.JOB_NAME} \nLogin User : ${LoginUser} \nShip Name : ${Ship_Name} \nOperation : ${Activity} \nBuild# : ${BUILD_NUMBER} \nBuild URL : ${env.BUILD_URL} \nBuild Result : ${buildStatus} \n\nPlease find attached the console logs for this build.\n\n\nThank you."
+        email_body = "Job Name : ${env.JOB_NAME} \nLogin User : ${LoginUser} \nShip Name : ${Ship_Name} \nOperation : ${Activity} \nBuild# : ${BUILD_NUMBER} \nBuild URL : ${env.BUILD_URL} \nBuild Result : ${buildStatus}\n\n" + data + "\n\nPlease find attached the console logs for this build.\n\n\nThank you."
+
+        print(email_body)
 
         // Send notifications
-        slackSend (color: colorCode,channel: '#exm-jenkins-tracking', message: slack_body)
-        emailext attachLog: true, body: email_body, compressLog: true, subject: "Build Notification: ${env.JOB_NAME}-Build# ${env.BUILD_NUMBER} ${buildStatus}", to : 'xicms-support-list@hsc.com'
+        //slackSend (color: colorCode,channel: '#exm-jenkins-tracking', message: slack_body)
+        //emailext attachLog: true, body: email_body, compressLog: true, subject: "Build Notification: ${env.JOB_NAME}-Build# ${env.BUILD_NUMBER} ${buildStatus}", to : 'xicms-support-list@hsc.com'
        
         }
 
     }
-    */
+    
 
 }
