@@ -16,7 +16,7 @@ node {
                     usernameVariable: 'ArtifactoryUser', passwordVariable: 'ArtifactoryPassword']]) {
         
                 stage('Git Checkout') {
-                        //last_started = env.STAGE_NAME
+                        last_started = env.STAGE_NAME
                         checkout scm
                         sh "chmod 755 ${env.WORKSPACE}/*"
                 }
@@ -30,7 +30,7 @@ node {
 
                 stage('Check User Access Rights') {
                     
-                    //last_started = env.STAGE_NAME
+                    last_started = env.STAGE_NAME
 
                     sh """
                         #!/bin/bash
@@ -45,7 +45,7 @@ node {
                                      
                     stage('Fetch binaries from artifactory') {
 
-                        //last_started = env.STAGE_NAME
+                        last_started = env.STAGE_NAME
                 
                         sh """
                             #!/bin/bash -e
@@ -55,23 +55,22 @@ node {
                     }
 
                     /*
-
                     stage('Check artifact property') {
                         
                         last_started = env.STAGE_NAME
 
                         sh """
                             #!/bin/bash -e      
-                            ${env.WORKSPACE}/checkArtifactProperty.sh "${Deployment_Environment}" "${Activity}" "${Release_Version}" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "${Promoting_From}" "${env.WORKSPACE}" "$LoginUser"
+                            ${env.WORKSPACE}/checkArtifactProperty.sh "${Deployment_Environment}" "${Activity}" "${Release_Version}" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "${Promoting_From}" "${env.WORKSPACE}" "$LoginUser" "${Ship_Name}"
 
                         """
                     }
-
                     */
+
                    
                    stage('Deploy'){
 
-                        //last_started = env.STAGE_NAME
+                        last_started = env.STAGE_NAME
 
                         Artifacts = "$Components"
 
@@ -87,14 +86,14 @@ node {
                 } else {
                     stage('Promote'){
 
-                        //last_started = env.STAGE_NAME
+                        last_started = env.STAGE_NAME
 
                         sh """
                             #!/bin/bash -e
 
                             python ${env.WORKSPACE}/fetchBinary.py "$Confluence_Page" $Release_Version $Activity "${env.WORKSPACE}" "$Components" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "${Transfer_Of_Artifacts}" "XICMS MW-Schedule" $Deployment_Environment "${Ship_Name}"
 
-                            ${env.WORKSPACE}/checkArtifactProperty.sh "${Deployment_Environment}" "${Activity}" "${Release_Version}" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}"  "${Promoting_From}" "${env.WORKSPACE}" "$LoginUser"
+                            ${env.WORKSPACE}/checkArtifactProperty.sh "${Deployment_Environment}" "${Activity}" "${Release_Version}" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}"  "${Promoting_From}" "${env.WORKSPACE}" "$LoginUser" "${Ship_Name}"
 
                         """
                     }
@@ -105,55 +104,59 @@ node {
        
     } catch(error) {
 
-      echo "An exception has occured in one of the stages. This build has FAILED !! ${error}"
+      echo "An exception has occured in stage '$last_started'. This build has FAILED !! ${error}"
         currentBuild.result = 'FAILURE'
+        throw error
     }
+    
     /*
     finally {
-        // Success or failure, always send notifications
-        notifyBuild(currentBuild.result)
+
+        wrap([$class: 'BuildUser']) {
+        
+            def LoginUser = env.BUILD_USER_ID
+        
+
+        buildStatus = currentBuild.result
+        buildStatus = buildStatus ?: 'SUCCESS'
+        
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: '${Artifactory_Credentials}',
+                usernameVariable: 'ArtifactoryUser', passwordVariable: 'ArtifactoryPassword']]) {
+          if( buildStatus == 'SUCCESS' && "${Deployment_Environment}" == "PRODUCTION" )
+          {
+              sh """
+                  #!/bin/bash -e
+                  ${env.WORKSPACE}/checkArtifactProperty.sh "${Deployment_Environment}" "Promote" "${Release_Version}" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}"  "PRODUCTION" "${env.WORKSPACE}" "$LoginUser" "${Ship_Name}"
+              """
+          }
+          
+        }
+        
+
+
+        // Success or failure, always send notification
+
+        if (buildStatus == 'STARTED') {
+        color = 'YELLOW'
+        colorCode = '#FFFF00'
+        } else if (buildStatus == 'SUCCESS') {
+        color = 'GREEN'
+        colorCode = '#00FF00'
+        } else {
+        color = 'RED'
+        colorCode = '#FF0000'
+        }
+
+        slack_body = "Job Name : ${env.JOB_NAME} \nLogin User : ${LoginUser} \nShip Name : ${Ship_Name} \nOperation : ${Activity} \nBuild# : ${BUILD_NUMBER} \nBuild URL : ${env.BUILD_URL} \nBuild Result : ${buildStatus}"
+        email_body = "Job Name : ${env.JOB_NAME} \nLogin User : ${LoginUser} \nShip Name : ${Ship_Name} \nOperation : ${Activity} \nBuild# : ${BUILD_NUMBER} \nBuild URL : ${env.BUILD_URL} \nBuild Result : ${buildStatus} \n\nPlease find attached the console logs for this build.\n\n\nThank you."
+
+        // Send notifications
+        slackSend (color: colorCode,channel: '#exm-jenkins-tracking', message: slack_body)
+        emailext attachLog: true, body: email_body, compressLog: true, subject: "Build Notification: ${env.JOB_NAME}-Build# ${env.BUILD_NUMBER} ${buildStatus}", to : 'xicms-support-list@hsc.com'
+       
+        }
+
     }
     */
 
 }
-
-/*
-
-def notifyBuild(String buildStatus = 'STARTED') {
-  // build status of null means successful
-  buildStatus = buildStatus ?: 'SUCCESS'
-
-  // Default values
-  def colorName = 'RED'
-  def colorCode = '#FF0000'
-  def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
-  def summary = "${subject} (${env.BUILD_URL})"
-  def details = """<p>STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
-    <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>"""
-
-  // Override default values based on build status
-  if (buildStatus == 'STARTED') {
-    color = 'YELLOW'
-    
-    colorCode = '#FFFF00'
-  } else if (buildStatus == 'SUCCESS') {
-    color = 'GREEN'
-    colorCode = '#00FF00'
-  } else {
-    color = 'RED'
-    colorCode = '#FF0000'
-  }
-
-  // Send notifications
-  slackSend (color: colorCode,channel: '#exm-jenkins-tracking', message: summary)
-
-  //hipchatSend (color: color, notify: true, message: summary)
- //to:'deepak.rohilla@hsc.com,xicms-support-list@hsc.com',
-  emailext (
-      subject: subject,
-      body: details,
-      
-      recipientProviders: [[$class: 'DevelopersRecipientProvider']]
-    )
-}
-*/

@@ -182,6 +182,12 @@ then
     fi
 fi
 
+if [ -f $workspace/logs/${logfile} ] && ([ "$action" == "Deploy" ] || [ "$action" == "Rollback" ])
+then
+    sed -n '/STATUS( app01 )/,/Checking if components/p' $workspace/logs/${logfile} > $workspace/logs/email_body.txt
+    sed -n '/STATUS( app02 )/,$p' $workspace/logs/${logfile} >> $workspace/logs/email_body.txt
+fi
+
 } || { # catch
     echo "An exception occured in making ssh connections."
     exit 1
