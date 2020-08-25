@@ -147,10 +147,17 @@ node {
         colorCode = '#FF0000'
         }
         
-        def data = readFile(file: 'logs/email_body.txt')
-        slack_body = "Job Name : ${env.JOB_NAME} \nLogin User : ${LoginUser} \nShip Name : ${Ship_Name} \nOperation : ${Activity} \nBuild# : ${BUILD_NUMBER} \nBuild URL : ${env.BUILD_URL} \nBuild Result : ${buildStatus}"
-        email_body = "Job Name : ${env.JOB_NAME} \nLogin User : ${LoginUser} \nShip Name : ${Ship_Name} \nOperation : ${Activity} \nBuild# : ${BUILD_NUMBER} \nBuild URL : ${env.BUILD_URL} \nBuild Result : ${buildStatus}\n\n\nBelow given is a snippet from the console logs :\n\n\n" + data + "\n\n\nPlease find attached the console logs for this build.\n\n\nThank you."
+        def exists = fileExists 'logs/email_body.txt'
+          
+        if (exists) {
+            def data = readFile(file: 'logs/email_body.txt')
+            email_body = "Job Name : ${env.JOB_NAME} \nLogin User : ${LoginUser} \nShip Name : ${Ship_Name} \nOperation : ${Activity} \nBuild# : ${BUILD_NUMBER} \nBuild URL : ${env.BUILD_URL} \nBuild Result : ${buildStatus}\n\n\nBelow given is a snippet from the console logs :\n\n\n" + data + "\n\n\nPlease find attached the console logs for this build.\n\n\nThank you."
+        } else {
+            email_body = "Job Name : ${env.JOB_NAME} \nLogin User : ${LoginUser} \nShip Name : ${Ship_Name} \nOperation : ${Activity} \nBuild# : ${BUILD_NUMBER} \nBuild URL : ${env.BUILD_URL} \nBuild Result : ${buildStatus}\n\n\nPlease find attached the console logs for this build.\n\n\nThank you."
+        }
 
+        slack_body = "Job Name : ${env.JOB_NAME} \nLogin User : ${LoginUser} \nShip Name : ${Ship_Name} \nOperation : ${Activity} \nBuild# : ${BUILD_NUMBER} \nBuild URL : ${env.BUILD_URL} \nBuild Result : ${buildStatus}"
+        
         print(email_body)
 
         // Send notifications
