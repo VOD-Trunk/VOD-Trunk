@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#Last modified : 8/25/2020
+
 LoginUser=$1
 AllowedUsers=$2
 Activity=$3

@@ -1,8 +1,8 @@
 {
 	"jenkins": {
 		"Release": {
-			"2.63.0": "xiCMS 2.63.0: Artifacts for Jenkins testing",	
-            "2.64.0": "xiCMS 2.64.0: Artifacts for Jenkins testing"
+			"2.63.0": "xiCMS 2.63.0: Artifacts + Installation Manual",	
+            "2.64.0": "xiCMS 2.64.0 : Artifacts + Installation Manual"
 		},
 
 		"user_access": {
@@ -29,7 +29,7 @@
 		"environments": {
 			"NA": { "NA": "000.000.000.000" },
 	      	"DEV": { "DEV": "000.000.000.000" },
-			"QA": { "XS": "10.127.136.31" },
+			"QA": { "XS": "10.126.69.140" },
 			"SUPPORT": { "SUPPORT": "192.168.248.161" },
 			"PRODUCTION": {
 				"NA": "000.000.000.000",

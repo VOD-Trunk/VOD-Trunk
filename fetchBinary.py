@@ -1,3 +1,5 @@
+#Last modified : 8/25/2020
+
 import sys
 import requests
 from requests.auth import HTTPBasicAuth
@@ -10,6 +12,7 @@ import ast
 
 
 def CheckConfluencePage(pageName):
+    '''This function checks if the confluence page with pageName exists or not. If exists it returns the contentID.'''
 
     PARAMS=(('title',pageName),('spaceKey','MGLN'),('expand','history'))
 
@@ -52,6 +55,7 @@ def CheckConfluencePage(pageName):
 
 
 def GetContentInformation(ContentId,headers):
+    '''This function is used to scrap through the confluence page and fetch different columns from the HTML table in that confluence page'''
 
     url = "https://carnival.atlassian.net/wiki/rest/api/content/" +str(ContentId) + "?expand=body.storage"
 
@@ -83,19 +87,14 @@ def GetContentInformation(ContentId,headers):
     print(len(subTable))
     for x in subTable:
 
-        #print(x)
-
         columnValue=TAG_RE.sub('', x)
 
         if recordCount%7 == 0:  #Ignore first record
                 applicationName.append(columnValue)
-                #print("applicationName:"+ columnValue)
         elif recordCount%7== 1:
                 applicationVersion.append(columnValue)
-                #print("applicationVersion:"+ columnValue)
         elif recordCount%7== 2:
                 applicationBuild.append(columnValue)
-                #print("applicationBuild:"+ columnValue)
         elif recordCount%7== 4:
                 artifactoryUrl.append(columnValue)
         elif recordCount%7== 5:
@@ -143,13 +142,10 @@ def GetScheduleContentInformation(ContentId,headers):
 
         if recordCount%7 == 0:  
                 shipName.append(columnValue)
-                #print("applicationName:"+ columnValue)
         elif recordCount%7== 1:
                 releasePage.append(columnValue)
-                #print("applicationVersion:"+ columnValue)
         elif recordCount%7== 2:
                 releaseVersion.append(columnValue)
-                #print("applicationBuild:"+ columnValue)
         elif recordCount%7== 3:
                 deploymentDate.append(columnValue)
         elif recordCount%7== 4:
@@ -310,10 +306,6 @@ if action == "Deploy" or action == "Promote" or (action == "ScheduleDeploy" and 
         else:
             component_list = components.split(",")
             partial_deploy = 1
-
-        if len(component_list) == 0:
-            print("No component selected. Please select atleast one component.")
-            exit(1)
 
         if partial_deploy == 2:
             for index, element in enumerate(yesNo):

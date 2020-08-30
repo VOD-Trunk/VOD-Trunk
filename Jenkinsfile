@@ -1,3 +1,4 @@
+//Last modified : 8/25/2020
 node {
 
     try {
@@ -45,7 +46,7 @@ node {
                                      
                     stage('Fetch binaries from artifactory') {
 
-                        last_started = env.STAGE_NAME
+                        //last_started = env.STAGE_NAME
                 
                         sh """
                             #!/bin/bash -e
@@ -55,6 +56,7 @@ node {
                     }
 
                     /*
+
                     stage('Check artifact property') {
                         
                         last_started = env.STAGE_NAME
@@ -79,7 +81,7 @@ node {
                         sh """
                             #!/bin/bash -e
 
-                            ${env.WORKSPACE}/deployment_caller.sh "$IpAddr" $Release_Version $Activity "$Artifacts" "${env.WORKSPACE}" "$Action_on_failure" "${Transfer_Of_Artifacts}"
+                            ${env.WORKSPACE}/deployment_caller.sh "$IpAddr" $Release_Version $Activity "$Artifacts" "${env.WORKSPACE}" "$Action_on_failure" "${Transfer_Of_Artifacts}" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}"
                             
                         """
                    }
@@ -104,12 +106,13 @@ node {
        
     } catch(error) {
 
-      echo "An exception has occured. This build has FAILED !! ${error}"
+        echo "An exception has occured. This build has FAILED !! ${error}"
         currentBuild.result = 'FAILURE'
         throw error
     }
-    
-    
+
+
+    /*
     finally {
 
         wrap([$class: 'BuildUser']) {
@@ -122,7 +125,7 @@ node {
         
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: '${Artifactory_Credentials}',
                 usernameVariable: 'ArtifactoryUser', passwordVariable: 'ArtifactoryPassword']]) {
-          if( buildStatus == 'SUCCESS' && "${Deployment_Environment}" == "PRODUCTION" )
+          if( buildStatus == 'SUCCESS' && "${Deployment_Environment}" == "PRODUCTION" && "${Activity}" == "Deploy" )
           {
               sh """
                   #!/bin/bash -e
@@ -131,7 +134,6 @@ node {
           }
           
         }
-        
 
 
         // Success or failure, always send notification
@@ -158,15 +160,14 @@ node {
 
         slack_body = "Job Name : ${env.JOB_NAME} \nLogin User : ${LoginUser} \nShip Name : ${Ship_Name} \nOperation : ${Activity} \nBuild# : ${BUILD_NUMBER} \nBuild URL : ${env.BUILD_URL} \nBuild Result : ${buildStatus}"
         
-        print(email_body)
 
         // Send notifications
-        //slackSend (color: colorCode,channel: '#exm-jenkins-tracking', message: slack_body)
-        //emailext attachLog: true, body: email_body, compressLog: true, subject: "Build Notification: ${env.JOB_NAME}-Build# ${env.BUILD_NUMBER} ${buildStatus}", to : 'xicms-support-list@hsc.com'
+        slackSend (color: colorCode,channel: '#exm-jenkins-tracking', message: slack_body)
+        emailext attachLog: true, body: email_body, compressLog: true, subject: "Build Notification: ${env.JOB_NAME}-Build# ${env.BUILD_NUMBER} ${buildStatus}", to : 'abhishek.chadha@hsc.com, deepak.rohilla@hsc.com, pratyush.mishra@hsc.com'
        
         }
 
     }
-    
+    */
 
 }

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#Last modified : 8/25/2020
+
 ts=`date +'%s'`
 logfile='/root/Releases/tmp/exm-deployment.log'
 new_release=$2
@@ -467,12 +469,12 @@ deploy_new_build() {
 		log
 		log "Copying properties.uie file to $releases_path/releases/$new_release"
 		log
-		if [ "$component" == "nacos" ]
-		then
+		#if [ "$component" == "nacos" ]
+		#then
 			cp $releases_path/Backup/$new_release/properties.uie $releases_path/releases/$new_release
-		else
-			cp $releases_path/Backup/$new_release/*.properties $releases_path/releases/$new_release
-		fi
+		#else
+		#	cp $releases_path/Backup/$new_release/*.properties $releases_path/releases/$new_release
+		#fi
 
 		log "Current properties.uie symlink is :"
 		log
@@ -484,12 +486,12 @@ deploy_new_build() {
 		log "Creating new symlink properties.uie ..."
 		log
 
-		if [ "$component" == "nacos" ]
-		then
+		#if [ "$component" == "nacos" ]
+		#then
 			ln -s $releases_path/releases/$new_release/properties.uie $releases_path/properties.uie
-		else
-			ln -s $releases_path/releases/$new_release/*.properties $releases_path/properties.uie
-		fi
+		#else
+		#	ln -s $releases_path/releases/$new_release/*.properties $releases_path/properties.uie
+		#fi
 
 		log "New properties.uie symlink is :"
 		log
@@ -1017,6 +1019,10 @@ case "${1}" in
 	      log
           for component in "${choice_list[@]}"
 	  	  do
+          	if [ "$component" == "All" ]
+            then
+            	continue
+            fi
           	checkComponent $component
           done
 	  	  iter=1
@@ -1024,6 +1030,10 @@ case "${1}" in
 		  do
 			if [ $iter == 1 ]
 			then
+            if [ "$component" == "All" ]
+            then
+            	continue
+            fi
 			log
 			log "================================================================================================================"
 			log "Starting deployment of $new_release selected components"
@@ -1062,6 +1072,10 @@ case "${1}" in
 	  	  do
 	  	  	  if [ $iter == 1 ]
 			  then
+              	if [ "$component" == "All" ]
+                then
+                    continue
+                fi
 			  	log
 				log "================================================================================================================"
 				log "Starting rollback of $new_release : Selected components"
@@ -1120,10 +1134,13 @@ esac
 log
 log
 log "==============================================================================================="
+log
 for key in ${!statusArray[@]};
 do
 	log "${key} : ${statusArray[${key}]}"
+    log
 	log "==============================================================================================="
+    log
 done
 
 
