@@ -198,14 +198,6 @@ fi
         sed -i '/Checking if components are present/d' $workspace/logs/email_body.txt
     fi
 
-    if [ -f $workspace/logs/${logfile} ] && [ `grep "ssh: Could not resolve hostname app02" $workspace/logs/${logfile} | wc -l` -gt 0 ]
-    then
-        echo
-        echo "Could not connect to app02 server."
-        echo
-        exit 1
-    fi
-
 } || { # catch
     echo "An exception occured in making ssh connections."
     exit 1
