@@ -777,7 +777,7 @@ verify() {
 			services_status=2
 			if [ $abort_on_fail == "Abort" ]
 			then
-				log "Aborting the deployment as tomcat was not restarted properly. Please check tomcat7 service. Thanks."
+				log "ERROR : Aborting the deployment as tomcat was not restarted properly. Please check tomcat7 service. Thanks."
 				log
 				exit 1
 			fi
@@ -794,7 +794,7 @@ verify() {
 		#	services_status=2
 		#	if [ $abort_on_fail == "Abort" ]
 		#	then
-		#		log "Aborting the deployment as tomcat was not restarted properly. Please check tomcat7 service. Thanks."
+		#		log "ERROR : Aborting the deployment as tomcat was not restarted properly. Please check tomcat7 service. Thanks."
 		#		log
 		#		exit 1
 		#	fi
@@ -809,7 +809,7 @@ verify() {
 			services_status=2
 			if [ $abort_on_fail == "Abort" ]
 			then
-				log "Aborting mission during $component deployment as tomcat was not restarted properly. Please check tomcat7 service. Thanks."
+				log "ERROR : Aborting mission during $component deployment as tomcat was not restarted properly. Please check tomcat7 service. Thanks."
 				log
 				exit 1
 			fi
@@ -830,7 +830,7 @@ verify() {
 			services_status=2
 			if [ $abort_on_fail == "Abort" ]
 			then
-				log "Aborting mission during $component deployment as $component service was not restarted properly. Please check $component service. Thanks."
+				log "ERROR : Aborting mission during $component deployment as $component service was not restarted properly. Please check $component service. Thanks."
 				log
 				exit 1
 			fi
@@ -847,7 +847,7 @@ verify() {
 			services_status=2
 			if [ $abort_on_fail == "Abort" ]
 			then
-				log "Aborting mission during $component deployment as $component service was not restarted properly. Please check $component service. Thanks."
+				log "ERROR : Aborting mission during $component deployment as $component service was not restarted properly. Please check $component service. Thanks."
 				log
 				exit 1
 			fi
@@ -864,7 +864,7 @@ verify() {
 		timestamp_status=2
 		if [ $abort_on_fail == "Abort" ]
 		then
-			log "Aborting mission during $component deployment as the timestamp is not updated. Please check $releases_path . Thanks."
+			log "ERROR : Aborting mission during $component deployment as the timestamp is not updated. Please check $releases_path . Thanks."
 			exit 1
 		fi
 	fi
@@ -943,7 +943,7 @@ checkComponent() {
     then
         :
     else
-        log "$component has not been transferred. Please transfer it from artifactory and then deploy."
+        log "ERROR : $component has not been transferred. Please transfer it from artifactory and then deploy."
         log
         exit 1
     fi
@@ -979,7 +979,7 @@ case "${1}" in
 	          	log "md5sum is same on confluence and server. $component has been transferred to app01 successfully."
 	          	log
 	        else
-	        	log "$component could not be transferred successfully. md5sum is not matching between confluence and server. Aborting Build !!"
+	        	log "ERROR : $component could not be transferred successfully. md5sum is not matching between confluence and server. Aborting Build !!"
 	            exit 1
 	        fi
 	      done
@@ -1108,7 +1108,7 @@ case "${1}" in
 		          	log
 		          	
 			    else
-		        	log "$component could not be transferred properly. md5sum is not matching between confluence and server. Aborting Build !!"
+		        	log "ERROR : $component could not be transferred properly. md5sum is not matching between confluence and server. Aborting Build !!"
 		            exit 1
 		        fi
 		      done
@@ -1125,14 +1125,14 @@ case "${1}" in
 			  }
 		  else
 		  	  log
-		  	  log "Aborting build. Files have not been transferred."
+		  	  log "ERROR : Aborting build. Files have not been transferred."
 		  	  exit 1
 		  fi	
 	  	  
 	  fi
 	  ;;
 	  *)
-	  echo Unknown option ${1}
+	  echo "ERROR : Unknown option ${1}"
 	  exit 1
 	  ;;
 esac

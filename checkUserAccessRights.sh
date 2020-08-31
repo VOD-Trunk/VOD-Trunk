@@ -11,7 +11,7 @@ Promoting_From=`echo $Promoting_From |cut -d'_' -f1`
 UserAccessEnv=$6
 UserAllowedOperation=$7
 workspace=$8
-logfile=checkUserAccessRights_stage.log
+logfile=checkUserAccessRightsStage.log
 
 isUserListed=`echo "$AllowedUsers" | grep "$LoginUser" | wc -l`
 isAllowedOperation=`echo "$UserAllowedOperation" | grep "$Activity" | wc -l`
@@ -30,7 +30,7 @@ then
     log "User exists, checking Allowed Operations..."
     log
 else
-    log "User ${LoginUser} does not exist in the list of users able to perform any operation on the xiCMS Jenkins Pipeline"
+    log "ERROR : User ${LoginUser} does not exist in the list of users able to perform any operation on the xiCMS Jenkins Pipeline"
     log
     exit 1
 fi
@@ -45,7 +45,7 @@ then
     log "User has access rights to perform ${Activity} operation."
     log
 else
-    log "User ${LoginUser} is not allowed to perform ${Activity} on the xiCMS Jenkins Pipeline"
+    log "ERROR : User ${LoginUser} is not allowed to perform ${Activity} on the xiCMS Jenkins Pipeline"
     log
     exit 1
 fi  
@@ -59,7 +59,7 @@ then
         log "User $LoginUser is allowed to perform $Activity operation in $Promoting_From"
         log
     else
-        log "User $LoginUser is not allowed to perform $Activity operation in $Promoting_From environment of xiCMS using Jenkins pipeline."
+        log "ERROR : User $LoginUser is not allowed to perform $Activity operation in $Promoting_From environment of xiCMS using Jenkins pipeline."
         log
         exit 1
     fi
@@ -71,7 +71,7 @@ else
         log "User $LoginUser is allowed to perform $Activity operation in $Deployment_Environment"
         log
     else
-        log "User $LoginUser is not allowed to perform $Activity operation in $Deployment_Environment environment of xiCMS using Jenkins pipeline."
+        log "ERROR : User $LoginUser is not allowed to perform $Activity operation in $Deployment_Environment environment of xiCMS using Jenkins pipeline."
         log
         exit 1
     fi

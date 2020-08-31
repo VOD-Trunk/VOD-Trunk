@@ -52,7 +52,7 @@ with open(logfile_path, 'w') as logfile:
 
             if len(searchResult)==0:
                     errorValue=("Confluence Page does not exist:" + pageName)
-                    log ("No Record found for URL:" + response.request.url)
+                    log ("ERROR : No Record found for URL:" + response.request.url)
                     exit(1)
             elif len(searchResult)==1:
                     log(json.dumps((json.loads(response.text)['results'][0]['id']), sort_keys=True, indent=4, separators=(",", ": ")))
@@ -88,7 +88,7 @@ with open(logfile_path, 'w') as logfile:
             log ("Query successful:Confluence page exist")
         else:
             log(response)
-            log ("Confluence page not exist or other error::" + url)
+            log ("ERROR : Confluence page not exist or other error::" + url)
             exit(1)
 
         searchString = response.text
@@ -140,7 +140,7 @@ with open(logfile_path, 'w') as logfile:
             log ("Query successful:Confluence page exist")
         else:
             log(response)
-            log ("Confluence page not exist or other error::" + url)
+            log ("ERROR : Confluence page not exist or other error::" + url)
             exit(1)
 
         searchString = response.text
@@ -281,7 +281,7 @@ with open(logfile_path, 'w') as logfile:
     if action == "Deploy" or action == "Promote" or (action == "ScheduleDeploy" and len(shipNamesFinal) != 0):
 
         if action == "Deploy" and targetShipName not in shipNamesFinal:
-            log("\n\nThe MW for deployment of " + relName + " on " + targetShipName + " is not scheduled for today.\n\n")
+            log("\n\nERROR : The MW for deployment of " + relName + " on " + targetShipName + " is not scheduled for today.\n\n")
             exit(1)
         else:
         
@@ -339,7 +339,7 @@ with open(logfile_path, 'w') as logfile:
                             continue
 
             if len(finalArtifactoryUrl) == 0:
-                log("None of the selected components is a part of Release : " + relName)
+                log("ERROR : None of the selected components is a part of Release : " + relName)
                 exit(1)
 
             log("\n\nFollowing are the artifacts in: " + relName + "\n\n")
