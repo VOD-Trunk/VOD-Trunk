@@ -10,6 +10,18 @@ import shutil
 import datetime
 import ast
 
+pageNameRelease = sys.argv[1]
+relName = sys.argv[2]
+action = sys.argv[3]
+workspace = sys.argv[4]
+components = sys.argv[5]
+username = sys.argv[6]
+password = sys.argv[7]
+transfer_flag = sys.argv[8]
+pageNameMW = sys.argv[9]
+deploymentEnv = sys.argv[10]
+targetShipName = sys.argv[11]
+
 
 logfile_path = workspace + '/logs/fetchBinaryStage.log'
 with open(logfile_path, 'w') as logfile:
@@ -180,17 +192,6 @@ with open(logfile_path, 'w') as logfile:
 
     currentDate = now.strftime("%m/%d/%Y")
 
-    pageNameRelease = sys.argv[1]
-    relName = sys.argv[2]
-    action = sys.argv[3]
-    workspace = sys.argv[4]
-    components = sys.argv[5]
-    username = sys.argv[6]
-    password = sys.argv[7]
-    transfer_flag = sys.argv[8]
-    pageNameMW = sys.argv[9]
-    deploymentEnv = sys.argv[10]
-    targetShipName = sys.argv[11]
     partial_deploy = 2
 
     releasesPath = workspace + '/Releases/'
