@@ -75,3 +75,4 @@ else
         log
         exit 1
     fi
+fi
