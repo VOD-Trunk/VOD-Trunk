@@ -216,12 +216,12 @@ with open(logfile_path, 'w') as logfile:
         with open(url_file_path, 'w') as f:
             f.truncate()
 
-    log_path = 'logs'
-    path = os.path.join(workspace,log_path)
-    if os.path.isdir(path) != True:
-        os.makedirs(path)
+    # log_path = 'logs'
+    # path = os.path.join(workspace,log_path)
+    # if os.path.isdir(path) != True:
+    #     os.makedirs(path)
     # else:
-    #     folder = workspace + "/logs/Deployment"
+    #     folder = workspace + "/logs"
     #     if os.path.isdir(folder):
     #         for the_file in os.listdir(folder):
     #             file_path = os.path.join(folder, the_file)
