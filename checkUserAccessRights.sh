@@ -10,6 +10,7 @@ Promoting_From=$5
 Promoting_From=`echo $Promoting_From |cut -d'_' -f1`
 UserAccessEnv=$6
 UserAllowedOperation=$7
+workspace=$8
 logfile=checkUserAccessRights_stage.log
 
 isUserListed=`echo "$AllowedUsers" | grep "$LoginUser" | wc -l`
@@ -17,7 +18,7 @@ isAllowedOperation=`echo "$UserAllowedOperation" | grep "$Activity" | wc -l`
 
 log(){
     log "$@" >&1 2>&1
-    log "$@" >> logs/${logfile}
+    log "$@" >> $workspace/logs/"${logfile}"
 }
 
 log

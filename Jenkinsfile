@@ -35,7 +35,7 @@ node {
 
                     sh """
                         #!/bin/bash
-                        ${env.WORKSPACE}/checkUserAccessRights.sh "${LoginUser}" "${AllowedUsers}" "${Activity}" "${Deployment_Environment}" "${Promoting_From}" "${UserAccessEnv}" "${UserAllowedOperation}"
+                        ${env.WORKSPACE}/checkUserAccessRights.sh "${LoginUser}" "${AllowedUsers}" "${Activity}" "${Deployment_Environment}" "${Promoting_From}" "${UserAccessEnv}" "${UserAllowedOperation}" "${env.WORKSPACE}"
                             
                     """
 
