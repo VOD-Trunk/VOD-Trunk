@@ -16,15 +16,18 @@ ArtifactoryUser=$8
 ArtifactoryPassword=$9
 
 log(){
-    #log "$@" >&1 2>&1
-    log "$@" >> ${logfile}
+    echo "$@" >&1 2>&1
+    echo "$@" >> ${logfile}
 }
 
-
-
-if [ -f $workspace/logs/email_body.txt ]
+if [ ! -d $workspace/logs/Deployment ]
 then
-    rm -f $workspace/logs/email_body.txt
+    mkdir -p $workspace/logs/Deployment
+fi
+
+if [ -f $workspace/logs/Deployment/email_body.txt ]
+then
+    rm -f $workspace/logs/Deployment/email_body.txt
 fi
 
 { #try
@@ -37,39 +40,39 @@ fi
             sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no"  root@$env 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
             sshpass -p "Carnival@123" scp -o "StrictHostKeyChecking=no" -r $workspace/Releases/$release $workspace/tmp root@$env:/root/Releases
             sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env "ssh -tt app02 \" rm -rf /root/Releases \"" 2>/dev/null
-            sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app01" "$transfer_flag" >> $workspace/logs/"${logfile}"
-            sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/"${logfile}"
+            sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app01" "$transfer_flag" > $workspace/logs/Deployment/"${logfile}"
+            sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/Deployment/"${logfile}"
             
-            if [ -f $workspace/logs/${logfile} ]
+            if [ -f $workspace/logs/Deployment/${logfile} ]
             then
-                #cat $workspace/logs/${logfile}
-                transfer_status=`grep "has not been transferred" $workspace/logs/${logfile} | wc -l`
+                #cat $workspace/logs/Deployment/${logfile}
+                transfer_status=`grep "has not been transferred" $workspace/logs/Deployment/${logfile} | wc -l`
 
                 if [ $transfer_status -gt 0 ]
                 then
                     exit 125
                 fi
             else
-                log "Log file not present at $workspace/logs/${logfile}"
+                log "Log file not present at $workspace/logs/Deployment/${logfile}"
                 exit 1
             fi
         else
-            sshpass -p "not4dev!" ssh  -o "StrictHostKeyChecking=no"  root@$env 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `log ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
+            sshpass -p "not4dev!" ssh  -o "StrictHostKeyChecking=no"  root@$env 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
             sshpass -p "not4dev!" scp  -o "StrictHostKeyChecking=no" -r $workspace/Releases/$release $workspace/tmp root@$env:/root/Releases
-            #sshpass -p "not4dev!" ssh -o "StrictHostKeyChecking=no" root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app01" "$transfer_flag" >> $workspace/logs/"${logfile}"
-            #sshpass -p "not4dev!" ssh -o "StrictHostKeyChecking=no" root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/"${logfile}"
+            #sshpass -p "not4dev!" ssh -o "StrictHostKeyChecking=no" root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app01" "$transfer_flag" > $workspace/logs/Deployment/"${logfile}"
+            #sshpass -p "not4dev!" ssh -o "StrictHostKeyChecking=no" root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/Deployment/"${logfile}"
             
-            if [ -f $workspace/logs/${logfile} ]
+            if [ -f $workspace/logs/Deployment/${logfile} ]
             then
-                #cat $workspace/logs/${logfile}
-                transfer_status=`grep "has not been transferred" $workspace/logs/${logfile} | wc -l`
+                #cat $workspace/logs/Deployment/${logfile}
+                transfer_status=`grep "has not been transferred" $workspace/logs/Deployment/${logfile} | wc -l`
 
                 if [ $transfer_status -gt 0 ]
                 then
                     exit 125
                 fi
             else
-                log "Log file not present at $workspace/logs/${logfile}"
+                log "Log file not present at $workspace/logs/Deployment/${logfile}"
                 exit 1
             fi
             
@@ -78,38 +81,38 @@ fi
     then
         if [ "$env" == "192.168.248.161" ]
         then
-            sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app01" "$transfer_flag" >> $workspace/logs/"${logfile}"
-            sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/"${logfile}"
+            sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app01" "$transfer_flag" > $workspace/logs/Deployment/"${logfile}"
+            sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/Deployment/"${logfile}"
             
             
-            if [ -f $workspace/logs/${logfile} ]
+            if [ -f $workspace/logs/Deployment/${logfile} ]
             then
-                #cat $workspace/logs/${logfile}
-                transfer_status=`grep "has not been transferred" $workspace/logs/${logfile} | wc -l`
+                #cat $workspace/logs/Deployment/${logfile}
+                transfer_status=`grep "has not been transferred" $workspace/logs/Deployment/${logfile} | wc -l`
 
                 if [ $transfer_status -gt 0 ]
                 then
                     exit 125
                 fi
             else
-                log "Log file not present at $workspace/logs/${logfile}"
+                log "Log file not present at $workspace/logs/Deployment/${logfile}"
                 exit 1
             fi
         else
-            #sshpass -p "not4dev!" ssh -o "StrictHostKeyChecking=no" root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app01" >> $workspace/logs/"${logfile}"
-            #sshpass -p "not4dev!" ssh -o "StrictHostKeyChecking=no" root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/"${logfile}"
+            #sshpass -p "not4dev!" ssh -o "StrictHostKeyChecking=no" root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app01" > $workspace/logs/Deployment/"${logfile}"
+            #sshpass -p "not4dev!" ssh -o "StrictHostKeyChecking=no" root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/Deployment/"${logfile}"
             
-            if [ -f $workspace/logs/${logfile} ]
+            if [ -f $workspace/logs/Deployment/${logfile} ]
             then
-                #cat $workspace/logs/${logfile}
-                transfer_status=`grep "has not been transferred" $workspace/logs/${logfile} | wc -l`
+                #cat $workspace/logs/Deployment/${logfile}
+                transfer_status=`grep "has not been transferred" $workspace/logs/Deployment/${logfile} | wc -l`
 
                 if [ $transfer_status -gt 0 ]
                 then
                     exit 125
                 fi
             else
-                log "Log file not present at $workspace/logs/${logfile}"
+                log "Log file not present at $workspace/logs/Deployment/${logfile}"
                 exit 1
             fi
         fi
@@ -122,28 +125,28 @@ fi
             IFS=$'\n'
             for ship in $ships
             do
-                ipaddr=`log $ship | cut -d: -f2`
-                ship_name=`log $ship | cut -d: -f1`
+                ipaddr=`echo $ship | cut -d: -f2`
+                ship_name=`echo $ship | cut -d: -f1`
                 log
                 log "Transferring artifacts to the target server ( $ipaddr )"
                 log
                 if [ "$ipaddr" == "192.168.248.161" ]
                 then
-                    sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no"  root@$ipaddr 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `log ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
+                    sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no"  root@$ipaddr 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
                     sshpass -p "Carnival@123" scp -o "StrictHostKeyChecking=no" -r $workspace/Releases/$release $workspace/tmp root@$ipaddr:/root/Releases
-                    sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$ipaddr "bash -s" -- < $workspace/deploy_on_server.sh -t "$release" "$component" "$abort_on_fail" "app01" "$transfer_flag">> $workspace/logs/"${logfile}"
+                    sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$ipaddr "bash -s" -- < $workspace/deploy_on_server.sh -t "$release" "$component" "$abort_on_fail" "app01" "$transfer_flag"> $workspace/logs/Deployment/"${logfile}"
                     
                 else
-                    sshpass -p "not4dev!" ssh  -o "StrictHostKeyChecking=no" -r root@$ipaddr 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `log ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
+                    sshpass -p "not4dev!" ssh  -o "StrictHostKeyChecking=no" -r root@$ipaddr 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
                     sshpass -p "not4dev!" scp  -o "StrictHostKeyChecking=no" -r $workspace/Releases/$release $workspace/tmp root@$ipaddr:/root/Releases
-                    sshpass -p "not4dev!" ssh -o "StrictHostKeyChecking=no" root@$ipaddr "bash -s" -- < $workspace/deploy_on_server.sh -t "$release" "$component" "$abort_on_fail" "app01" "$transfer_flag" >> $workspace/logs/"${logfile}"
+                    sshpass -p "not4dev!" ssh -o "StrictHostKeyChecking=no" root@$ipaddr "bash -s" -- < $workspace/deploy_on_server.sh -t "$release" "$component" "$abort_on_fail" "app01" "$transfer_flag" > $workspace/logs/Deployment/"${logfile}"
                     
                 fi
 
-                if [ -f $workspace/logs/${logfile} ]
+                if [ -f $workspace/logs/Deployment/${logfile} ]
                 then
 
-                    chksum_status=`grep "md5sum is not matching" $workspace/logs/${logfile} | wc -l`
+                    chksum_status=`grep "md5sum is not matching" $workspace/logs/Deployment/${logfile} | wc -l`
 
                     if [ $chksum_status -gt 0 ]
                     then
@@ -160,17 +163,17 @@ fi
             log "There is no ship currently scheduled for deployment."
         fi
 
-        if [ -f $workspace/logs/${logfile} ]
+        if [ -f $workspace/logs/Deployment/${logfile} ]
         then
-            #cat $workspace/logs/${logfile}
-            transfer_status=`grep "md5sum is not matching" $workspace/logs/${logfile} | wc -l`
+            #cat $workspace/logs/Deployment/${logfile}
+            transfer_status=`grep "md5sum is not matching" $workspace/logs/Deployment/${logfile} | wc -l`
 
             if [ $transfer_status -gt 0 ]
             then
                 exit 125
             fi
         else
-            log "Log file not present at $workspace/logs/${logfile}"
+            log "Log file not present at $workspace/logs/Deployment/${logfile}"
             exit 1
         fi
         
@@ -178,37 +181,37 @@ fi
     then
         if [ "$env" == "192.168.248.161" ]
         then
-            sshpass -p "Carnival@123" ssh root@$env "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" "app01">> $workspace/logs/"${logfile}"
-            sshpass -p "Carnival@123" ssh root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/"${logfile}"
+            sshpass -p "Carnival@123" ssh root@$env "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" "app01">> $workspace/logs/Deployment/"${logfile}"
+            sshpass -p "Carnival@123" ssh root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/Deployment/"${logfile}"
             
-            if [ -f $workspace/logs/${logfile} ]
+            if [ -f $workspace/logs/Deployment/${logfile} ]
             then
-                : #cat $workspace/logs/${logfile}
+                : #cat $workspace/logs/Deployment/${logfile}
             fi
         else
             :
-            #sshpass -p "not4dev!" ssh root@$env "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" "app01"> $workspace/logs/"${logfile}"
-            #sshpass -p "not4dev!" ssh root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/"${logfile}"
+            #sshpass -p "not4dev!" ssh root@$env "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" "app01"> $workspace/logs/Deployment/"${logfile}"
+            #sshpass -p "not4dev!" ssh root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/Deployment/"${logfile}"
             
-            if [ -f $workspace/logs/${logfile} ]
+            if [ -f $workspace/logs/Deployment/${logfile} ]
             then
-                : #cat $workspace/logs/${logfile}
+                : #cat $workspace/logs/Deployment/${logfile}
             fi
         fi
     fi
 
-    if [ -f $workspace/logs/${logfile} ] && ([ "$action" == "Deploy" ] || [ "$action" == "Rollback" ])
+    if [ -f $workspace/logs/Deployment/${logfile} ] && ([ "$action" == "Deploy" ] || [ "$action" == "Rollback" ])
     then
-        sed -n '/STATUS( app01 )/,/Checking if components/p' $workspace/logs/${logfile} > $workspace/logs/email_body.txt
-        sed -n '/STATUS( app02 )/,$p' $workspace/logs/${logfile} >> $workspace/logs/email_body.txt
-        sed -i '/Transferring artifacts to app02/d' $workspace/logs/email_body.txt
-        sed -i '/UTC 20/d' $workspace/logs/email_body.txt
-        sed -i '/Checking if components are present/d' $workspace/logs/email_body.txt
+        sed -n '/STATUS( app01 )/,/Checking if components/p' $workspace/logs/Deployment/${logfile} > $workspace/logs/Deployment/email_body.txt
+        sed -n '/STATUS( app02 )/,$p' $workspace/logs/Deployment/${logfile} >> $workspace/logs/Deployment/email_body.txt
+        sed -i '/Transferring artifacts to app02/d' $workspace/logs/Deployment/email_body.txt
+        sed -i '/UTC 20/d' $workspace/logs/Deployment/email_body.txt
+        sed -i '/Checking if components are present/d' $workspace/logs/Deployment/email_body.txt
     fi
 
-    if [ -f $workspace/logs/${logfile} ]
+    if [ -f $workspace/logs/Deployment/${logfile} ]
     then
-        cat $workspace/logs/${logfile}
+        cat $workspace/logs/Deployment/${logfile}
     fi
 
 } || { # catch

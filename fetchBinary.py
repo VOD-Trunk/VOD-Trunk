@@ -185,7 +185,6 @@ with open(logfile_path, 'w') as logfile:
               }
 
     today = datetime.date.today()
-    #log(str("Today's date: ",today))
 
     now = datetime.datetime.now()
 
@@ -222,7 +221,7 @@ with open(logfile_path, 'w') as logfile:
     if os.path.isdir(path) != True:
         os.makedirs(path)
     else:
-        folder = workspace + "/logs/deployment"
+        folder = workspace + "/logs/Deployment"
         if os.path.isdir(folder):
             for the_file in os.listdir(folder):
                 file_path = os.path.join(folder, the_file)
