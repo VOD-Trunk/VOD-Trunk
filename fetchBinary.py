@@ -12,7 +12,7 @@ import ast
 
 
 logfile_path = workspace + '/logs/fetchBinaryStage.log'
-with open(logfile_path, 'w') as logfile
+with open(logfile_path, 'w') as logfile:
 
     def log(text):
         print text
