@@ -185,7 +185,7 @@ with open(logfile_path, 'w') as logfile:
               }
 
     today = datetime.date.today()
-    log("Today's date:" +  today)
+    log(f"Today's date: {today}")
 
     now = datetime.datetime.now()
 
