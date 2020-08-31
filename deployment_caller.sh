@@ -14,10 +14,11 @@ abort_on_fail=$6
 transfer_flag=$7
 ArtifactoryUser=$8
 ArtifactoryPassword=$9
+stageLogfile=deployStage.log
 
 log(){
     echo "$@" >&1 2>&1
-    echo "$@" >> ${logfile}
+    echo "$@" >> $workspace/logs/"${stageLogfile}"
 }
 
 if [ ! -d $workspace/logs/Deployment ]
