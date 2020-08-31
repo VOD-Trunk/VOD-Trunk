@@ -2,8 +2,7 @@
 
 #Last modified : 8/25/2020
 
-ts=`date +'%s'`
-logfile=deployment-$ts.log
+logfile=deployment.log
 env=$1
 release=$2
 action=$3
