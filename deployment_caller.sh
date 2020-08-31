@@ -213,7 +213,7 @@ fi
     if [ -f $workspace/logs/${logfile} ]
     then
         logText=`cat $workspace/logs/${logfile}`
-        log "logText"
+        log "$logText"
     fi
 
 } || { # catch
