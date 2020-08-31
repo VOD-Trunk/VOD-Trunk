@@ -220,7 +220,7 @@ with open(logfile_path, 'w') as logfile:
     path = os.path.join(workspace,log_path)
     if os.path.isdir(path) != True:
         os.makedirs(path)
-    else:
+    """else:
         folder = workspace + "/logs"
         for the_file in os.listdir(folder):
             file_path = os.path.join(folder, the_file)
@@ -228,7 +228,7 @@ with open(logfile_path, 'w') as logfile:
                 if os.path.isfile(file_path):
                    os.unlink(file_path)
             except Exception as e:
-                log(e)
+                log(e)"""
 
     tmp_path = 'tmp'
     path = os.path.join(workspace,tmp_path)
