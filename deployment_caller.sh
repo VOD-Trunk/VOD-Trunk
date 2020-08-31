@@ -42,11 +42,11 @@ fi
             sshpass -p "Carnival@123" scp -o "StrictHostKeyChecking=no" -r $workspace/Releases/$release $workspace/tmp root@$env:/root/Releases
             sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env "ssh -tt app02 \" rm -rf /root/Releases \"" 2>/dev/null
             sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app01" "$transfer_flag" > $workspace/logs/Deployment/"${logfile}"
-            sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/Deployment/"${logfile}"
+            #sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/Deployment/"${logfile}"
             
             if [ -f $workspace/logs/Deployment/${logfile} ]
             then
-                #cat $workspace/logs/Deployment/${logfile}
+                cat $workspace/logs/Deployment/${logfile}
                 transfer_status=`grep "has not been transferred" $workspace/logs/Deployment/${logfile} | wc -l`
 
                 if [ $transfer_status -gt 0 ]
@@ -65,7 +65,7 @@ fi
             
             if [ -f $workspace/logs/Deployment/${logfile} ]
             then
-                #cat $workspace/logs/Deployment/${logfile}
+                cat $workspace/logs/Deployment/${logfile}
                 transfer_status=`grep "has not been transferred" $workspace/logs/Deployment/${logfile} | wc -l`
 
                 if [ $transfer_status -gt 0 ]
@@ -83,12 +83,12 @@ fi
         if [ "$env" == "192.168.248.161" ]
         then
             sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app01" "$transfer_flag" > $workspace/logs/Deployment/"${logfile}"
-            sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/Deployment/"${logfile}"
+            #sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/Deployment/"${logfile}"
             
             
             if [ -f $workspace/logs/Deployment/${logfile} ]
             then
-                #cat $workspace/logs/Deployment/${logfile}
+                cat $workspace/logs/Deployment/${logfile}
                 transfer_status=`grep "has not been transferred" $workspace/logs/Deployment/${logfile} | wc -l`
 
                 if [ $transfer_status -gt 0 ]
@@ -105,7 +105,7 @@ fi
             
             if [ -f $workspace/logs/Deployment/${logfile} ]
             then
-                #cat $workspace/logs/Deployment/${logfile}
+                cat $workspace/logs/Deployment/${logfile}
                 transfer_status=`grep "has not been transferred" $workspace/logs/Deployment/${logfile} | wc -l`
 
                 if [ $transfer_status -gt 0 ]
@@ -166,7 +166,7 @@ fi
 
         if [ -f $workspace/logs/Deployment/${logfile} ]
         then
-            #cat $workspace/logs/Deployment/${logfile}
+            cat $workspace/logs/Deployment/${logfile}
             transfer_status=`grep "md5sum is not matching" $workspace/logs/Deployment/${logfile} | wc -l`
 
             if [ $transfer_status -gt 0 ]
@@ -187,7 +187,7 @@ fi
             
             if [ -f $workspace/logs/Deployment/${logfile} ]
             then
-                : #cat $workspace/logs/Deployment/${logfile}
+                cat $workspace/logs/Deployment/${logfile}
             fi
         else
             :
@@ -196,7 +196,7 @@ fi
             
             if [ -f $workspace/logs/Deployment/${logfile} ]
             then
-                : #cat $workspace/logs/Deployment/${logfile}
+                cat $workspace/logs/Deployment/${logfile}
             fi
         fi
     fi
