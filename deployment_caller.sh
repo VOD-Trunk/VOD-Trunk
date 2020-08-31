@@ -99,6 +99,7 @@ log(){
             #     exit 1
             # fi
         else
+            :
             #sshpass -p "not4dev!" ssh -o "StrictHostKeyChecking=no" root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app01" > $logfile
             #sshpass -p "not4dev!" ssh -o "StrictHostKeyChecking=no" root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $logfile
             
