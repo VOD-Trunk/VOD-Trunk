@@ -16,7 +16,7 @@ isUserListed=`echo "$AllowedUsers" | grep "$LoginUser" | wc -l`
 isAllowedOperation=`echo "$UserAllowedOperation" | grep "$Activity" | wc -l`
 
 log(){
-    #log "$@" >&1 2>&1
+    log "$@" >&1 2>&1
     log "$@" >> logs/${logfile}
 }
 
