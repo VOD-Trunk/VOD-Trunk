@@ -50,7 +50,7 @@ node {
                 
                         sh """
                             #!/bin/bash -e
-                            python ${env.WORKSPACE}/fetchBinary.py "$Confluence_Page" $Release_Version $Activity "${env.WORKSPACE}" "$Components" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "${Transfer_Of_Artifacts}" "XICMS MW-Schedule" $Deployment_Environment "${Ship_Name}"
+                            python ${env.WORKSPACE}/fetchBinary.py "$Confluence_Page" $Release_Version $Activity "${env.WORKSPACE}" "$Components" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "${Transfer_Of_Artifacts}" "XICMS MW-Schedule" $Deployment_Environment "${Ship_Name}" > ${env.WORKSPACE}/logs/fetch_binary_stage.log
                             
                         """
                     }
@@ -112,22 +112,8 @@ node {
     }
 
 
-    
+    /*
     finally {
-
-        stage('Save build logs'){
-
-            last_started = env.STAGE_NAME
-
-            def logContent = Jenkins.getInstance().getItemByFullName(env.JOB_NAME).getBuildByNumber(Integer.parseInt(env.BUILD_NUMBER)).logFile.text
-            // copy the log in the job's own workspace
-            writeFile file: "buildlog.txt", text: logContent
-
-        }
-
-    }
-
-        /*
 
         wrap([$class: 'BuildUser']) {
         
