@@ -51,7 +51,7 @@ fi
 
 if [ "$Activity" == "Promote" ]
 then
-    EnvAccess=`log "$UserAccessEnv" | grep "$Promoting_From" | wc -l`
+    EnvAccess=`echo "$UserAccessEnv" | grep "$Promoting_From" | wc -l`
 
     if [ "$EnvAccess" -eq 1 ]
     then
@@ -63,7 +63,7 @@ then
         exit 1
     fi
 else
-    EnvAccess=`log "$UserAccessEnv" | grep "$Deployment_Environment" | wc -l`
+    EnvAccess=`echo "$UserAccessEnv" | grep "$Deployment_Environment" | wc -l`
 
     if [ "$EnvAccess" -eq 1 ]
     then
