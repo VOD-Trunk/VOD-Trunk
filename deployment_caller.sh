@@ -46,7 +46,7 @@ fi
             
             if [ -f $workspace/logs/${logfile} ]
             then
-                cat $workspace/logs/${logfile}
+                #cat $workspace/logs/${logfile}
                 transfer_status=`grep "has not been transferred" $workspace/logs/${logfile} | wc -l`
 
                 if [ $transfer_status -gt 0 ]
@@ -65,7 +65,7 @@ fi
             
             if [ -f $workspace/logs/${logfile} ]
             then
-                cat $workspace/logs/${logfile}
+                #cat $workspace/logs/${logfile}
                 transfer_status=`grep "has not been transferred" $workspace/logs/${logfile} | wc -l`
 
                 if [ $transfer_status -gt 0 ]
@@ -88,7 +88,7 @@ fi
             
             if [ -f $workspace/logs/${logfile} ]
             then
-                cat $workspace/logs/${logfile}
+                #cat $workspace/logs/${logfile}
                 transfer_status=`grep "has not been transferred" $workspace/logs/${logfile} | wc -l`
 
                 if [ $transfer_status -gt 0 ]
@@ -105,7 +105,7 @@ fi
             
             if [ -f $workspace/logs/${logfile} ]
             then
-                cat $workspace/logs/${logfile}
+                #cat $workspace/logs/${logfile}
                 transfer_status=`grep "has not been transferred" $workspace/logs/${logfile} | wc -l`
 
                 if [ $transfer_status -gt 0 ]
@@ -153,7 +153,7 @@ fi
                     then
                         log "Property setting not required as artifacts were not transferred properly."
                     else
-                        $workspace/checkArtifactProperty.sh "NA" "ScheduleDeploy" "$release" "$ArtifactoryUser" "$ArtifactoryPassword" "$ship_name" "$workspace" "NA"
+                        : #$workspace/checkArtifactProperty.sh "NA" "ScheduleDeploy" "$release" "$ArtifactoryUser" "$ArtifactoryPassword" "$ship_name" "$workspace" "NA"
                     fi
                 else
                     log "Failed in transfer of artifacts on $ship_name. md5sum was different for $component on ship when compared to confluece."
@@ -166,7 +166,7 @@ fi
 
         if [ -f $workspace/logs/${logfile} ]
         then
-            cat $workspace/logs/${logfile}
+            #cat $workspace/logs/${logfile}
             transfer_status=`grep "md5sum is not matching" $workspace/logs/${logfile} | wc -l`
 
             if [ $transfer_status -gt 0 ]
@@ -196,23 +196,24 @@ fi
             
             if [ -f $workspace/logs/${logfile} ]
             then
-                cat $workspace/logs/${logfile}
+                : #cat $workspace/logs/${logfile}
             fi
         fi
     fi
 
-    if [ -f $workspace/logs/${logfile} ] && ([ "$action" == "Deploy" ] || [ "$action" == "Rollback" ])
-    then
-        sed -n '/STATUS( app01 )/,/Checking if components/p' $workspace/logs/${logfile} > $workspace/logs/email_body.txt
-        sed -n '/STATUS( app02 )/,$p' $workspace/logs/${logfile} >> $workspace/logs/email_body.txt
-        sed -i '/Transferring artifacts to app02/d' $workspace/logs/email_body.txt
-        sed -i '/UTC 20/d' $workspace/logs/email_body.txt
-        sed -i '/Checking if components are present/d' $workspace/logs/email_body.txt
-    fi
+    #if [ -f $workspace/logs/${logfile} ] && ([ "$action" == "Deploy" ] || [ "$action" == "Rollback" ])
+    #then
+    #    sed -n '/STATUS( app01 )/,/Checking if components/p' $workspace/logs/${logfile} > $workspace/logs/email_body.txt
+    #    sed -n '/STATUS( app02 )/,$p' $workspace/logs/${logfile} >> $workspace/logs/email_body.txt
+    #    sed -i '/Transferring artifacts to app02/d' $workspace/logs/email_body.txt
+    #    sed -i '/UTC 20/d' $workspace/logs/email_body.txt
+    #    sed -i '/Checking if components are present/d' $workspace/logs/email_body.txt
+    #fi
 
     if [ -f $workspace/logs/${logfile} ]
     then
-        cat $workspace/logs/${logfile}
+        logText=`cat $workspace/logs/${logfile}`
+        log "logText"
     fi
 
 } || { # catch
