@@ -20,11 +20,7 @@ node {
                         //last_started = env.STAGE_NAME
                         checkout scm
 
-                        sh """
-                            #!/bin/bash
-                            chmod 755 ${env.WORKSPACE}/*
-                            if [ ! -d ${env.WORKSPACE}/logs ]; then mkdir -p ${env.WORKSPACE}/logs; else for i in `ls ${env.WORKSPACE}/logs`; do rm -rf ${env.WORKSPACE}/logs/$i; done; fi
-                        """
+                        sh "chmod 755 ${env.WORKSPACE}/*"
                 }
 
                 def Jconf = readJSON file: "${env.WORKSPACE}/jenkinsconfig.json"

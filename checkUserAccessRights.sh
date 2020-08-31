@@ -16,6 +16,17 @@ logfile=checkUserAccessRightsStage.log
 isUserListed=`echo "$AllowedUsers" | grep "$LoginUser" | wc -l`
 isAllowedOperation=`echo "$UserAllowedOperation" | grep "$Activity" | wc -l`
 
+if [ ! -d $workspace/logs ]
+then
+    mkdir -p $workspace/logs
+elif [ -d $workspace/logs ]
+then
+    for i in `ls $workspace/logs`
+    do
+        rm -rf $workspace/logs/$i
+    done
+fi
+
 log(){
     echo "$@" >&1 2>&1
     echo "$@" >> $workspace/logs/"${logfile}"
