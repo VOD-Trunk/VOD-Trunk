@@ -23,7 +23,7 @@ node {
 
                         sh """
                             #!/bin/bash
-                            if [ ! -d ${env.WORKSPACE}/logs ]; then mkdir -p ${env.WORKSPACE}/logs; elif [ -d ${env.WORKSPACE}/logs ]; then for i in `ls ${env.WORKSPACE}/logs`; do rm -rf ${env.WORKSPACE}/logs/$i; done; fi"
+                            if [ ! -d ${env.WORKSPACE}/logs ]; then mkdir -p ${env.WORKSPACE}/logs; else for i in `ls ${env.WORKSPACE}/logs`; do rm -rf ${env.WORKSPACE}/logs/$i; done; fi
                         """
                 }
 
