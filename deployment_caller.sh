@@ -15,7 +15,7 @@ ArtifactoryPassword=$9
 stageLogfile='deployStage.log'
 
 log(){
-    echo "$@" >&1 2>&1
+    #echo "$@" >&1 2>&1
     echo "$@" >> $workspace/logs/"${stageLogfile}"
 }
 
@@ -181,7 +181,7 @@ log(){
     then
         if [ "$env" == "192.168.248.161" ]
         then
-            sshpass -p "Carnival@123" ssh root@$env "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" "app01">>> $workspace/logs/"${stageLogfile}"
+            sshpass -p "Carnival@123" ssh root@$env "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" "app01" >> $workspace/logs/"${stageLogfile}"
             sshpass -p "Carnival@123" ssh root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >>> $workspace/logs/"${stageLogfile}"
             
             # if [ -f $workspace/logs/${logfile} ]
