@@ -47,11 +47,11 @@ with open(logfile_path, 'w') as logfile:
         log(response.request.url)
 
         if response.status_code == 200:
-            log ("HTTP Query successful: Confluence page exists ::" +pageName)
+            log ("HTTP Query successful: Confluence page exists ::" + pageName)
             searchResult=json.loads(response.text)['results']
 
             if len(searchResult)==0:
-                    errorValue=("Confluence Page does not exist:" +pageName)
+                    errorValue=("Confluence Page does not exist:" + pageName)
                     log ("No Record found for URL:" + response.request.url)
                     exit(1)
             elif len(searchResult)==1:
@@ -59,13 +59,13 @@ with open(logfile_path, 'w') as logfile:
                     contentID=searchResult[0]['id']
             else:
                     contentID =0
-                    errorValue=("More then one record exist for page:",pageName)
+                    errorValue=("More then one record exist for page:" + pageName)
                     log(response.text)
 
         else:
             log(response)
-            errorValue=("HTTP request failed for page " ,pageName ,"reason:" ,response)
-            log ("Confluence page not exist or other error::",url)
+            errorValue=("HTTP request failed for page " + pageName  + "reason:"  + response)
+            log ("Confluence page not exist or other error::" + url)
 
         return  (contentID,errorValue)
 
@@ -88,7 +88,7 @@ with open(logfile_path, 'w') as logfile:
             log ("Query successful:Confluence page exist")
         else:
             log(response)
-            log ("Confluence page not exist or other error::",url)
+            log ("Confluence page not exist or other error::" + url)
             exit(1)
 
         searchString = response.text
@@ -103,7 +103,6 @@ with open(logfile_path, 'w') as logfile:
         yesNo=[]
         test=[]
         TAG_RE = re.compile(r'<[^>]+>')
-        log(len(subTable))
         for x in subTable:
 
             columnValue=TAG_RE.sub('', x)
@@ -141,7 +140,7 @@ with open(logfile_path, 'w') as logfile:
             log ("Query successful:Confluence page exist")
         else:
             log(response)
-            log ("Confluence page not exist or other error::",url)
+            log ("Confluence page not exist or other error::" + url)
             exit(1)
 
         searchString = response.text
@@ -186,7 +185,7 @@ with open(logfile_path, 'w') as logfile:
               }
 
     today = datetime.date.today()
-    log("Today's date:", today)
+    log("Today's date:" +  today)
 
     now = datetime.datetime.now()
 
