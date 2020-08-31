@@ -10,62 +10,67 @@ Promoting_From=$5
 Promoting_From=`echo $Promoting_From |cut -d'_' -f1`
 UserAccessEnv=$6
 UserAllowedOperation=$7
+logfile=deployment-$ts.log
 
 isUserListed=`echo "$AllowedUsers" | grep "$LoginUser" | wc -l`
 isAllowedOperation=`echo "$UserAllowedOperation" | grep "$Activity" | wc -l`
 
-echo
-echo "Logged in user is : $LoginUser"
-echo
+log(){
+    #log "$@" >&1 2>&1
+    log "$@" >> ${logfile}
+}
+
+log
+log "Logged in user is : $LoginUser"
+log
 
 if [ "$isUserListed" -eq 1 ] 
 then
-    echo "User exists, checking Allowed Operations..."
-    echo
+    log "User exists, checking Allowed Operations..."
+    log
 else
-    echo "User ${LoginUser} does not exist in the list of users able to perform any operation on the xiCMS Jenkins Pipeline"
-    echo
+    log "User ${LoginUser} does not exist in the list of users able to perform any operation on the xiCMS Jenkins Pipeline"
+    log
     exit 1
 fi
 
-echo "Allowed Operations for user $LoginUser are : $UserAllowedOperation"
-echo
-echo "Allowed access environments for user $LoginUser are : $UserAccessEnv"
-echo
+log "Allowed Operations for user $LoginUser are : $UserAllowedOperation"
+log
+log "Allowed access environments for user $LoginUser are : $UserAccessEnv"
+log
 
 if [ "$isAllowedOperation" -eq 1 ] 
 then
-    echo "User has access rights to perform ${Activity} operation."
-    echo
+    log "User has access rights to perform ${Activity} operation."
+    log
 else
-    echo "User ${LoginUser} is not allowed to perform ${Activity} on the xiCMS Jenkins Pipeline"
-    echo
+    log "User ${LoginUser} is not allowed to perform ${Activity} on the xiCMS Jenkins Pipeline"
+    log
     exit 1
 fi  
 
 if [ "$Activity" == "Promote" ]
 then
-    EnvAccess=`echo "$UserAccessEnv" | grep "$Promoting_From" | wc -l`
+    EnvAccess=`log "$UserAccessEnv" | grep "$Promoting_From" | wc -l`
 
     if [ "$EnvAccess" -eq 1 ]
     then
-        echo "User $LoginUser is allowed to perform $Activity operation in $Promoting_From"
-        echo
+        log "User $LoginUser is allowed to perform $Activity operation in $Promoting_From"
+        log
     else
-        echo "User $LoginUser is not allowed to perform $Activity operation in $Promoting_From environment of xiCMS using Jenkins pipeline."
-        echo
+        log "User $LoginUser is not allowed to perform $Activity operation in $Promoting_From environment of xiCMS using Jenkins pipeline."
+        log
         exit 1
     fi
 else
-    EnvAccess=`echo "$UserAccessEnv" | grep "$Deployment_Environment" | wc -l`
+    EnvAccess=`log "$UserAccessEnv" | grep "$Deployment_Environment" | wc -l`
 
     if [ "$EnvAccess" -eq 1 ]
     then
-        echo "User $LoginUser is allowed to perform $Activity operation in $Deployment_Environment"
-        echo
+        log "User $LoginUser is allowed to perform $Activity operation in $Deployment_Environment"
+        log
     else
-        echo "User $LoginUser is not allowed to perform $Activity operation in $Deployment_Environment environment of xiCMS using Jenkins pipeline."
-        echo
+        log "User $LoginUser is not allowed to perform $Activity operation in $Deployment_Environment environment of xiCMS using Jenkins pipeline."
+        log
         exit 1
     fi
-fi
