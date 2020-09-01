@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#Last modified : 8/25/2020
+#Last modified : 9/01/2020
 
 ts=`date +'%s'`
 logfile='/root/Releases/tmp/exm-deployment.log'
@@ -66,6 +66,9 @@ else
 		elif [ "${choice_list[$i]}" == "Mute Status Service" ]
 		then
 			choice_list[$i]="mute"
+		elif [ "${choice_list[$i]}" == "DB" ]
+		then
+			choice_list[$i]="db-upgrade-dir"
 		fi
 
 	done
@@ -90,6 +93,8 @@ get_current_build() {
 	then
 			if [ ! -d /apps/exm-admin-tool/releases ]
 			then
+				log "Creating directory /apps/exm-admin-tool/releases as it was not present."
+				log
 				mkdir -p /apps/exm-admin-tool/releases
 			fi
 			current_build=`ls -la /apps/exm-admin-tool/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
@@ -100,6 +105,8 @@ get_current_build() {
 	then
 			if [ ! -d /apps/exm-client/releases ]
 			then
+				log "Creating directory /apps/exm-client/releases as it was not present."
+				log
 				mkdir -p /apps/exm-client/releases
 			fi
 			current_build=`ls -la /apps/exm-client/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
@@ -110,6 +117,8 @@ get_current_build() {
 	then
 			if [ ! -d /apps/clientmap/exm-client-startup/releases ]
 			then
+				log "Creating directory /apps/clientmap/exm-client-startup/releases as it was not present."
+				log
 				mkdir -p /apps/clientmap/exm-client-startup/releases
 			fi
 			current_build=`ls -la /apps/clientmap/exm-client-startup/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
@@ -120,6 +129,8 @@ get_current_build() {
 	then
 			if [ ! -d /apps/clientmap/exm-client-leftnav2/releases ]
 			then
+				log "Creating directory /apps/clientmap/exm-client-leftnav2/releases as it was not present."
+				log
 				mkdir -p /apps/clientmap/exm-client-leftnav2/releases
 			fi
 			current_build=`ls -la /apps/clientmap/exm-client-leftnav2/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
@@ -130,6 +141,8 @@ get_current_build() {
 	then
 			if [ ! -d /apps/clientmap/exm-client-leftnav2-signage/releases ]
 			then
+				log "Creating directory /apps/clientmap/exm-client-leftnav2-signage/releases as it was not present."
+				log
 				mkdir -p /apps/clientmap/exm-client-leftnav2-signage/releases
 			fi
 			current_build=`ls -la /apps/clientmap/exm-client-leftnav2-signage/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
@@ -140,6 +153,8 @@ get_current_build() {
 	then
 			if [ ! -d /apps/exm-diagnostic-app/releases ]
 			then
+				log "Creating directory /apps/exm-diagnostic-app/releases as it was not present."
+				log
 				mkdir -p /apps/exm-diagnostic-app/releases
 			fi
 			current_build=`ls -la /apps/exm-diagnostic-app/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
@@ -150,6 +165,8 @@ get_current_build() {
 	then
 			if [ ! -d /apps/clientmap/exm-client-lite/releases ]
 			then
+				log "Creating directory /apps/clientmap/exm-client-lite/releases as it was not present."
+				log
 				mkdir -p /apps/clientmap/exm-client-lite/releases
 			fi
 			current_build=`ls -la /apps/clientmap/exm-client-lite/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
@@ -160,6 +177,8 @@ get_current_build() {
 	then
 			if [ ! -d /apps/mute/releases ]
 			then
+				log "Creating directory /apps/mute/releases as it was not present."
+				log
 				mkdir -p /apps/mute/releases
 			fi
 			current_build=`ls -la /apps/mute/current | grep "server.js" | cut -d '>' -f 2 | cut -d '/' -f 1-5| sed 's/ //g'`
@@ -194,6 +213,8 @@ get_current_build() {
 	then
 			if [ ! -d /usr/local/nacos/releases ]
 			then
+				log "Creating directory /usr/local/nacos/releases as it was not present."
+				log
 				mkdir -p /usr/local/nacos/releases
 			fi
 			current_build=`ls -la /usr/local/nacos/ | grep "nacos.daemon.jar " | cut -d '>' -f 2 | sed 's/ //g' | cut -d '/' -f 6`
@@ -204,6 +225,8 @@ get_current_build() {
 	then
 			if [ ! -d /usr/local/mutedaemon/releases ]
 			then
+				log "Creating directory /usr/local/mutedaemon/releases as it was not present."
+				log
 				mkdir -p /usr/local/mutedaemon/releases
 			fi
 			current_build=`ls -la /usr/local/mutedaemon/ | grep "mutedaemon.jar " | cut -d '>' -f 2 | sed 's/ //g' | cut -d '/' -f 6`
@@ -299,6 +322,51 @@ deploy_new_build() {
 
 	#####Deployment of all clients have the same steps. So using the same code for both in below code block.
 
+	if [ "$component" == "db-upgrade-dir" ]
+	then
+		log "Starting the deployment of $component"
+		log
+
+		ls -l /root/Releases/$new_release/db-upgrade-dir/xicms-2.64.0-db-upgrade.zip
+
+		if [ $? = 0 ]
+		then
+			log "DB Upgrade ZIP is present"
+			log
+		else
+			log "ERROR : DB Upgrade ZIP is missing"
+			log
+			exit 1
+		fi
+
+		unzip /root/Releases/$new_release/db-upgrade-dir/xicms-2.64.0-db-upgrade.zip -d /root/Releases/$new_release/db-upgrade-dir
+		cd /root/Releases/$new_release/db-upgrade-dir/xicms-2.64.0-db-upgrade
+		sh db-script.sh --upgrade
+		
+		count=`cat /root/update/2.64.0/db-upgrade-dir/xicms-2.64.0-db-upgrade/2.64.0-dboper-*.log | grep -w "Liquibase Update Successful" | wc -l`
+		 
+		if [ $count -eq 2 ]
+		then
+			log "Liquibase Update Successful"
+			log
+		else
+			log "ERROR : DB upgrade was unsuccessful. Please check logs at /root/update/2.64.0/db-upgrade-dir/xicms-2.64.0-db-upgrade"
+			exit 1
+		fi
+
+		cat /root/update/2.64.0/db-upgrade-dir/xicms-2.64.0-db-upgrade/2.64.0-dboper-*.log | grep -w "finished upgrade"
+
+		if [ $? -eq 0 ]
+		then
+			log "Upgrade Finished."
+			log
+		else
+			log "ERROR : DB upgrade was unsuccessful. Please check logs at /root/update/2.64.0/db-upgrade-dir/xicms-2.64.0-db-upgrade"
+			exit 1
+		fi
+	fi
+
+
 	if  [ "$component" == "exm-admin-tool" ] || [ "$component" == "exm-client-cruise" ] || [ "$component" == "exm-client-startup" ] || [ "$component" == "exm-client-leftnav2" ] || [ "$component" == "exm-client-leftnav2-signage" ] || [ "$component" == "exm-client-lite" ] || [ "$component" == "exm-diagnostic-app" ]
 	then
 
@@ -309,6 +377,8 @@ deploy_new_build() {
 
 		if [ ! -d $releases_path/Backup ]
 		then
+			log "Creating directory $releases_path/Backup as it was not present."
+			log
 			mkdir -p $releases_path/Backup
 		elif [ -d $releases_path/Backup ]
 		then
@@ -376,6 +446,8 @@ deploy_new_build() {
 
 		if [ ! -d /root/War_Backup/$component ]
 		then
+			log "Creating directory /root/War_Backup/$component as it was not present."
+			log
 			mkdir -p /root/War_Backup/$component
 		elif [ -d /root/War_Backup/$component ]
 		then
@@ -384,9 +456,9 @@ deploy_new_build() {
 				rm -rf /root/War_Backup/$component/$i
 			done
 		fi
-		cp -r $releases_path/$component* /root/War_Backup/$component
+		cp -r $releases_path/$component $releases_path/$component.war /root/War_Backup/$component
 		#cp $releases_path/$component.war /tmp/
-		rm -rf $releases_path/$component*
+		rm -rf $releases_path/$component $releases_path/$component.war
 
 		log "Copying new war file to $releases_path/$component.war"
 		log
@@ -403,6 +475,8 @@ deploy_new_build() {
 				
 		if [ ! -d $releases_path/Backup ]
 		then
+			log "Creating directory $releases_path/Backup as it was not present."
+			log
 			mkdir -p $releases_path/Backup
 		elif [ -d $releases_path/Backup ]
 		then
@@ -414,6 +488,8 @@ deploy_new_build() {
 
 		if [ ! -d $releases_path/releases/$new_release ]
 		then
+			log "Creating directory $releases_path/releases/$new_release as it was not present."
+			log
 			mkdir -p $releases_path/releases/$new_release
 		elif [ -d $releases_path/releases/$new_release ]
 		then
@@ -512,6 +588,8 @@ deploy_new_build() {
 
 		if [ ! -d $releases_path/Backup ]
 		then
+			log "Creating directory $releases_path/Backup as it was not present."
+			log
 			mkdir -p $releases_path/Backup
 		elif [ -d $releases_path/Backup ]
 		then
@@ -524,10 +602,9 @@ deploy_new_build() {
 
 		if [ ! -d $releases_path/releases ]
 		then
+			log "Creating directory $releases_path/releases as it was not present."
+			log
 			mkdir -p $releases_path/releases
-		elif [ -d $releases_path/releases ]
-		then
-			mkdir -p $releases_path/releases/
 		fi
 
 		file_name=`ls /root/Releases/$new_release/$component/*.zip | cut -d "/" -f 6`
@@ -700,6 +777,12 @@ rollback() {
 
 		log "New symlink is:"
 		log "`ls -l $releases_path/current | grep 'server.js'`"
+		log
+	fi
+
+	if  [ "$component"  == "db-upgrade-dir" ]
+	then
+		log "Rollback logic not present for DB upgrade."
 		log
 	fi
 }
@@ -910,8 +993,11 @@ deploy_master() {
 	abort_on_fail=$2
 	action=$3
 
-	releases_path=$(get_current_build $component | cut -d ":" -f 2)
-	current_build=$(get_current_build $component | cut -d ":" -f 1)
+	if [ "$component" != "db-upgrade-dir" ]
+	then
+		releases_path=$(get_current_build $component | cut -d ":" -f 2)
+		current_build=$(get_current_build $component | cut -d ":" -f 1)
+	fi
     
 
 	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "nacos" ] || [ "$component"  == "excursion" ] || [  "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]
@@ -930,8 +1016,11 @@ deploy_master() {
 		restart_services $component start
 	fi
 
-	current_build=$(get_current_build $component | cut -d ":" -f 1)
-	verify $component $releases_path $current_build $abort_on_fail $action
+	if [ "$component" != "db-upgrade-dir" ]
+	then
+		current_build=$(get_current_build $component | cut -d ":" -f 1)
+		verify $component $releases_path $current_build $abort_on_fail $action
+	fi
 }
 
 checkComponent() {
@@ -1012,8 +1101,8 @@ case "${1}" in
 			iter=$((iter+1))
 		  done
 		  log
-		  log
-		  log "=================================FINAL DEPLOYMENT STATUS( $server )================================"
+		  log 
+		  log "===============FINAL DEPLOYMENT STATUS( $server )==============="
 	  else
 	  	  log "Checking if components are present..."
 	      log
@@ -1044,7 +1133,7 @@ case "${1}" in
 		  done
 		  log
 		  log
-		  log "=================================FINAL DEPLOYMENT STATUS( $server )================================"
+		  log "===============FINAL DEPLOYMENT STATUS( $server )==============="
 	  fi
 	  ;;
 	-r|--rollback)
@@ -1065,7 +1154,7 @@ case "${1}" in
 		  done
 		  log
 		  log
-		  log "=================================FINAL ROLLBACK STATUS( $server )================================"
+		  log "===============FINAL ROLLBACK STATUS( $server )==============="
 	  else
 	  	  iter=1
 	  	  for component in "${choice_list[@]}"
@@ -1086,7 +1175,7 @@ case "${1}" in
 		  done
 		  log
 		  log
-		  log "=================================FINAL ROLLBACK STATUS( $server )================================"
+		  log "===============FINAL ROLLBACK STATUS( $server )==============="
 	  fi
 	  ;;
 	-t|--transfer)
@@ -1139,13 +1228,13 @@ esac
 
 log
 log
-log "==============================================================================================="
+log "================================================================"
 log
 for key in ${!statusArray[@]};
 do
 	log "${key} : ${statusArray[${key}]}"
     log
-	log "==============================================================================================="
+	log "================================================================"
     log
 done
 

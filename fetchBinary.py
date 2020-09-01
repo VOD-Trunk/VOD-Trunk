@@ -1,4 +1,4 @@
-#Last modified : 8/25/2020
+#Last modified : 9/01/2020
 
 import sys
 import requests
@@ -22,9 +22,14 @@ pageNameMW = sys.argv[9]
 deploymentEnv = sys.argv[10]
 targetShipName = sys.argv[11]
 
+log_path = 'logs'
+path = os.path.join(workspace,log_path)
+if os.path.isdir(path) != True:
+   os.makedirs(path)
+
 
 logfile_path = workspace + '/logs/fetchBinaryStage.log'
-with open(logfile_path, 'w') as logfile:
+with open(logfile_path, 'w+') as logfile:
 
     def log(text):
         print text
@@ -216,21 +221,6 @@ with open(logfile_path, 'w') as logfile:
         with open(url_file_path, 'w') as f:
             f.truncate()
 
-    # log_path = 'logs'
-    # path = os.path.join(workspace,log_path)
-    # if os.path.isdir(path) != True:
-    #     os.makedirs(path)
-    # else:
-    #     folder = workspace + "/logs"
-    #     if os.path.isdir(folder):
-    #         for the_file in os.listdir(folder):
-    #             file_path = os.path.join(folder, the_file)
-    #             try:
-    #                 if os.path.isfile(file_path):
-    #                    os.unlink(file_path)
-    #             except Exception as e:
-    #                 log(e)
-
     tmp_path = 'tmp'
     path = os.path.join(workspace,tmp_path)
     if os.path.isdir(path) != True:
@@ -344,6 +334,10 @@ with open(logfile_path, 'w') as logfile:
 
             log("\n\nFollowing are the artifacts in: " + relName + "\n\n")
             for key, value in finalArtifactoryUrl.items():
+
+                if targetShipName in ["KODM","NADM","EUDM","WEDM","NSDM","NODM","VODM","ZUDM","OSDM","Ovation","Encore","Odyssey"]:
+                    if key == "EXM Notification plugin":
+                        continue
                     
                 componentConfluence = str(key)
                 url = str(value)
@@ -376,6 +370,8 @@ with open(logfile_path, 'w') as logfile:
                     component = "notification-service"
                 elif componentConfluence == "Mute Status Service":
                     component = "mute"
+                elif componentConfluence == "DB":
+                    component = "db-upgrade-dir"
                 else:
                     continue
 

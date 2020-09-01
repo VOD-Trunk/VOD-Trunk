@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#Last modified : 8/25/2020
+#Last modified : 8/31/2020
 
 LoginUser=$1
 AllowedUsers=$2

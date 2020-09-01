@@ -1,4 +1,4 @@
-//Last modified : 8/25/2020
+//Last modified : 9/01/2020
 node {
 
     try {
@@ -17,9 +17,8 @@ node {
                     usernameVariable: 'ArtifactoryUser', passwordVariable: 'ArtifactoryPassword']]) {
         
                 stage('Git Checkout') {
-                        //last_started = env.STAGE_NAME
+                        /last_started = env.STAGE_NAME
                         checkout scm
-
                         sh "chmod 755 ${env.WORKSPACE}/*"
                 }
 
@@ -57,7 +56,6 @@ node {
                     }
 
                     /*
-
                     stage('Check artifact property') {
                         
                         last_started = env.STAGE_NAME
@@ -67,8 +65,7 @@ node {
                             ${env.WORKSPACE}/checkArtifactProperty.sh "${Deployment_Environment}" "${Activity}" "${Release_Version}" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "${Promoting_From}" "${env.WORKSPACE}" "$LoginUser" "${Ship_Name}"
 
                         """
-                    }
-                    */
+                    } */
 
                    
                    stage('Deploy'){
@@ -107,13 +104,11 @@ node {
        
     } catch(error) {
 
-        echo "An exception has occured. This build has FAILED !! ${error}"
+      echo "An exception has occured in stage '$last_started'. This build has FAILED !! ${error}"
         currentBuild.result = 'FAILURE'
         throw error
     }
-
-
-    /*
+    
     finally {
 
         wrap([$class: 'BuildUser']) {
@@ -126,12 +121,26 @@ node {
         
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: '${Artifactory_Credentials}',
                 usernameVariable: 'ArtifactoryUser', passwordVariable: 'ArtifactoryPassword']]) {
+            /*
           if( buildStatus == 'SUCCESS' && "${Deployment_Environment}" == "PRODUCTION" && "${Activity}" == "Deploy" )
           {
               sh """
                   #!/bin/bash -e
                   ${env.WORKSPACE}/checkArtifactProperty.sh "${Deployment_Environment}" "Promote" "${Release_Version}" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}"  "PRODUCTION" "${env.WORKSPACE}" "$LoginUser" "${Ship_Name}"
-              """
+            
+                """
+          } */
+          
+          if( buildStatus == 'FAILURE' ) {
+
+          sh """
+
+            if [ -d ${env.WORKSPACE}/logs ]
+            then
+                grep -h "ERROR" ${env.WORKSPACE}/logs/* > ${env.WORKSPACE}/logs/errors.log
+            fi
+            
+          """
           }
           
         }
@@ -149,26 +158,37 @@ node {
         color = 'RED'
         colorCode = '#FF0000'
         }
-        
-        def exists = fileExists 'logs/email_body.txt'
-          
-        if (exists) {
+
+        def isBodyExists = fileExists 'logs/email_body.txt'
+        def isErrorExists = fileExists 'logs/errors.log'
+              
+        if (isBodyExists) {
             def data = readFile(file: 'logs/email_body.txt')
-            email_body = "Job Name : ${env.JOB_NAME} \nLogin User : ${LoginUser} \nShip Name : ${Ship_Name} \nOperation : ${Activity} \nBuild# : ${BUILD_NUMBER} \nBuild URL : ${env.BUILD_URL} \nBuild Result : ${buildStatus}\n\n\nBelow given is a snippet from the console logs :\n\n\n" + data + "\n\n\nPlease find attached the console logs for this build.\n\n\nThank you."
+            if (isErrorExists) {
+                def errors = readFile(file: 'logs/errors.log')
+                email_body = "Job Name : ${env.JOB_NAME} \nLogin User : ${LoginUser} \nShip Name : ${Ship_Name} \nOperation : ${Activity} \nBuild# : ${BUILD_NUMBER} \nBuild URL : ${env.BUILD_URL} \nBuild Result : ${buildStatus}\n\n\nBelow given is a snippet from the console logs :\n\n\n" + data + "\n\nErrors: \n\n" + errors +"\n\n\nPlease find attached the console logs for this build.\n\n\nThank you."
+                slack_body = "Job Name : ${env.JOB_NAME} \nLogin User : ${LoginUser} \nShip Name : ${Ship_Name} \nOperation : ${Activity} \nBuild# : ${BUILD_NUMBER} \nBuild URL : ${env.BUILD_URL} \nBuild Result : ${buildStatus}\n\n\nBelow given is a snippet from the console logs :\n\n\n" + data + "\n\nErrors: \n\n" + errors +"\n\n\nThank you."
+            }else {
+                email_body = "Job Name : ${env.JOB_NAME} \nLogin User : ${LoginUser} \nShip Name : ${Ship_Name} \nOperation : ${Activity} \nBuild# : ${BUILD_NUMBER} \nBuild URL : ${env.BUILD_URL} \nBuild Result : ${buildStatus}\n\n\nBelow given is a snippet from the console logs :\n\n\n" + data + "\n\n\nPlease find attached the console logs for this build.\n\n\nThank you."
+                slack_body = "Job Name : ${env.JOB_NAME} \nLogin User : ${LoginUser} \nShip Name : ${Ship_Name} \nOperation : ${Activity} \nBuild# : ${BUILD_NUMBER} \nBuild URL : ${env.BUILD_URL} \nBuild Result : ${buildStatus}\n\n\nBelow given is a snippet from the console logs :\n\n\n" + data + "\n\n\nThank you."
+            }
         } else {
-            email_body = "Job Name : ${env.JOB_NAME} \nLogin User : ${LoginUser} \nShip Name : ${Ship_Name} \nOperation : ${Activity} \nBuild# : ${BUILD_NUMBER} \nBuild URL : ${env.BUILD_URL} \nBuild Result : ${buildStatus}\n\n\nPlease find attached the console logs for this build.\n\n\nThank you."
+            if (isErrorExists) {
+                def errors = readFile(file: 'logs/errors.log')
+                email_body = "Job Name : ${env.JOB_NAME} \nLogin User : ${LoginUser} \nShip Name : ${Ship_Name} \nOperation : ${Activity} \nBuild# : ${BUILD_NUMBER} \nBuild URL : ${env.BUILD_URL} \nBuild Result : ${buildStatus}\n\n\nErrors: \n\n" + errors +"\n\n\nPlease find attached the console logs for this build.\n\n\nThank you."
+                slack_body = "Job Name : ${env.JOB_NAME} \nLogin User : ${LoginUser} \nShip Name : ${Ship_Name} \nOperation : ${Activity} \nBuild# : ${BUILD_NUMBER} \nBuild URL : ${env.BUILD_URL} \nBuild Result : ${buildStatus}\n\n\nErrors: \n\n" + errors +"\n\n\nThank you."
+            } else {
+                email_body = "Job Name : ${env.JOB_NAME} \nLogin User : ${LoginUser} \nShip Name : ${Ship_Name} \nOperation : ${Activity} \nBuild# : ${BUILD_NUMBER} \nBuild URL : ${env.BUILD_URL} \nBuild Result : ${buildStatus}\n\n\nPlease find attached the console logs for this build.\n\n\nThank you."
+                slack_body = "Job Name : ${env.JOB_NAME} \nLogin User : ${LoginUser} \nShip Name : ${Ship_Name} \nOperation : ${Activity} \nBuild# : ${BUILD_NUMBER} \nBuild URL : ${env.BUILD_URL} \nBuild Result : ${buildStatus}\n\n\nThank you."
+            }
         }
 
-        slack_body = "Job Name : ${env.JOB_NAME} \nLogin User : ${LoginUser} \nShip Name : ${Ship_Name} \nOperation : ${Activity} \nBuild# : ${BUILD_NUMBER} \nBuild URL : ${env.BUILD_URL} \nBuild Result : ${buildStatus}"
-        
-
         // Send notifications
-        slackSend (color: colorCode,channel: '#exm-jenkins-tracking', message: slack_body)
-        emailext attachLog: true, body: email_body, compressLog: true, subject: "Build Notification: ${env.JOB_NAME}-Build# ${env.BUILD_NUMBER} ${buildStatus}", to : 'abhishek.chadha@hsc.com, deepak.rohilla@hsc.com, pratyush.mishra@hsc.com'
+        //slackSend (color: colorCode,channel: '#exm-jenkins-tracking', message: slack_body)
+        //emailext attachLog: true, body: email_body, compressLog: true, subject: "Build Notification: ${env.JOB_NAME}-Build# ${env.BUILD_NUMBER} ${buildStatus}", to : 'abhishek.chadha@hsc.com, deepak.rohilla@hsc.com, pratyush.mishra@hsc.com, deepam.1920@hsc.com, shashank.shukla@hsc.com'
        
         }
 
     }
-    */
 
 }
