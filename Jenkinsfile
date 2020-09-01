@@ -17,7 +17,7 @@ node {
                     usernameVariable: 'ArtifactoryUser', passwordVariable: 'ArtifactoryPassword']]) {
         
                 stage('Git Checkout') {
-                        /last_started = env.STAGE_NAME
+                        //last_started = env.STAGE_NAME
                         checkout scm
                         sh "chmod 755 ${env.WORKSPACE}/*"
                 }
