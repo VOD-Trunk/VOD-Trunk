@@ -104,7 +104,7 @@ node {
        
     } catch(error) {
 
-      echo "An exception has occured in stage '$last_started'. This build has FAILED !! ${error}"
+      echo "An exception has occured. This build has FAILED !! ${error}"
         currentBuild.result = 'FAILURE'
         throw error
     }
