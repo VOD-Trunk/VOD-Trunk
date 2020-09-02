@@ -547,7 +547,7 @@ deploy_new_build() {
 		log
 		#if [ "$component" == "nacos" ]
 		#then
-			cp $releases_path/Backup/$new_release/properties.uie $releases_path/releases/$new_release
+			cp $releases_path/properties.uie $releases_path/releases/$new_release
 		#else
 		#	cp $releases_path/Backup/$new_release/*.properties $releases_path/releases/$new_release
 		#fi
