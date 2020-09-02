@@ -562,12 +562,12 @@ deploy_new_build() {
 		log "Creating new symlink properties.uie ..."
 		log
 
-		if [ "$component" == "nacos" ]
-		then
+		#if [ "$component" == "nacos" ]
+		#then
 			ln -s $releases_path/releases/$new_release/properties.uie $releases_path/properties.uie
-		else
-			ln -s $releases_path/releases/$new_release/*.properties $releases_path/properties.uie
-		fi
+		#else
+		#	ln -s $releases_path/releases/$new_release/*.properties $releases_path/properties.uie
+		#fi
 
 		log "New properties.uie symlink is :"
 		log
