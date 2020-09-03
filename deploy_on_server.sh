@@ -257,6 +257,7 @@ restart_services() {
 
 	if  ([ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]) && [ "$start_stop" == "start" ]
 	then
+
 		log "Starting tomcat7 service for $component..."
 		log
 		service tomcat7 start #Start_Tomcat_Service
@@ -277,31 +278,53 @@ restart_services() {
 	
 	if ([ "$component" == "nacos" ] || [ "$component" == "mutedaemon" ]) && [ "$start_stop" == "stop" ]
 	then
-		log "Stopping $component service..."
+		log "Checking if $component service is running on this server..."
 		log
-		service $component stop
-		log
-		sleep 5
+
+		isServiceRunning=`monit summary | grep $component | tr -s ' ' |  cut -d ' ' -f 3 | grep Running | wc -l`
+
+		if [ $isServiceRunning == 1 ]
+		then
+			log "Stopping $component service..."
+			log
+			monit stop $component
+			log
+			sleep 5
+		else
+			log "$component service doesn't need to be restarted on this server."
+			log
+		fi
 		log
 		log "================================================================================================================"
-		log	
+		log
 	fi
 
 	if ([ "$component" == "nacos" ] || [ "$component" == "mutedaemon" ]) && [ "$start_stop" == "start" ]
 	then
-		log "Starting $component service..."
+		log "Checking if the $component Service is stopped..."
 		log
-		service $component start
-		sleep 5
-		
-		service_status=`ps -ef | grep "$component" | wc -l`
-		
-		if [ $service_status -gt 1 ]
+
+		isServiceRunning=`monit summary | grep $component | tr -s ' ' |  cut -d ' ' -f 3 | grep Running | wc -l`
+
+		if [ $isServiceRunning -eq 0 ]
 		then
-			log "$component started successfully."
+			log "Starting $component service..."
 			log
+			monit start $component
+			sleep 5
+			
+			service_status=`ps -ef | grep "$component" | wc -l`
+			
+			if [ $service_status -gt 1 ]
+			then
+				log "$component started successfully."
+				log
+			else
+				log "$component failed to start."
+				log
+			fi
 		else
-			log "$component failed to start."
+			log "$component service doesn't need to be restarted on this server."
 			log
 		fi
 
