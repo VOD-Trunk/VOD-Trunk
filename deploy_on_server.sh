@@ -1051,7 +1051,7 @@ checkComponent() {
 	component=$1
 
     DIR="/root/Releases/$new_release/$component"
-    if [ -d /root/Releases/$new_release/$component ]
+    if [ "ls -A $DIR" ]
     then
         :
     else
