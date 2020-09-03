@@ -44,8 +44,6 @@ then
 
             if [ $transfer_status -gt 0 ]
             then
-                log "All components have not been transferred. Please check and try again."
-                log
                 if [ -f $workspace/logs/${logfile} ]
                 then
                     cat $workspace/logs/${logfile}
@@ -69,8 +67,6 @@ then
 
             if [ $transfer_status -gt 0 ]
             then
-                log "All components have not been transferred. Please check and try again."
-                log
                 if [ -f $workspace/logs/${logfile} ]
                 then
                     cat $workspace/logs/${logfile}
@@ -100,8 +96,6 @@ then
 
             if [ $transfer_status -gt 0 ]
             then
-                log "All components have not been transferred. Please check and try again."
-                log
                 if [ -f $workspace/logs/${logfile} ]
                 then
                     cat $workspace/logs/${logfile}
@@ -125,8 +119,6 @@ then
 
             if [ $transfer_status -gt 0 ]
             then
-                log "All components have not been transferred. Please check and try again."
-                log
                 if [ -f $workspace/logs/${logfile} ]
                 then
                     cat $workspace/logs/${logfile}
