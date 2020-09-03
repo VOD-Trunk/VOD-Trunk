@@ -46,7 +46,7 @@ then
             then
                 log "All components have not been transferred. Please check and try again."
                 log
-                exit 125
+                exit 1
             fi
         else
             log "ERROR : Log file not present at $workspace/logs/${logfile}"
@@ -67,7 +67,7 @@ then
             then
                 log "All components have not been transferred. Please check and try again."
                 log
-                exit 125
+                exit 1
             fi
         else
             log "ERROR : Log file not present at $workspace/logs/${logfile}"
@@ -94,7 +94,7 @@ then
             then
                 log "All components have not been transferred. Please check and try again."
                 log
-                exit 125
+                exit 1
             fi
         else
             log "ERROR : Log file not present at $workspace/logs/${logfile}"
@@ -115,7 +115,7 @@ then
             then
                 log "All components have not been transferred. Please check and try again."
                 log
-                exit 125
+                exit 1
             fi
         else
             log "ERROR : Log file not present at $workspace/logs/${logfile}"
