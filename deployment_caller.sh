@@ -171,8 +171,9 @@ then
     transfer_status=`grep "has not been transferred" $workspace/logs/${logfile} | wc -l`
     abort_status=`grep "Aborting mission" $workspace/logs/${logfile} | wc -l`
     dbUpgradeStatus=`grep "DB upgrade was unsuccessful" $workspace/logs/${logfile} | wc -l`
+    chksum_status=`grep "md5sum is not matching" $workspace/logs/${logfile} | wc -l`
 
-    if [ $transfer_status -gt 0 ] || [ $abort_status -gt 0 ] || [ $dbUpgradeStatus -gt 0 ]
+    if [ $transfer_status -gt 0 ] || [ $abort_status -gt 0 ] || [ $dbUpgradeStatus -gt 0 ] || [ $chksum_status -gt 0 ]
     then
         if [ -f $workspace/logs/"${logfile}" ]
         then
