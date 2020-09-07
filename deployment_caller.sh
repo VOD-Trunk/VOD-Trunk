@@ -44,7 +44,6 @@ then
         
         if [ -f $workspace/logs/${logfile} ]
         then
-            #cat $workspace/logs/${logfile}
             transfer_status=`grep "has not been transferred" $workspace/logs/${logfile} | wc -l`
 
             if [ $transfer_status -gt 0 ]
@@ -55,6 +54,18 @@ then
                 fi
                 exit 1
             fi
+
+            abort_status=`grep "Aborting mission" $workspace/logs/${logfile} | wc -l`
+
+            if [ $abort_status -gt 0 ]
+            then
+                if [ -f $workspace/logs/"${logfile}" ]
+                then
+                    cat $workspace/logs/"${logfile}"
+                fi
+                exit 1
+            fi
+
         else
             log "ERROR : Log file not present at $workspace/logs/${logfile}"
             exit 1
@@ -67,10 +78,20 @@ then
         
         if [ -f $workspace/logs/${logfile} ]
         then
-            #cat $workspace/logs/${logfile}
             transfer_status=`grep "has not been transferred" $workspace/logs/${logfile} | wc -l`
 
             if [ $transfer_status -gt 0 ]
+            then
+                if [ -f $workspace/logs/"${logfile}" ]
+                then
+                    cat $workspace/logs/"${logfile}"
+                fi
+                exit 1
+            fi
+
+            abort_status=`grep "Aborting mission" $workspace/logs/${logfile} | wc -l`
+
+            if [ $abort_status -gt 0 ]
             then
                 if [ -f $workspace/logs/"${logfile}" ]
                 then
@@ -106,6 +127,18 @@ then
                 fi
                 exit 1
             fi
+
+            abort_status=`grep "Aborting mission" $workspace/logs/${logfile} | wc -l`
+
+            if [ $abort_status -gt 0 ]
+            then
+                if [ -f $workspace/logs/"${logfile}" ]
+                then
+                    cat $workspace/logs/"${logfile}"
+                fi
+                exit 1
+            fi
+
         else
             log "ERROR : Log file not present at $workspace/logs/${logfile}"
             exit 1
@@ -125,6 +158,17 @@ then
                 if [ -f $workspace/logs/${logfile} ]
                 then
                     cat $workspace/logs/${logfile}
+                fi
+                exit 1
+            fi
+
+            abort_status=`grep "Aborting mission" $workspace/logs/${logfile} | wc -l`
+
+            if [ $abort_status -gt 0 ]
+            then
+                if [ -f $workspace/logs/"${logfile}" ]
+                then
+                    cat $workspace/logs/"${logfile}"
                 fi
                 exit 1
             fi
@@ -220,10 +264,44 @@ then
     then
         sshpass -p "Carnival@123" ssh root@$env "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" "app01"> $workspace/logs/"${logfile}"
         sshpass -p "Carnival@123" ssh root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/"${logfile}"
+
+        if [ -f $workspace/logs/${logfile} ]
+        then
+            abort_status=`grep "Aborting mission" $workspace/logs/${logfile} | wc -l`
+
+            if [ $abort_status -gt 0 ]
+            then
+                if [ -f $workspace/logs/"${logfile}" ]
+                then
+                    cat $workspace/logs/"${logfile}"
+                fi
+                exit 1
+            fi
+        else
+            log "ERROR : Log file not present at $workspace/logs/${logfile}"
+            exit 1
+        fi
         
     else
         sshpass -p "not4dev!" ssh root@$env "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" "app01"> $workspace/logs/"${logfile}"
         sshpass -p "not4dev!" ssh root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/"${logfile}"
+
+        if [ -f $workspace/logs/${logfile} ]
+        then
+            abort_status=`grep "Aborting mission" $workspace/logs/${logfile} | wc -l`
+
+            if [ $abort_status -gt 0 ]
+            then
+                if [ -f $workspace/logs/"${logfile}" ]
+                then
+                    cat $workspace/logs/"${logfile}"
+                fi
+                exit 1
+            fi
+        else
+            log "ERROR : Log file not present at $workspace/logs/${logfile}"
+            exit 1
+        fi
         
     fi
 fi
