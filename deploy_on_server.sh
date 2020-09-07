@@ -375,7 +375,7 @@ deploy_new_build() {
 		
 		cd /root/Releases/$new_release/db-upgrade-dir/$new_build
 		
-		printf 'uie123\n' | ./db-script.sh --upgrade &>/dev/null
+		printf 'uie123\n' | ./db-script.sh --upgrade #&>/dev/null
 		
 		count=`cat /root/update/$new_release/db-upgrade-dir/$new_build/*-dboper-*.log | grep -w "Liquibase Update Successful" | wc -l`
 		 
