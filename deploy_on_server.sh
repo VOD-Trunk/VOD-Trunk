@@ -371,13 +371,13 @@ deploy_new_build() {
 
 		new_build=`cd /root/Releases/$new_release/$component/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
 
-		chmod +x /root/Releases/$new_release/db-upgrade-dir/$component/db-script.sh
+		chmod +x /root/Releases/$new_release/db-upgrade-dir/$new_build/db-script.sh
 		
 		cd /root/Releases/$new_release/db-upgrade-dir/$new_build
 		
 		printf 'uie123\n' | ./db-script.sh --upgrade
 		
-		count=`cat /root/update/$new_release/db-upgrade-dir/$new_build/2.64.0-dboper-*.log | grep -w "Liquibase Update Successful" | wc -l`
+		count=`cat /root/update/$new_release/db-upgrade-dir/$new_build/*-dboper-*.log | grep -w "Liquibase Update Successful" | wc -l`
 		 
 		if [ $count -eq 2 ]
 		then
@@ -388,7 +388,7 @@ deploy_new_build() {
 			exit 1
 		fi
 
-		cat /root/update/$new_release/db-upgrade-dir/$new_build/2.64.0-dboper-*.log | grep -w "finished upgrade"
+		cat /root/update/$new_release/db-upgrade-dir/$new_build/*-dboper-*.log | grep -w "finished upgrade"
 
 		if [ $? -eq 0 ]
 		then
