@@ -347,7 +347,7 @@ deploy_new_build() {
 
 	if [ "$component" == "db-upgrade-dir" ]
 	then
-		log "Starting the deployment of $component"
+		log "Starting the DB upgrade"
 		log
 
 		ls -l /root/Releases/$new_release/db-upgrade-dir/xicms-2.64.0-db-upgrade.zip
