@@ -1083,10 +1083,6 @@ then
 
 	if [ $isDbUpgradeReqd -eq 1 ]
 	then
-
-		sed -i '/db-upgrade-dir/d' /root/Releases/tmp/component_build_mapping.txt
-		sed -i '/^$/d' /root/Releases/tmp/component_build_mapping.txt
-		
 		component="db-upgrade-dir"
 		log
 		log "Starting DB upgrade of release $new_release"
@@ -1102,6 +1098,9 @@ then
 	    	log "ERROR : $component could not be transferred successfully. md5sum is not matching between confluence and server. Aborting Build !!"
 	        exit 1
 	    fi
+
+	    sed -i '/db-upgrade-dir/d' /root/Releases/tmp/component_build_mapping.txt
+		sed -i '/^$/d' /root/Releases/tmp/component_build_mapping.txt
 		
 		deploy_master $component $abort_on_fail deploy
 	else
