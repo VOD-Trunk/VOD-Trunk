@@ -1083,6 +1083,10 @@ then
 
 	if [ $isDbUpgradeReqd -eq 1 ]
 	then
+
+		sed -i '/db-upgrade-dir/d' /root/Releases/tmp/component_build_mapping.txt
+		sed -i '/^$/d' /root/Releases/tmp/component_build_mapping.txt
+		
 		component="db-upgrade-dir"
 		log
 		log "Starting DB upgrade of release $new_release"
@@ -1100,9 +1104,6 @@ then
 	    fi
 		
 		deploy_master $component $abort_on_fail deploy
-
-		sed -i '/db-upgrade-dir/d' /root/Releases/tmp/component_build_mapping.txt
-		sed -i '/^$/d' /root/Releases/tmp/component_build_mapping.txt
 	else
 		log
 		log "DB upgrade is not required."
