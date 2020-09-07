@@ -41,69 +41,11 @@ then
         #sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env "ssh -tt app02 \" rm -rf /root/Releases \"" 2>/dev/null
         sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app01" "$transfer_flag" >> $workspace/logs/"${logfile}"
         #sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/"${logfile}"
-        
-        if [ -f $workspace/logs/${logfile} ]
-        then
-            transfer_status=`grep "has not been transferred" $workspace/logs/${logfile} | wc -l`
-
-            if [ $transfer_status -gt 0 ]
-            then
-                if [ -f $workspace/logs/"${logfile}" ]
-                then
-                    cat $workspace/logs/"${logfile}"
-                fi
-                exit 1
-            fi
-
-            abort_status=`grep "Aborting mission" $workspace/logs/${logfile} | wc -l`
-
-            if [ $abort_status -gt 0 ]
-            then
-                if [ -f $workspace/logs/"${logfile}" ]
-                then
-                    cat $workspace/logs/"${logfile}"
-                fi
-                exit 1
-            fi
-
-        else
-            log "ERROR : Log file not present at $workspace/logs/${logfile}"
-            exit 1
-        fi
     else
         sshpass -p "not4dev!" ssh  -o "StrictHostKeyChecking=no"  root@$env 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
         sshpass -p "not4dev!" scp  -o "StrictHostKeyChecking=no" -r $workspace/Releases/$release $workspace/tmp root@$env:/root/Releases
         sshpass -p "not4dev!" ssh -o "StrictHostKeyChecking=no" root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app01" "$transfer_flag" >> $workspace/logs/"${logfile}"
-        sshpass -p "not4dev!" ssh -o "StrictHostKeyChecking=no" root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/"${logfile}"
-        
-        if [ -f $workspace/logs/${logfile} ]
-        then
-            transfer_status=`grep "has not been transferred" $workspace/logs/${logfile} | wc -l`
-
-            if [ $transfer_status -gt 0 ]
-            then
-                if [ -f $workspace/logs/"${logfile}" ]
-                then
-                    cat $workspace/logs/"${logfile}"
-                fi
-                exit 1
-            fi
-
-            abort_status=`grep "Aborting mission" $workspace/logs/${logfile} | wc -l`
-
-            if [ $abort_status -gt 0 ]
-            then
-                if [ -f $workspace/logs/"${logfile}" ]
-                then
-                    cat $workspace/logs/"${logfile}"
-                fi
-                exit 1
-            fi
-        else
-            log "ERROR : Log file not present at $workspace/logs/${logfile}"
-            exit 1
-        fi
-        
+        sshpass -p "not4dev!" ssh -o "StrictHostKeyChecking=no" root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/"${logfile}"        
     fi
 elif [ "$action" == "Deploy" ] && [ "$transfer_flag" == "false" ]
 then
@@ -113,69 +55,12 @@ then
         sshpass -p "Carnival@123" scp -o "StrictHostKeyChecking=no" -r $workspace/tmp root@$env:/root/Releases
         sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app01" "$transfer_flag" >> $workspace/logs/"${logfile}"
         #sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/"${logfile}"
-        
-        
-        if [ -f $workspace/logs/${logfile} ]
-        then
-            transfer_status=`grep "has not been transferred" $workspace/logs/${logfile} | wc -l`
-
-            if [ $transfer_status -gt 0 ]
-            then
-                if [ -f $workspace/logs/"${logfile}" ]
-                then
-                    cat $workspace/logs/"${logfile}"
-                fi
-                exit 1
-            fi
-
-            abort_status=`grep "Aborting mission" $workspace/logs/${logfile} | wc -l`
-
-            if [ $abort_status -gt 0 ]
-            then
-                if [ -f $workspace/logs/"${logfile}" ]
-                then
-                    cat $workspace/logs/"${logfile}"
-                fi
-                exit 1
-            fi
-
-        else
-            log "ERROR : Log file not present at $workspace/logs/${logfile}"
-            exit 1
-        fi
     else
         sshpass -p "not4dev!" ssh -o "StrictHostKeyChecking=no"  root@$env 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else mv /root/Releases/tmp /root/Releases/tmp_`date +%Y_%m_%d__%H_%M_%S`; fi'
         sshpass -p "not4dev!" scp -o "StrictHostKeyChecking=no" -r $workspace/tmp root@$env:/root/Releases
         sshpass -p "not4dev!" ssh -o "StrictHostKeyChecking=no" root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app01" >> $workspace/logs/"${logfile}"
         sshpass -p "not4dev!" ssh -o "StrictHostKeyChecking=no" root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/"${logfile}"
         
-        if [ -f $workspace/logs/${logfile} ]
-        then
-            transfer_status=`grep "has not been transferred" $workspace/logs/${logfile} | wc -l`
-
-            if [ $transfer_status -gt 0 ]
-            then
-                if [ -f $workspace/logs/${logfile} ]
-                then
-                    cat $workspace/logs/${logfile}
-                fi
-                exit 1
-            fi
-
-            abort_status=`grep "Aborting mission" $workspace/logs/${logfile} | wc -l`
-
-            if [ $abort_status -gt 0 ]
-            then
-                if [ -f $workspace/logs/"${logfile}" ]
-                then
-                    cat $workspace/logs/"${logfile}"
-                fi
-                exit 1
-            fi
-        else
-            log "ERROR : Log file not present at $workspace/logs/${logfile}"
-            exit 1
-        fi
     fi
     
 elif [ "$action" == "ScheduleDeploy" ]
@@ -264,44 +149,10 @@ then
     then
         sshpass -p "Carnival@123" ssh root@$env "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" "app01"> $workspace/logs/"${logfile}"
         sshpass -p "Carnival@123" ssh root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/"${logfile}"
-
-        if [ -f $workspace/logs/${logfile} ]
-        then
-            abort_status=`grep "Aborting mission" $workspace/logs/${logfile} | wc -l`
-
-            if [ $abort_status -gt 0 ]
-            then
-                if [ -f $workspace/logs/"${logfile}" ]
-                then
-                    cat $workspace/logs/"${logfile}"
-                fi
-                exit 1
-            fi
-        else
-            log "ERROR : Log file not present at $workspace/logs/${logfile}"
-            exit 1
-        fi
         
     else
         sshpass -p "not4dev!" ssh root@$env "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" "app01"> $workspace/logs/"${logfile}"
         sshpass -p "not4dev!" ssh root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/"${logfile}"
-
-        if [ -f $workspace/logs/${logfile} ]
-        then
-            abort_status=`grep "Aborting mission" $workspace/logs/${logfile} | wc -l`
-
-            if [ $abort_status -gt 0 ]
-            then
-                if [ -f $workspace/logs/"${logfile}" ]
-                then
-                    cat $workspace/logs/"${logfile}"
-                fi
-                exit 1
-            fi
-        else
-            log "ERROR : Log file not present at $workspace/logs/${logfile}"
-            exit 1
-        fi
         
     fi
 fi
@@ -313,6 +164,27 @@ then
     sed -i '/Transferring artifacts to app02/d' $workspace/logs/email_body.txt
     sed -i '/UTC 20/d' $workspace/logs/email_body.txt
     sed -i '/Checking if components are present/d' $workspace/logs/email_body.txt
+fi
+
+if [ -f $workspace/logs/${logfile} ]
+    then
+        transfer_status=`grep "has not been transferred" $workspace/logs/${logfile} | wc -l`
+        abort_status=`grep "Aborting mission" $workspace/logs/${logfile} | wc -l`
+        dbUpgradeStatus=`grep "DB upgrade was unsuccessful" $workspace/logs/${logfile} | wc -l`
+
+        if [ $transfer_status -gt 0 ] || [ $abort_status -gt 0 ] || [ $dbUpgradeStatus -gt 0 ]
+        then
+            if [ -f $workspace/logs/"${logfile}" ]
+            then
+                cat $workspace/logs/"${logfile}"
+            fi
+            exit 1
+        fi
+
+    else
+        log "ERROR : Log file not present at $workspace/logs/${logfile}"
+        exit 1
+    fi
 fi
 
 if [ -f $workspace/logs/"${logfile}" ]
