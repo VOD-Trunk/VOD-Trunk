@@ -167,24 +167,23 @@ then
 fi
 
 if [ -f $workspace/logs/${logfile} ]
+then
+    transfer_status=`grep "has not been transferred" $workspace/logs/${logfile} | wc -l`
+    abort_status=`grep "Aborting mission" $workspace/logs/${logfile} | wc -l`
+    dbUpgradeStatus=`grep "DB upgrade was unsuccessful" $workspace/logs/${logfile} | wc -l`
+
+    if [ $transfer_status -gt 0 ] || [ $abort_status -gt 0 ] || [ $dbUpgradeStatus -gt 0 ]
     then
-        transfer_status=`grep "has not been transferred" $workspace/logs/${logfile} | wc -l`
-        abort_status=`grep "Aborting mission" $workspace/logs/${logfile} | wc -l`
-        dbUpgradeStatus=`grep "DB upgrade was unsuccessful" $workspace/logs/${logfile} | wc -l`
-
-        if [ $transfer_status -gt 0 ] || [ $abort_status -gt 0 ] || [ $dbUpgradeStatus -gt 0 ]
+        if [ -f $workspace/logs/"${logfile}" ]
         then
-            if [ -f $workspace/logs/"${logfile}" ]
-            then
-                cat $workspace/logs/"${logfile}"
-            fi
-            exit 1
+            cat $workspace/logs/"${logfile}"
         fi
-
-    else
-        log "ERROR : Log file not present at $workspace/logs/${logfile}"
         exit 1
     fi
+
+else
+    log "ERROR : Log file not present at $workspace/logs/${logfile}"
+    exit 1
 fi
 
 if [ -f $workspace/logs/"${logfile}" ]
