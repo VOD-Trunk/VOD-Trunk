@@ -24,6 +24,11 @@ then
     rm -f $workspace/logs/email_body.txt
 fi
 
+if [ -f  $workspace/logs/"${logfile} ]
+then
+    rm -f $workspace/logs/"${logfile}"
+fi
+
 { #try
 if [ "$action" == "Deploy" ] && [ "$transfer_flag" == "true" ]
 then
@@ -44,9 +49,9 @@ then
 
             if [ $transfer_status -gt 0 ]
             then
-                if [ -f $workspace/logs/${logfile} ]
+                if [ -f $workspace/logs/"${logfile}" ]
                 then
-                    cat $workspace/logs/${logfile}
+                    cat $workspace/logs/"${logfile}"
                 fi
                 exit 1
             fi
@@ -67,9 +72,9 @@ then
 
             if [ $transfer_status -gt 0 ]
             then
-                if [ -f $workspace/logs/${logfile} ]
+                if [ -f $workspace/logs/"${logfile}" ]
                 then
-                    cat $workspace/logs/${logfile}
+                    cat $workspace/logs/"${logfile}"
                 fi
                 exit 1
             fi
@@ -91,14 +96,13 @@ then
         
         if [ -f $workspace/logs/${logfile} ]
         then
-            #cat $workspace/logs/${logfile}
             transfer_status=`grep "has not been transferred" $workspace/logs/${logfile} | wc -l`
 
             if [ $transfer_status -gt 0 ]
             then
-                if [ -f $workspace/logs/${logfile} ]
+                if [ -f $workspace/logs/"${logfile}" ]
                 then
-                    cat $workspace/logs/${logfile}
+                    cat $workspace/logs/"${logfile}"
                 fi
                 exit 1
             fi
@@ -141,6 +145,22 @@ then
             ipaddr=`echo $ship | cut -d: -f2`
             ship_name=`echo $ship | cut -d: -f1`
             log
+            log "Checking if transfer of artifacts is done already for $ship_name"
+                $workspace/checkArtifactProperty.sh "NA" "checkTransferStatus" "$release" "$ArtifactoryUser" "$ArtifactoryPassword" "$ship_name" "$workspace" "NA"
+                if [ $? -eq 0 ]
+                then
+                    :
+                else
+                    log "Artifacts have already been transferred to $ship_name. Moving ahead."
+
+                    if [ -f $workspace/logs/checkArtifactPropertyStage.log ]
+                    then
+                        cat $workspace/logs/checkArtifactPropertyStage.log
+                    fi
+
+                    continue
+                fi
+            log
             log "Transferring artifacts to the target server ( $ipaddr )"
             log
             if [ "$ipaddr" == "192.168.248.161" ]
@@ -150,13 +170,13 @@ then
                 sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$ipaddr "bash -s" -- < $workspace/deploy_on_server.sh -t "$release" "$component" "$abort_on_fail" "app01" "$transfer_flag" >> $workspace/logs/"${logfile}"
                 
             else
-                sshpass -p "not4dev!" ssh  -o "StrictHostKeyChecking=no" -r root@$ipaddr 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
+                sshpass -p "not4dev!" ssh  -o "StrictHostKeyChecking=no"  root@$ipaddr 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
                 sshpass -p "not4dev!" scp  -o "StrictHostKeyChecking=no" -r $workspace/Releases/$release $workspace/tmp root@$ipaddr:/root/Releases
                 sshpass -p "not4dev!" ssh -o "StrictHostKeyChecking=no" root@$ipaddr "bash -s" -- < $workspace/deploy_on_server.sh -t "$release" "$component" "$abort_on_fail" "app01" "$transfer_flag" >> $workspace/logs/"${logfile}"
                 
             fi
 
-            if [ -f $workspace/logs/${logfile} ]
+            if [ -f $workspace/logs/"${logfile}" ]
             then
 
                 chksum_status=`grep "md5sum is not matching" $workspace/logs/${logfile} | wc -l`
@@ -166,6 +186,11 @@ then
                     log "Property setting not required as artifacts were not transferred properly."
                 else
                     $workspace/checkArtifactProperty.sh "NA" "ScheduleDeploy" "$release" "$ArtifactoryUser" "$ArtifactoryPassword" "$ship_name" "$workspace" "NA"
+
+                    if [ -f $workspace/logs/checkArtifactPropertyStage.log ]
+                    then
+                        cat $workspace/logs/checkArtifactPropertyStage.log
+                    fi
                 fi
             else
                 log "ERROR : Failed in transfer of artifacts on $ship_name. md5sum was different for $component on ship when compared to confluece."
@@ -176,7 +201,7 @@ then
         log "There is no ship currently scheduled for deployment."
     fi
 
-    if [ -f $workspace/logs/${logfile} ]
+    if [ -f $workspace/logs/"${logfile}" ]
     then
         transfer_status=`grep "md5sum is not matching" $workspace/logs/${logfile} | wc -l`
 

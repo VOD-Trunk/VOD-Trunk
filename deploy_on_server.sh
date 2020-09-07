@@ -996,7 +996,7 @@ verify() {
 		log "The deployment/rollback of $component has failed."
 		if [ $timestamp_status -eq 1 ]
 		then
-			log "Tomcat7 service is not running. Please check and deploy/rollback $component."
+			log "There was a problem in restarting the service associated with $component. Please check and re-deploy/rollback $component."
 		elif [ $services_status -eq 1 ]
 		then
 			log "The desired build of $component has not been deployed/rolled back. Please check the symlink at $releases_path."

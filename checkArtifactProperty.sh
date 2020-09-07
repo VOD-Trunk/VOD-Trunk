@@ -14,9 +14,19 @@ ship_name=$9
 logfile=checkArtifactPropertyStage.log
 
 log(){
-    echo "$@" >&1 2>&1
+    if [ "$Activity" == "ScheduleDeploy" ] || [ "$Activity" == "checkTransferStatus" ]
+    then
+        :
+    else
+        echo "$@" >&1 2>&1
+    fi
     echo "$@" >> $JenkinsWorkspace/logs/"${logfile}"
 }
+
+if [ -f  $workspace/logs/"${logfile}" ]
+then
+    rm -f $workspace/logs/"${logfile}"
+fi
 
 export DateTimeStamp=$(date +%Y%m%d-%H%M)
 
@@ -111,6 +121,8 @@ do
         log
         log
     fi
+
+
 
 
     if [ "$Activity" == "Promote" ] && [ "$PromotingFrom" == "QA_TO_SUPPORT" ]
@@ -235,6 +247,17 @@ do
             log "ERROR : Error in setting Property ${PromotingFrom}_transfer = Done on $Component of $ReleaseVersion. Please try again."
             log
             log
+            exit 1
+        fi
+    elif [ "$Activity" == "checkTransferStatus" ]
+    then
+        isTransferDone=`curl -sS -u "$ArtifactoryUser":"$ArtifactoryPassword" -X GET ''${UrlPart1}/${UrlPart2}'?properties='${PromotingFrom}'_TRANSFER_TIME' | grep "${PromotingFrom}_TRANSFER_TIME" | wc -l`
+        log `curl -sS -u "$ArtifactoryUser":"$ArtifactoryPassword" -X GET ''${UrlPart1}/${UrlPart2}'?properties='${PromotingFrom}'_TRANSFER_TIME'`
+        if [ ${isTransferDone} -eq 1 ]
+        then
+            log
+            log
+            log "${PromotingFrom}_transfer = Done is already set on $Component of $ReleaseVersion"
             exit 1
         fi
     fi 
