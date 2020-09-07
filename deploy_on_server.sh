@@ -375,27 +375,27 @@ deploy_new_build() {
 		
 		cd /root/Releases/$new_release/db-upgrade-dir/$new_build
 		
-		printf 'uie123\n' | ./db-script.sh --upgrade #&>/dev/null
+		printf 'uie123\n' | ./db-script.sh --upgrade
 		
-		count=`cat /root/update/$new_release/db-upgrade-dir/$new_build/*-dboper-*.log | grep -w "Liquibase Update Successful" | wc -l`
+		count=`cat /root/update/$new_release/db-upgrade-dir/$new_build/2.64.0-dboper-*.log | grep -w "Liquibase Update Successful" | wc -l`
 		 
 		if [ $count -eq 2 ]
 		then
 			log "Liquibase Update Successful"
 			log
 		else
-			log "ERROR : DB upgrade was unsuccessful. Please check logs at /root/update/2.64.0/db-upgrade-dir/xicms-2.64.0-db-upgrade"
+			log "ERROR : DB upgrade was unsuccessful. Please check logs at /root/update/$new_release/db-upgrade-dir/$new_build"
 			exit 1
 		fi
 
-		cat /root/update/$new_release/db-upgrade-dir/$new_build/*-dboper-*.log | grep -w "finished upgrade"
+		cat /root/update/$new_release/db-upgrade-dir/$new_build/2.64.0-dboper-*.log | grep -w "finished upgrade"
 
 		if [ $? -eq 0 ]
 		then
 			log "Upgrade Finished."
 			log
 		else
-			log "ERROR : DB upgrade was unsuccessful. Please check logs at /root/update/2.64.0/db-upgrade-dir/xicms-2.64.0-db-upgrade"
+			log "ERROR : DB upgrade was unsuccessful. Please check logs at /root/update/$new_release/db-upgrade-dir/$new_build"
 			exit 1
 		fi
 
