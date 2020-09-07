@@ -350,7 +350,9 @@ deploy_new_build() {
 		log "Starting the DB upgrade"
 		log
 
-		ls -l /root/Releases/$new_release/db-upgrade-dir/xicms-2.64.0-db-upgrade.zip
+		file_name=`ls /root/Releases/$new_release/$component/*.zip | cut -d "/" -f 6`
+
+		ls -l /root/Releases/$new_release/db-upgrade-dir/$file_name
 
 		if [ $? = 0 ]
 		then
@@ -361,8 +363,6 @@ deploy_new_build() {
 			log
 			exit 1
 		fi
-
-		file_name=`ls /root/Releases/$new_release/$component/*.zip | cut -d "/" -f 6`
 
 		log "Unzipping $file_name ..."
 		log
