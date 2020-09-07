@@ -24,7 +24,7 @@ then
     rm -f $workspace/logs/email_body.txt
 fi
 
-if [ -f  $workspace/logs/"${logfile} ]
+if [ -f  $workspace/logs/"${logfile}" ]
 then
     rm -f $workspace/logs/"${logfile}"
 fi
