@@ -388,6 +388,8 @@ deploy_new_build() {
 			log "ERROR : DB upgrade was unsuccessful. Please check logs at /root/update/2.64.0/db-upgrade-dir/xicms-2.64.0-db-upgrade"
 			exit 1
 		fi
+
+		cd /root
 	fi
 
 
@@ -1075,6 +1077,38 @@ if [[ $# -eq 0 ]]; then
 			exit 1
 fi
 
+if [ "$server" == "app01" ] && [ "$action" == "-d" ]
+then
+	isDbUpgradeReqd=`grep "db-upgrade-dir" /root/Releases/tmp/component_build_mapping.txt | wc -l`
+
+	if [ $isDbUpgradeReqd -eq 1 ]
+	then
+		component="db-upgrade-dir"
+		log
+		log "Starting DB upgrade of release $new_release"
+		log
+		confluence_md5sum=`grep "db-upgrade-dir" /root/Releases/tmp/component_build_mapping.txt | cut -d ':' -f 3 | awk '{$1=$1};1'`
+	    comp_md5sum=`cd /root/Releases/$new_release/$component && find -type f -exec md5sum "{}" + | cut -d' ' -f1`
+
+	    if [ "$confluence_md5sum" == "$comp_md5sum" ]
+	    then
+	      	log "md5sum is same on confluence and server. $component has been transferred to app01 successfully."
+	      	log
+	    else
+	    	log "ERROR : $component could not be transferred successfully. md5sum is not matching between confluence and server. Aborting Build !!"
+	        exit 1
+	    fi
+		
+		deploy_master $component $abort_on_fail deploy
+
+		sed -i '/db-upgrade-dir/d' /root/Releases/tmp/component_build_mapping.txt
+		sed -i '/^$/d' /root/Releases/tmp/component_build_mapping.txt
+	else
+		log
+		log "DB upgrade is not required."
+	fi
+fi
+
 case "${1}" in
 	-d|--deploy)
 	  if [ "$server" == "app01" ] && [ "$transfer_flag" == "true" ]
@@ -1263,7 +1297,7 @@ do
 done
 
 
-if [ "$server" == "app01" ] && [ "$transfer_flag" == "true" ] || [ "$action" == "-d" ]
+if [ "$server" == "app01" ] && [ "$transfer_flag" == "true" ] && [ "$action" == "-d" ]
 then
 	log
 	log "Transferring artifacts to app02."
