@@ -365,7 +365,7 @@ deploy_new_build() {
 		unzip -qq /root/Releases/$new_release/db-upgrade-dir/xicms-2.64.0-db-upgrade.zip -d /root/Releases/$new_release/db-upgrade-dir
 		chmod +x /root/Releases/$new_release/db-upgrade-dir/xicms-2.64.0-db-upgrade/db-script.sh
 		cd /root/Releases/$new_release/db-upgrade-dir/xicms-2.64.0-db-upgrade
-		printf 'uie123\n' | ./db-script.sh --upgrade
+		printf 'uie123\n' | ./db-script.sh --upgrade &>/dev/null
 		
 		count=`cat /root/update/2.64.0/db-upgrade-dir/xicms-2.64.0-db-upgrade/2.64.0-dboper-*.log | grep -w "Liquibase Update Successful" | wc -l`
 		 
