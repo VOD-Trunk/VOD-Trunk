@@ -362,12 +362,22 @@ deploy_new_build() {
 			exit 1
 		fi
 
-		unzip -qq /root/Releases/$new_release/db-upgrade-dir/xicms-2.64.0-db-upgrade.zip -d /root/Releases/$new_release/db-upgrade-dir
-		chmod +x /root/Releases/$new_release/db-upgrade-dir/xicms-2.64.0-db-upgrade/db-script.sh
-		cd /root/Releases/$new_release/db-upgrade-dir/xicms-2.64.0-db-upgrade
+		file_name=`ls /root/Releases/$new_release/$component/*.zip | cut -d "/" -f 6`
+
+		log "Unzipping $file_name ..."
+		log
+
+		unzip -qq /root/Releases/$new_release/$component/$file_name -d /root/Releases/$new_release/$component/
+
+		new_build=`cd /root/Releases/$new_release/$component/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
+
+		chmod +x /root/Releases/$new_release/db-upgrade-dir/$component/db-script.sh
+		
+		cd /root/Releases/$new_release/db-upgrade-dir/$new_build
+		
 		printf 'uie123\n' | ./db-script.sh --upgrade &>/dev/null
 		
-		count=`cat /root/update/2.64.0/db-upgrade-dir/xicms-2.64.0-db-upgrade/2.64.0-dboper-*.log | grep -w "Liquibase Update Successful" | wc -l`
+		count=`cat /root/update/$new_release/db-upgrade-dir/$new_build/*-dboper-*.log | grep -w "Liquibase Update Successful" | wc -l`
 		 
 		if [ $count -eq 2 ]
 		then
@@ -378,7 +388,7 @@ deploy_new_build() {
 			exit 1
 		fi
 
-		cat /root/update/2.64.0/db-upgrade-dir/xicms-2.64.0-db-upgrade/2.64.0-dboper-*.log | grep -w "finished upgrade"
+		cat /root/update/$new_release/db-upgrade-dir/$new_build/*-dboper-*.log | grep -w "finished upgrade"
 
 		if [ $? -eq 0 ]
 		then
