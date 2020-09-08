@@ -362,15 +362,19 @@ deploy_new_build() {
 				rm -rf /root/Releases/$new_release/dbbackup/$i
 			done
 		fi
-
-		{ #try
-		      	mysqldump -uexm -puie123 -h dbvip -R exm | sed 's/DEFINER=`exm`/DEFINER=`exm`/g' > /root/Releases/$new_release/dbbackup/exm-backup.sql
-		} || { # catch
-				log
-			    log "ERROR : DB backup failed!! Aborting build..."
-			    log
-		}
 		
+		mysqldump -uexm -puie123 -h dbvip -R exm | sed 's/DEFINER=`exm`/DEFINER=`exm`/g' > /root/Releases/$new_release/dbbackup/exm-backup.sql
+
+		if [ $? -eq 0 ]
+		then
+		    log "DB backed up successfully. Backup can be found at /root/Releases/$new_release/dbbackup/exm-backup.sql"
+		    log
+		else
+		    log "ERROR : DB backup failed!! Aborting build..."
+		    log
+		    exit 1
+		fi
+
 		file_name=`ls /root/Releases/$new_release/$component/*.zip | cut -d "/" -f 6`
 
 		ls -l /root/Releases/$new_release/db-upgrade-dir/$file_name
