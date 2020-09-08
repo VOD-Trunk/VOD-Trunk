@@ -270,7 +270,7 @@ with open(logfile_path, 'w+') as logfile:
 
     if action == "Deploy" or action == "Promote" or (action == "ScheduleDeploy" and len(shipNamesFinal) != 0):
 
-        if action == "Deploy" and targetShipName not in shipNamesFinal:
+        if action == "Deploy" and deploymentEnv == "PRODUCTION" and targetShipName not in shipNamesFinal:
             log("\n\nERROR : The MW for deployment of " + relName + " on " + targetShipName + " is not scheduled for today.\n\n")
             exit(1)
         else:

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#Last modified : 9/01/2020
+#Last modified : 9/08/2020
 
 ts=`date +'%s'`
 logfile='/root/Releases/tmp/exm-deployment.log'
