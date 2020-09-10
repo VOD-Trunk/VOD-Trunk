@@ -316,7 +316,7 @@ restart_services() {
 			log "Starting $component service..."
 			log
 			monit start $component
-			sleep 5
+			sleep 7
 			
 			service_status=`ps -ef | grep "$component" | wc -l`
 			
