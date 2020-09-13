@@ -809,7 +809,7 @@ rollback() {
 	component=$2
 	releases_path=$3
 
-	if  [ "$component" == "exm-admin-tool" ] || [ "$component" == "exm-client-cruise" ] || [ "$component" == "exm-client-startup" ] || [ "$component" == "exm-client-leftnav2" ] || [ "$component" == "exm-client-leftnav2-signage" ] || [ "$component" == "exm-client-lite" ] || [ "$component" == "exm-diagnostic-app" ]
+	if  [ "$component" == "exm-admin-tool" ] || [ "$component" == "exm-client-cruise" ] || [ "$component" == "exm-client-startup" ] || [ "$component" == "exm-client-leftnav2" ] || [ "$component" == "exm-client-leftnav2-signage" ] || [ "$component" == "exm-client-lite" ] || [ "$component" == "exm-diagnostic-app" ] || [ "$component" == "exm-precor-client" ]
 	then
 
 		log "Starting rollback of $component"
@@ -950,7 +950,7 @@ verify() {
 	action=$5
 	services_status=1
 
-	if  [ "$component" == "exm-admin-tool" ] || [ "$component" == "exm-client-cruise" ] || [ "$component" == "exm-client-startup" ] || [ "$component" == "exm-client-leftnav2" ] || [ "$component" == "exm-client-leftnav2-signage" ] || [ "$component" == "exm-client-lite" ] || [ "$component" == "exm-diagnostic-app" ]
+	if  [ "$component" == "exm-admin-tool" ] || [ "$component" == "exm-client-cruise" ] || [ "$component" == "exm-client-startup" ] || [ "$component" == "exm-client-leftnav2" ] || [ "$component" == "exm-client-leftnav2-signage" ] || [ "$component" == "exm-client-lite" ] || [ "$component" == "exm-diagnostic-app" ] || [ "$component" == "exm-precor-client" ]
 	then
 		timestamp_build=`cat $current_build/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
 		if [ "$action" == "deploy" ]
