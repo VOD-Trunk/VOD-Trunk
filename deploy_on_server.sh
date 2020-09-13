@@ -666,9 +666,8 @@ deploy_new_build() {
 		
 	fi
 
-	### Steps for node-mute service is different from all others. It is a zip file.
-
-	if [ "$component" == "mute" ] || [ "$component" == "exm-precor-client" ]
+	### Steps for node-mute and exm-precor-client service is different from all others. It is a zip file.
+	if [ "$component" == "exm-precor-client" ]
 	then
 		log "Starting the deployment of $component"
 		log
@@ -710,51 +709,94 @@ deploy_new_build() {
 
 		cp -r /root/Releases/$new_release/$component/$new_build $releases_path/releases/
 
-		if [ "$component" == "mute" ]
-		then
-			link_present=`ls $releases_path/current | grep "server.js" | wc -l`
-
-			if [ $link_present == 1 ]
-			then 
-				log "Unlinking current symlink..."
-				log
-				log "current symlink is :"
-				log "`ls -l $releases_path/current | grep 'server.js'`"
-				log
-
-				unlink $releases_path/current/server.js
-			fi
-
-			log "Creating new symlink current ..."
+		link_present=`ls $releases_path | grep current | wc -l`
+		if [ $link_present == 1 ]
+		then 
+			log "Unlinking current symlink..."
 			log
-
-			ln -s $releases_path/releases/$new_build/*.js $releases_path/current/server.js
-
-			log "New symlink is:"
-			log "`ls -l $releases_path/current | grep 'server.js'`"
-			log
-		else
-			link_present=`ls $releases_path | grep current | wc -l`
-			if [ $link_present == 1 ]
-			then 
-				log "Unlinking current symlink..."
-				log
-				log "current symlink is :"
-				log "`ls -l $releases_path | grep current`"
-				log
-
-				unlink $releases_path/current
-			fi
-
-			log "Creating new symlink current ..."
-			log
-
-			ln -s $releases_path/releases/$new_build $releases_path/current
-
-			log "New symlink is:"
+			log "current symlink is :"
 			log "`ls -l $releases_path | grep current`"
 			log
+
+			unlink $releases_path/current
 		fi
+
+		log "Creating new symlink current ..."
+		log
+
+		ln -s $releases_path/releases/$new_build $releases_path/current
+
+		log "New symlink is:"
+		log "`ls -l $releases_path | grep current`"
+		log
+	fi
+
+
+	if [ "$component" == "mute" ]
+	then
+		log "Starting the deployment of $component"
+		log
+		log "Taking backup of the current build."
+		log
+
+		if [ ! -d $releases_path/Backup ]
+		then
+			log "Creating directory $releases_path/Backup as it was not present."
+			log
+			mkdir -p $releases_path/Backup
+		elif [ -d $releases_path/Backup ]
+		then
+			for i in `ls $releases_path/Backup`
+			do
+				rm -rf $releases_path/Backup/$i
+			done
+		fi
+		cp -r $current_build $releases_path/Backup
+
+		if [ ! -d $releases_path/releases ]
+		then
+			log "Creating directory $releases_path/releases as it was not present."
+			log
+			mkdir -p $releases_path/releases
+		fi
+
+		file_name=`ls /root/Releases/$new_release/$component/*.zip | cut -d "/" -f 6`
+
+		log "Unzipping $file_name ..."
+		log
+
+		unzip -qq /root/Releases/$new_release/$component/$file_name -d /root/Releases/$new_release/$component/
+
+		new_build=`cd /root/Releases/$new_release/$component/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
+
+		log "Copying $new_build to $releases_path/releases/"
+		log
+
+		cp -r /root/Releases/$new_release/$component/$new_build $releases_path/releases/
+
+		
+		link_present=`ls $releases_path/current | grep "server.js" | wc -l`
+
+		if [ $link_present == 1 ]
+		then 
+			log "Unlinking current symlink..."
+			log
+			log "current symlink is :"
+			log "`ls -l $releases_path/current | grep 'server.js'`"
+			log
+
+			unlink $releases_path/current/server.js
+		fi
+
+		log "Creating new symlink current ..."
+		log
+
+		ln -s $releases_path/releases/$new_build/*.js $releases_path/current/server.js
+
+		log "New symlink is:"
+		log "`ls -l $releases_path/current | grep 'server.js'`"
+		log
+		
 	fi
 
 }
@@ -976,22 +1018,6 @@ verify() {
 			fi
 
 		fi
-
-		
-		#tail -100 /var/log/tomcat7/catalina.out | grep -w "Starting Servlet Engine: Apache Tomcat"
-		#if [ $? -eq 0 ]
-		#then
-		#	log "tomcat7 service has been started."
-		#	log
-		#else
-		#	services_status=2
-		#	if [ $abort_on_fail == "Abort" ]
-		#	then
-		#		log "ERROR : Aborting the deployment as tomcat was not restarted properly. Please check tomcat7 service. Thanks."
-		#		log
-		#		exit 1
-		#	fi
-		#fi
 
 		ps -elf | grep -v grep | grep -q tomcat7
 		if [ $? -eq 0 ]

@@ -163,15 +163,15 @@ with open(logfile_path, 'w+') as logfile:
 
             columnValue=TAG_RE.sub('', x)
 
-            if recordCount%7 == 0:  
+            if recordCount%5 == 0:  
                     shipName.append(columnValue)
-            elif recordCount%7== 1:
+            elif recordCount%5== 1:
                     releasePage.append(columnValue)
-            elif recordCount%7== 2:
+            elif recordCount%5== 2:
                     releaseVersion.append(columnValue)
-            elif recordCount%7== 3:
+            elif recordCount%5== 3:
                     deploymentDate.append(columnValue)
-            elif recordCount%7== 4:
+            elif recordCount%5== 4:
                     deploymentStatus.append(columnValue)
 
 
