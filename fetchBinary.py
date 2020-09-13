@@ -1,4 +1,4 @@
-#Last modified : 9/01/2020
+#Last modified : 9/13/2020
 
 import sys
 import requests
@@ -372,6 +372,8 @@ with open(logfile_path, 'w+') as logfile:
                     component = "mute"
                 elif componentConfluence == "DB":
                     component = "db-upgrade-dir"
+                elif componentConfluence == "Precor Client":
+                    component = "exm-precor-client"
                 else:
                     continue
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#Last modified : 9/08/2020
+#Last modified : 9/13/2020
 
 ts=`date +'%s'`
 logfile='/root/Releases/tmp/exm-deployment.log'
@@ -42,6 +42,10 @@ else
 		elif [ "${choice_list[$i]}" == "Startup Client" ]
 		then
 			choice_list[$i]="exm-client-startup"
+		elif [ "${choice_list[$i]}" == "Precor Client" ]
+		then
+			choice_list[$i]="exm-precor-client"
+		fi
 		elif [ "${choice_list[$i]}" == "NACOS Listener" ]
 		then
 			choice_list[$i]="nacos"
@@ -89,88 +93,28 @@ get_current_build() {
 
 	component=$1
 
-	if [ "$component" == "exm-admin-tool" ]
+	if [ "$component" == "exm-admin-tool" ] ||  [ "$component" == "exm-client-cruise" ] || [ "$component" == "exm-diagnostic-app" ]
 	then
-			if [ ! -d /apps/exm-admin-tool/releases ]
+			if [ ! -d /apps/$component/releases ]
 			then
-				log "Creating directory /apps/exm-admin-tool/releases as it was not present."
+				log "Creating directory /apps/$component/releases as it was not present."
 				log
-				mkdir -p /apps/exm-admin-tool/releases
+				mkdir -p /apps/$component/releases
 			fi
-			current_build=`ls -la /apps/exm-admin-tool/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
-			releases_path='/apps/exm-admin-tool'
+			current_build=`ls -la /apps/$component/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
+			releases_path='/apps/$component'
 	fi
 
-	if [ "$component" == "exm-client-cruise" ]
+	if [ "$component" == "exm-client-startup" ] || [ "$component" == "exm-client-leftnav2" ] || [ "$component" == "exm-client-leftnav2-signage" ] || [ "$component" == "exm-client-lite" ] || [ "$component" == "exm-precor-client" ]
 	then
-			if [ ! -d /apps/exm-client/releases ]
+			if [ ! -d /apps/clientmap/$component/releases ]
 			then
-				log "Creating directory /apps/exm-client/releases as it was not present."
+				log "Creating directory /apps/clientmap/$component/releases as it was not present."
 				log
-				mkdir -p /apps/exm-client/releases
+				mkdir -p /apps/clientmap/$component/releases
 			fi
-			current_build=`ls -la /apps/exm-client/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
-			releases_path='/apps/exm-client'
-	fi
-
-	if [ "$component" == "exm-client-startup" ]
-	then
-			if [ ! -d /apps/clientmap/exm-client-startup/releases ]
-			then
-				log "Creating directory /apps/clientmap/exm-client-startup/releases as it was not present."
-				log
-				mkdir -p /apps/clientmap/exm-client-startup/releases
-			fi
-			current_build=`ls -la /apps/clientmap/exm-client-startup/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
-			releases_path='/apps/clientmap/exm-client-startup'
-	fi
-
-	if [ "$component" == "exm-client-leftnav2" ]
-	then
-			if [ ! -d /apps/clientmap/exm-client-leftnav2/releases ]
-			then
-				log "Creating directory /apps/clientmap/exm-client-leftnav2/releases as it was not present."
-				log
-				mkdir -p /apps/clientmap/exm-client-leftnav2/releases
-			fi
-			current_build=`ls -la /apps/clientmap/exm-client-leftnav2/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
-			releases_path='/apps/clientmap/exm-client-leftnav2'
-	fi
-
-	if [ "$component" == "exm-client-leftnav2-signage" ]
-	then
-			if [ ! -d /apps/clientmap/exm-client-leftnav2-signage/releases ]
-			then
-				log "Creating directory /apps/clientmap/exm-client-leftnav2-signage/releases as it was not present."
-				log
-				mkdir -p /apps/clientmap/exm-client-leftnav2-signage/releases
-			fi
-			current_build=`ls -la /apps/clientmap/exm-client-leftnav2-signage/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
-			releases_path='/apps/clientmap/exm-client-leftnav2-signage'
-	fi
-
-	if [ "$component" == "exm-diagnostic-app" ]
-	then
-			if [ ! -d /apps/exm-diagnostic-app/releases ]
-			then
-				log "Creating directory /apps/exm-diagnostic-app/releases as it was not present."
-				log
-				mkdir -p /apps/exm-diagnostic-app/releases
-			fi
-			current_build=`ls -la /apps/exm-diagnostic-app/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
-			releases_path='/apps/exm-diagnostic-app'
-	fi
-
-	if  [ "$component" == "exm-client-lite" ]
-	then
-			if [ ! -d /apps/clientmap/exm-client-lite/releases ]
-			then
-				log "Creating directory /apps/clientmap/exm-client-lite/releases as it was not present."
-				log
-				mkdir -p /apps/clientmap/exm-client-lite/releases
-			fi
-			current_build=`ls -la /apps/clientmap/exm-client-lite/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
-			releases_path='/apps/clientmap/exm-client-lite'
+			current_build=`ls -la /apps/clientmap/$component/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
+			releases_path='/apps/clientmap/$component'
 	fi
 
 	if  [ "$component" == "mute" ]
@@ -185,53 +129,24 @@ get_current_build() {
 			releases_path='/apps/mute'
 	fi
 
-	if [ "$component" == "v2" ]
+	if [ "$component" == "v2" ] || [ "$component" == "location" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]
 	then
-			current_build='/var/lib/tomcat7/hosts/prod.uiexm.com/webapps/v2.war'
+			current_build='/var/lib/tomcat7/hosts/prod.uiexm.com/webapps/$component.war'
 			releases_path='/var/lib/tomcat7/hosts/prod.uiexm.com/webapps'
 	fi
 
-	if  [ "$component" == "location" ]
+	if [ "$component" == "nacos" ] || [ "$component" == "mutedaemon" ]
 	then
-			current_build='/var/lib/tomcat7/hosts/prod.uiexm.com/webapps/location.war'
-			releases_path='/var/lib/tomcat7/hosts/prod.uiexm.com/webapps'
-	fi
-
-	if [ "$component" == "diagnostics" ]
-	then
-			current_build='/var/lib/tomcat7/hosts/prod.uiexm.com/webapps/diagnostics.war'
-			releases_path='/var/lib/tomcat7/hosts/prod.uiexm.com/webapps'
-	fi
-
-	if [ "$component" == "notification-service" ]
-	then
-			current_build='/var/lib/tomcat7/hosts/prod.uiexm.com/webapps/notification-service.war'
-			releases_path='/var/lib/tomcat7/hosts/prod.uiexm.com/webapps'
-	fi
-
-	if [ "$component" == "nacos" ]
-	then
-			if [ ! -d /usr/local/nacos/releases ]
+			if [ ! -d /usr/local/$component/releases ]
 			then
-				log "Creating directory /usr/local/nacos/releases as it was not present."
+				log "Creating directory /usr/local/$component/releases as it was not present."
 				log
-				mkdir -p /usr/local/nacos/releases
+				mkdir -p /usr/local/$component/releases
 			fi
-			current_build=`ls -la /usr/local/nacos/ | grep "nacos.daemon.jar " | cut -d '>' -f 2 | sed 's/ //g' | cut -d '/' -f 6`
-			releases_path='/usr/local/nacos'
+			current_build=`ls -la /usr/local/$component/ | grep "$component.daemon.jar " | cut -d '>' -f 2 | sed 's/ //g' | cut -d '/' -f 6`
+			releases_path='/usr/local/$component'
 	fi
-
-	if [ "$component" == "mutedaemon" ]
-	then
-			if [ ! -d /usr/local/mutedaemon/releases ]
-			then
-				log "Creating directory /usr/local/mutedaemon/releases as it was not present."
-				log
-				mkdir -p /usr/local/mutedaemon/releases
-			fi
-			current_build=`ls -la /usr/local/mutedaemon/ | grep "mutedaemon.jar " | cut -d '>' -f 2 | sed 's/ //g' | cut -d '/' -f 6`
-			releases_path='/usr/local/mutedaemon'
-	fi	
+	
 
 	echo "$current_build:$releases_path"
 }
@@ -444,7 +359,7 @@ deploy_new_build() {
 	fi
 
 
-	if  [ "$component" == "exm-admin-tool" ] || [ "$component" == "exm-client-cruise" ] || [ "$component" == "exm-client-startup" ] || [ "$component" == "exm-client-leftnav2" ] || [ "$component" == "exm-client-leftnav2-signage" ] || [ "$component" == "exm-client-lite" ] || [ "$component" == "exm-diagnostic-app" ]
+	if  [ "$component" == "exm-admin-tool" ] || [ "$component" == "exm-client-cruise" ] || [ "$component" == "exm-client-startup" ] || [ "$component" == "exm-client-leftnav2" ] || [ "$component" == "exm-client-leftnav2-signage" ] || [ "$component" == "exm-client-lite" ] || [ "$component" == "exm-diagnostic-app" ] || [ "$component" == "exm-precor-client" ]
 	then
 
 		log "Starting the deployment of $component"
@@ -497,6 +412,25 @@ deploy_new_build() {
 		log "New symlink is:"
 		log "`ls -l $releases_path | grep current`"
 		log
+
+		if [ "$component" == "exm-precor-client" ]
+		then
+			log "Checking if /apps/clients/precor symlink already exists.."
+			log
+			precor_link_present=`ls /apps/clients | grep precor | wc -l`
+
+			if [ $link_present == 0 ]
+			then 
+				log "Creating new symlink current ..."
+				log
+				
+				ln -s /apps/clientmap/exm-precor-client/current /apps/clients/precor
+
+				log "New symlink is :"
+				log "`ls -l /apps/clients | grep precor`"
+				log
+			fi
+		fi
 
 		if [ "$component" == "exm-client-cruise" ]
 		then
