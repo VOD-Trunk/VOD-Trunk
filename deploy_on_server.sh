@@ -45,7 +45,6 @@ else
 		elif [ "${choice_list[$i]}" == "Precor Client" ]
 		then
 			choice_list[$i]="exm-precor-client"
-		fi
 		elif [ "${choice_list[$i]}" == "NACOS Listener" ]
 		then
 			choice_list[$i]="nacos"
