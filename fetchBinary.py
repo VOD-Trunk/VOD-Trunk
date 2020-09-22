@@ -226,7 +226,7 @@ with open(logfile_path, 'w+') as logfile:
                 if os.path.isdir(tmp_rls_path) != True:
                     os.makedirs(tmp_rls_path)
 
-                scheduled_ships_hist = workspace + "/tmp/" + rls + "/scheduled_ships.txt"
+                scheduled_ships_hist = workspace + "/tmp/scheduled_ships.txt"
                 if os.path.exists(scheduled_ships_hist):
                     with open(scheduled_ships_hist, 'w') as f:
                         f.truncate()
