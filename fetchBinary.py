@@ -257,7 +257,7 @@ with open(logfile_path, 'w+') as logfile:
                             with open(jenkinsconfig_path) as f:
                                 r = json.load(f)
                                 ipaddr_json = ast.literal_eval(json.dumps(r))
-                                if shipName == "XS":
+                                if shipName == "XS" or shipName == "HSC_Test":
                                     ipaddr = ipaddr_json["jenkins"]["environments"]["QA"][shipName]
                                 elif shipName == "SUPPORT":
                                     ipaddr = ipaddr_json["jenkins"]["environments"]["SUPPORT"][shipName]
