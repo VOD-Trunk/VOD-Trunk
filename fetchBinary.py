@@ -265,7 +265,7 @@ with open(logfile_path, 'w+') as logfile:
                                     ipaddr = ipaddr_json["jenkins"]["environments"]["PRODUCTION"][shipName]
                                 log("\nShip " + shipName + " is ready for release deployment. Initiating transfer of artifacts to " + ipaddr)
 
-                            with open(scheduled_ships_path, 'w+') as f:
+                            with open(scheduled_ships_path, 'a+') as f:
                                 f.write(shipName + ":" + ipaddr + ":" +  releaseVersion[i]+"\n")
                         else:
                             log("\nShip " +shipName +" is not ready for release Deployment.")
