@@ -226,9 +226,9 @@ with open(logfile_path, 'w+') as logfile:
                 if os.path.isdir(tmp_rls_path) != True:
                     os.makedirs(tmp_rls_path)
 
-                scheduled_ships_hist = workspace + "/tmp/scheduled_ships.txt"
-                if os.path.exists(scheduled_ships_hist):
-                    with open(scheduled_ships_hist, 'w') as f:
+                scheduled_ships_path = workspace + "/tmp/scheduled_ships.txt"
+                if os.path.exists(scheduled_ships_path):
+                    with open(scheduled_ships_path, 'w') as f:
                         f.truncate()
                 builds_file_hist = workspace + "/tmp/" + rls + "/component_build_mapping.txt"
                 if os.path.exists(builds_file_hist):
@@ -240,8 +240,6 @@ with open(logfile_path, 'w+') as logfile:
                         f.truncate()
 
             for i, shipName in enumerate(shipNames):
-
-                scheduled_ships_path = tmp_rls_path + "/scheduled_ships.txt"
 
                 if len(deploymentDate[i]) != 0:
                     if action == "Deploy":
