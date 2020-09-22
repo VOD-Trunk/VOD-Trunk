@@ -2,7 +2,7 @@
 	"jenkins": {
 		"Release": {
 			"2.63.0": "xiCMS 2.63.0: Artifacts for Jenkins testing",	
-                        "2.64.0": "xiCMS 2.64.0: Artifacts for Jenkins testing",
+            "2.64.0": "xiCMS 2.64.0: Artifacts for Jenkins testing",
 			"2.65.0": "xiCMS 2.64.0: Artifacts for Jenkins testing"
 		},
 
@@ -30,8 +30,10 @@
 		"environments": {
 			"NA": { "NA": "000.000.000.000" },
 	      	"DEV": { "DEV": "000.000.000.000" },
-			"QA": { "XS": "10.126.69.140",
-			      "HSC_Test": "192.168.248.134"},
+			"QA": { 
+				"XS": "10.126.69.140",
+				"HSC_Test": "192.168.248.134"
+			},
 			"SUPPORT": { "SUPPORT": "192.168.248.161" },
 			"PRODUCTION": {
 				"NA": "000.000.000.000",
@@ -49,7 +51,7 @@
 				"Diamond": "172.29.204.194",
 				"Emerald": "172.29.124.233",
 				"Coral": "10.120.69.150",
-	                    "Enchanted": "10.125.69.145",
+	            "Enchanted": "10.125.69.144",
 				"KODM": "10.115.50.52",
 				"NADM": "10.9.200.52",
 				"EUDM": "10.9.196.53",
