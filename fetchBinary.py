@@ -276,8 +276,6 @@ with open(logfile_path, 'w+') as logfile:
     else:
         scheduledReleaseDict.update({relName:pageNameRelease})
 
-    log(str(scheduledReleaseDict))
-
   
     if action == "Deploy" or action == "Promote" or (action == "ScheduleDeploy" and len(shipNamesScheduled) != 0):
 
