@@ -31,7 +31,7 @@ fi
 export DateTimeStamp=$(date +%Y%m%d-%H%M)
 
 UrlPart1="http://artifactory.tools.ocean.com/artifactory/api/storage"
-urls=`cat $JenkinsWorkspace/tmp/urls.txt`
+urls=`cat $JenkinsWorkspace/tmp/$ReleaseVersion/urls.txt`
 IFS=$'\n'
 for row in $urls
 do
