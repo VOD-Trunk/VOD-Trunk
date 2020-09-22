@@ -95,7 +95,7 @@ then
             log
             log "Transferring artifacts to the target server ( $ipaddr )"
             log
-            if [ "$ipaddr" == "192.168.248.161" ]
+            if [ "$ipaddr" == "192.168.248.161" ] || [ "$ipaddr" == "192.168.248.134" ]
             then
                 sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no"  root@$ipaddr 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
                 sshpass -p "Carnival@123" scp -o "StrictHostKeyChecking=no" -r $workspace/Releases/$relName root@$ipaddr:/root/Releases
