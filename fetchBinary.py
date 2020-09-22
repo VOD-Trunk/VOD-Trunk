@@ -260,6 +260,8 @@ with open(logfile_path, 'w+') as logfile:
                                 ipaddr_json = ast.literal_eval(json.dumps(r))
                                 if shipName == "XS":
                                     ipaddr = ipaddr_json["jenkins"]["environments"]["QA"][shipName]
+                                elif shipName == "SUPPORT":
+                                    ipaddr = ipaddr_json["jenkins"]["environments"]["SUPPORT"][shipName]
                                 else:
                                     ipaddr = ipaddr_json["jenkins"]["environments"]["PRODUCTION"][shipName]
                                 log("\nShip " + shipName + " is ready for release deployment. Initiating transfer of artifacts to " + ipaddr)
