@@ -198,6 +198,11 @@ with open(logfile_path, 'w+') as logfile:
 
     partial_deploy = 2
 
+    scheduled_ships_path = workspace + "/tmp/scheduled_ships.txt"
+    if os.path.exists(scheduled_ships_path):
+        with open(scheduled_ships_path, 'w') as f:
+            f.truncate()
+
     if action == "ScheduleDeploy" or action == "Deploy":
         #Page ID to get the page details
         contentID=0
@@ -226,10 +231,6 @@ with open(logfile_path, 'w+') as logfile:
                 if os.path.isdir(tmp_rls_path) != True:
                     os.makedirs(tmp_rls_path)
 
-                scheduled_ships_path = workspace + "/tmp/scheduled_ships.txt"
-                if os.path.exists(scheduled_ships_path):
-                    with open(scheduled_ships_path, 'w') as f:
-                        f.truncate()
                 builds_file_hist = workspace + "/tmp/" + rls + "/component_build_mapping.txt"
                 if os.path.exists(builds_file_hist):
                     with open(builds_file_hist, 'w') as f:
@@ -286,11 +287,6 @@ with open(logfile_path, 'w+') as logfile:
         else:
             #Page ID to get the page details
             contentID=0
-            # releasePageSet = {}
-            # if action == "ScheduleDeploy":
-            #     releasePageSet = set(releasePageScheduled)
-            # else:
-            #     releasePageSet.add(pageNameRelease)
             for releaseName, pageName in scheduledReleaseDict.items():
 
                 applicationName=[]
