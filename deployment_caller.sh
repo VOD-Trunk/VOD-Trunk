@@ -13,7 +13,7 @@ transfer_flag=$7
 ArtifactoryUser=$8
 ArtifactoryPassword=$9
 pwd=$10
-pass=`echo $pwd | base64 --decode`
+pass=`echo "$pwd" | base64 --decode`
 logfile='deployStage.log'
 
 log(){
