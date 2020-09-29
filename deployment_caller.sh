@@ -12,7 +12,7 @@ abort_on_fail=$6
 transfer_flag=$7
 ArtifactoryUser=$8
 ArtifactoryPassword=$9
-pwd=$10
+export pwd=${10}
 pass=`echo "$pwd" | base64 -d`
 
 logfile='deployStage.log'
