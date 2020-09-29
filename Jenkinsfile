@@ -26,6 +26,7 @@ node {
                 def Confluence_Page = Jconf.jenkins.Release."${Release_Version}"
                 def IpAddr = Jconf.jenkins.environments."${Deployment_Environment}"[0]."${Ship_Name}"
                 def ship_pwd = Jconf.jenkins.environments."${Deployment_Environment}"[1].pwd
+                echo "${ship_pwd}"
                 def AllowedUsers = Jconf.jenkins.user_access.keySet()
                 UserAllowedOperation = Jconf.jenkins.user_access."${LoginUser}".operations
                 UserAccessEnv = Jconf.jenkins.user_access."${LoginUser}".env
