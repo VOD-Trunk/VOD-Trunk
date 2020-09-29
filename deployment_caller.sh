@@ -12,6 +12,8 @@ abort_on_fail=$6
 transfer_flag=$7
 ArtifactoryUser=$8
 ArtifactoryPassword=$9
+pwd=$10
+pass=`echo $pwd | base64 --decode`
 logfile='deployStage.log'
 
 log(){
@@ -34,36 +36,44 @@ if [ "$action" == "Deploy" ] && [ "$transfer_flag" == "true" ]
 then
     log "Transferring artifacts to the target server ( $env )"
     log
-    if [ "$env" == "192.168.248.161" ]
-    then
-        sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no"  root@$env 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
-        sshpass -p "Carnival@123" scp -o "StrictHostKeyChecking=no" -r $workspace/Releases/$release root@$env:/root/Releases
-        sshpass -p "Carnival@123" scp -o "StrictHostKeyChecking=no" -r $workspace/tmp/$release root@$env:/root/Releases/tmp
-        #sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env "ssh -tt app02 \" rm -rf /root/Releases \"" 2>/dev/null
-        sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app01" "$transfer_flag" >> $workspace/logs/"${logfile}"
-        #sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/"${logfile}"
-    else
-        sshpass -p "not4dev!" ssh  -o "StrictHostKeyChecking=no"  root@$env 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
-        sshpass -p "not4dev!" scp -o "StrictHostKeyChecking=no" -r $workspace/Releases/$release root@$env:/root/Releases
-        sshpass -p "not4dev!" scp -o "StrictHostKeyChecking=no" -r $workspace/tmp/$release root@$env:/root/Releases/tmp
-        sshpass -p "not4dev!" ssh -o "StrictHostKeyChecking=no" root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app01" "$transfer_flag" >> $workspace/logs/"${logfile}"
-        sshpass -p "not4dev!" ssh -o "StrictHostKeyChecking=no" root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/"${logfile}"        
-    fi
+    # if [ "$env" == "192.168.248.161" ]
+    # then
+    #     sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no"  root@$env 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
+    #     if [ -d $workspace/Releases/$release/UIEWowzaLib ]
+    #     then
+    #         cp $workspace/xevo-wowza-addon.sh $workspace/Releases/$release/UIEWowzaLib
+    #     fi
+    #     sshpass -p "Carnival@123" scp -o "StrictHostKeyChecking=no" -r $workspace/Releases/$release root@$env:/root/Releases
+    #     sshpass -p "Carnival@123" scp -o "StrictHostKeyChecking=no" -r $workspace/tmp/$release root@$env:/root/Releases/tmp
+    #     #sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env "ssh -tt app02 \" rm -rf /root/Releases \"" 2>/dev/null
+    #     sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app01" "$transfer_flag" >> $workspace/logs/"${logfile}"
+    #     #sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/"${logfile}"
+    # else
+        sshpass -p $pass ssh  -o "StrictHostKeyChecking=no"  root@$env 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
+        if [ -d $workspace/Releases/$release/UIEWowzaLib ]
+        then
+            cp $workspace/xevo-wowza-addon.sh $workspace/Releases/$release/UIEWowzaLib
+        fi
+        sshpass -p $pass scp -o "StrictHostKeyChecking=no" -r $workspace/Releases/$release root@$env:/root/Releases
+        sshpass -p $pass scp -o "StrictHostKeyChecking=no" -r $workspace/tmp/$release root@$env:/root/Releases/tmp
+        sshpass -p $pass ssh -o "StrictHostKeyChecking=no" root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app01" "$transfer_flag" >> $workspace/logs/"${logfile}"
+        #sshpass -p $pass ssh -o "StrictHostKeyChecking=no" root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/"${logfile}"        
+    # fi
 elif [ "$action" == "Deploy" ] && [ "$transfer_flag" == "false" ]
 then
-    if [ "$env" == "192.168.248.161" ]
-    then
-        sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no"  root@$env 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else mv /root/Releases/tmp /root/Releases/tmp_`date +%Y_%m_%d__%H_%M_%S`; fi'
-        sshpass -p "Carnival@123" scp -o "StrictHostKeyChecking=no" -r $workspace/tmp/$release root@$env:/root/Releases/tmp
-        sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app01" "$transfer_flag" >> $workspace/logs/"${logfile}"
-        #sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/"${logfile}"
-    else
-        sshpass -p "not4dev!" ssh -o "StrictHostKeyChecking=no"  root@$env 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else mv /root/Releases/tmp /root/Releases/tmp_`date +%Y_%m_%d__%H_%M_%S`; fi'
-        sshpass -p "not4dev!" scp -o "StrictHostKeyChecking=no" -r $workspace/tmp/$release root@$env:/root/Releases/tmp
-        sshpass -p "not4dev!" ssh -o "StrictHostKeyChecking=no" root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app01" >> $workspace/logs/"${logfile}"
-        sshpass -p "not4dev!" ssh -o "StrictHostKeyChecking=no" root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/"${logfile}"
+    # if [ "$env" == "192.168.248.161" ]
+    # then
+    #     sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no"  root@$env 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else mv /root/Releases/tmp /root/Releases/tmp_`date +%Y_%m_%d__%H_%M_%S`; fi'
+    #     sshpass -p "Carnival@123" scp -o "StrictHostKeyChecking=no" -r $workspace/tmp/$release root@$env:/root/Releases/tmp
+    #     sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app01" "$transfer_flag" >> $workspace/logs/"${logfile}"
+    #     #sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/"${logfile}"
+    # else
+        sshpass -p $pass ssh -o "StrictHostKeyChecking=no"  root@$env 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else mv /root/Releases/tmp /root/Releases/tmp_`date +%Y_%m_%d__%H_%M_%S`; fi'
+        sshpass -p $pass scp -o "StrictHostKeyChecking=no" -r $workspace/tmp/$release root@$env:/root/Releases/tmp
+        sshpass -p $pass ssh -o "StrictHostKeyChecking=no" root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app01" >> $workspace/logs/"${logfile}"
+        #sshpass -p $pass ssh -o "StrictHostKeyChecking=no" root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/"${logfile}"
         
-    fi
+    # fi
     
 elif [ "$action" == "ScheduleDeploy" ]
 then
@@ -95,20 +105,28 @@ then
             log
             log "Transferring artifacts to the target server ( $ipaddr )"
             log
-            if [ "$ipaddr" == "192.168.248.161" ] || [ "$ipaddr" == "192.168.248.134" ]
-            then
-                sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no"  root@$ipaddr 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
-                sshpass -p "Carnival@123" scp -o "StrictHostKeyChecking=no" -r $workspace/Releases/$relName root@$ipaddr:/root/Releases
-                sshpass -p "Carnival@123" scp -o "StrictHostKeyChecking=no" -r $workspace/tmp/$relName root@$ipaddr:/root/Releases/tmp
-                sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$ipaddr "bash -s" -- < $workspace/deploy_on_server.sh -t "$relName" "$component" "$abort_on_fail" "app01" "$transfer_flag" >> $workspace/logs/"${logfile}"
+            # if [ "$ipaddr" == "192.168.248.161" ] || [ "$ipaddr" == "192.168.248.134" ]
+            # then
+            #     sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no"  root@$ipaddr 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
+            #     if [ -d $workspace/Releases/$relName/UIEWowzaLib ]
+            #     then
+            #         cp $workspace/xevo-wowza-addon.sh $workspace/Releases/$relName/UIEWowzaLib
+            #     fi
+            #     sshpass -p "Carnival@123" scp -o "StrictHostKeyChecking=no" -r $workspace/Releases/$relName root@$ipaddr:/root/Releases
+            #     sshpass -p "Carnival@123" scp -o "StrictHostKeyChecking=no" -r $workspace/tmp/$relName root@$ipaddr:/root/Releases/tmp
+            #     sshpass -p "Carnival@123" ssh -o "StrictHostKeyChecking=no" root@$ipaddr "bash -s" -- < $workspace/deploy_on_server.sh -t "$relName" "$component" "$abort_on_fail" "app01" "$transfer_flag" >> $workspace/logs/"${logfile}"
                 
-            else
-                sshpass -p "not4dev!" ssh  -o "StrictHostKeyChecking=no"  root@$ipaddr 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
-                sshpass -p "not4dev!" scp -o "StrictHostKeyChecking=no" -r $workspace/Releases/$relName root@$ipaddr:/root/Releases
-                sshpass -p "not4dev!" scp -o "StrictHostKeyChecking=no" -r $workspace/tmp/$relName root@$ipaddr:/root/Releases/tmp
-                sshpass -p "not4dev!" ssh -o "StrictHostKeyChecking=no" root@$ipaddr "bash -s" -- < $workspace/deploy_on_server.sh -t "$relName" "$component" "$abort_on_fail" "app01" "$transfer_flag" >> $workspace/logs/"${logfile}"
+            # else
+                sshpass -p $pass ssh  -o "StrictHostKeyChecking=no"  root@$ipaddr 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
+                if [ -d $workspace/Releases/$relName/UIEWowzaLib ]
+                then
+                    cp $workspace/xevo-wowza-addon.sh $workspace/Releases/$relName/UIEWowzaLib
+                fi
+                sshpass -p $pass scp -o "StrictHostKeyChecking=no" -r $workspace/Releases/$relName root@$ipaddr:/root/Releases
+                sshpass -p $pass scp -o "StrictHostKeyChecking=no" -r $workspace/tmp/$relName root@$ipaddr:/root/Releases/tmp
+                sshpass -p $pass ssh -o "StrictHostKeyChecking=no" root@$ipaddr "bash -s" -- < $workspace/deploy_on_server.sh -t "$relName" "$component" "$abort_on_fail" "app01" "$transfer_flag" >> $workspace/logs/"${logfile}"
                 
-            fi
+            # fi
 
             if [ -f $workspace/logs/"${logfile}" ]
             then
@@ -156,8 +174,8 @@ then
         sshpass -p "Carnival@123" ssh root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/"${logfile}"
         
     else
-        sshpass -p "not4dev!" ssh root@$env "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" "app01"> $workspace/logs/"${logfile}"
-        sshpass -p "not4dev!" ssh root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/"${logfile}"
+        sshpass -p $pass ssh root@$env "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" "app01"> $workspace/logs/"${logfile}"
+        sshpass -p $pass ssh root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -r "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/"${logfile}"
         
     fi
 fi

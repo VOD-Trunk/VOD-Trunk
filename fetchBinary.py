@@ -391,6 +391,8 @@ with open(logfile_path, 'w+') as logfile:
                         component = "mute"
                     elif componentConfluence == "DB":
                         component = "db-upgrade-dir"
+                    elif componentConfluence == "UIEWowzaLib":
+                        component = "UIEWowzaLib"
                     else:
                         continue
 

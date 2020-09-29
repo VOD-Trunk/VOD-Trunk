@@ -24,7 +24,8 @@ node {
 
                 def Jconf = readJSON file: "${env.WORKSPACE}/jenkinsconfig.json"
                 def Confluence_Page = Jconf.jenkins.Release."${Release_Version}"
-                def IpAddr = Jconf.jenkins.environments."${Deployment_Environment}"."${Ship_Name}"
+                def IpAddr = Jconf.jenkins.environments."${Deployment_Environment}"[0]."${Ship_Name}"
+                def ship_pwd = Jconf.jenkins.environments."${Deployment_Environment}"[1].pwd
                 def AllowedUsers = Jconf.jenkins.user_access.keySet()
                 UserAllowedOperation = Jconf.jenkins.user_access."${LoginUser}".operations
                 UserAccessEnv = Jconf.jenkins.user_access."${LoginUser}".env
@@ -79,7 +80,7 @@ node {
                         sh """
                             #!/bin/bash -e
 
-                            ${env.WORKSPACE}/deployment_caller.sh "$IpAddr" $Release_Version $Activity "$Artifacts" "${env.WORKSPACE}" "$Action_on_failure" "${Transfer_Of_Artifacts}" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}"
+                            ${env.WORKSPACE}/deployment_caller.sh "$IpAddr" $Release_Version $Activity "$Artifacts" "${env.WORKSPACE}" "$Action_on_failure" "${Transfer_Of_Artifacts}" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "$ship_pwd"
                             
                         """
                    }
