@@ -13,13 +13,16 @@ transfer_flag=$7
 ArtifactoryUser=$8
 ArtifactoryPassword=$9
 pwd=$10
-pass=`echo "$pwd" | base64 --decode`
+pass=`echo "$pwd" | base64 -d`
+
 logfile='deployStage.log'
 
 log(){
     #echo "$@" >&1 2>&1
     echo "$@" >> $workspace/logs/"${logfile}"
 }
+
+log "Decoded password is : $pass"
 
 if [ -f $workspace/logs/email_body.txt ]
 then
