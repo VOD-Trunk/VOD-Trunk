@@ -801,7 +801,7 @@ deploy_new_build() {
 
 	if [ "$component" == "UIEWowzaLib" ]
 	then
-		ssh media01 "echo 'y' | ./xevo-wowza-addon.sh "
+		ssh media01 "echo 'y' | ./xevo-wowza-addon.sh && chmod 777 media /home/wowza/media/v2/wowza /home/wowza/media/v2/wowza/running.json"
 	fi
 
 

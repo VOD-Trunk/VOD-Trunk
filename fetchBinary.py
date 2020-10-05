@@ -113,6 +113,9 @@ with open(logfile_path, 'w+') as logfile:
             columnValue=TAG_RE.sub('', x)
             columnValue = columnValue.strip()
 
+            if recordCount in range(7):
+                log(columnValue) 
+
             if recordCount%7 == 0:  #Ignore first record
                     applicationName.append(columnValue)
             elif recordCount%7== 1:
