@@ -107,11 +107,21 @@ with open(logfile_path, 'w+') as logfile:
             
             if recordCount == 0:
                 firstRowColumnNames = columnValue.split()
-                if len(firstRowColumnNames) != 7:
-                    log("Abhishek: Column count error")
+                if len(firstRowColumnNames) != 7:    #count of columns headers should be 7 fixed.
+                    log("The table structure on confluence page is not correct. There should be 7 columns in the table.")
                     exit(1)
 
+                tableHeaders=["Component","Revision Number","Build #","TAG","Artifact","md5sum","Modified over baseline"]
+                #The column headers should only be the ones present in tableHeaders list and in that specific order.
+                for i in range(7):
+                    if firstRowColumnNames[i] != tableHeaders[i]:
+                        log("The table structure on confluence page is not correct. The seven column headers should be in this order : Component, Revision Number, Build #, TAG, Artifact, md5sum, Modified over baseline")
+                        exit(1)
+                    else:
+                        continue
+
             recordCount= recordCount + 1
+        return("Confluence page validated successfully.")
 
 
 
@@ -148,34 +158,7 @@ with open(logfile_path, 'w+') as logfile:
         for x in subTable:
 
             columnValue=TAG_RE.sub('', x)
-            columnValue = columnValue.strip()
-
-            if recordCount == 0 and columnValue != "Component":
-                log("The table structure on confluence page is not correct. First column header should be Component.")
-                exit(1)
-            elif recordCount == 1 and columnValue != "Revision Number":
-                log("The table structure on confluence page is not correct. Second column header should be Revision Number.")
-                exit(1)
-            elif recordCount == 2 and columnValue != "Build #":
-                log("The table structure on confluence page is not correct. Third column header should be Build #.")
-                exit(1)
-            elif recordCount == 3 and columnValue != "TAG":
-                log("The table structure on confluence page is not correct. Fourth column header should be TAG.")
-                exit(1)
-            elif recordCount == 4 and columnValue != "Artifact":
-                log("The table structure on confluence page is not correct. Fifth column header should be Artifact.")
-                exit(1)
-            elif recordCount == 5 and columnValue != "md5sum":
-                log("The table structure on confluence page is not correct. Sixth column header should be md5sum.")
-                exit(1)
-            elif recordCount == 6 and columnValue != "Modified over baseline":
-                log("The table structure on confluence page is not correct. Seventh column header should be Modified over baseline.")
-                exit(1)
-            elif recordCount == 13 and columnValue not in ["Y","N"]:
-                log("The table structure on confluence page is not correct. There should be 7 columns in the table.")
-                exit(1)
-
-                
+            columnValue = columnValue.strip()                
 
             if recordCount%7 == 0:  #Ignore first record
                     applicationName.append(columnValue)
@@ -379,7 +362,10 @@ with open(logfile_path, 'w+') as logfile:
                 if contentID ==0:
                     log(errorValue)
                 else:
-                    verifyConfluenceTable(contentID,headers)
+                    verificationResult= verifyConfluenceTable(contentID,headers)
+
+                    log(verificationResult)
+
                     applicationName,applicationVersion,applicationBuild,artifactoryUrl,confluence_md5sum,yesNo =GetContentInformation(contentID,headers)
 
                 if components == "All":
