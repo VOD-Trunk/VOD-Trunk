@@ -108,14 +108,14 @@ with open(logfile_path, 'w+') as logfile:
             if recordCount == 0:
                 firstRowColumnNames = columnValue.split()
                 if len(firstRowColumnNames) != 7:    #count of columns headers should be 7 fixed.
-                    log("The table structure on confluence page is not correct. There should be 7 columns in the table.")
+                    log("The table structure on confluence page is not correct. There should only be seven column headers and in this order : Component, Revision Number, Build #, TAG, Artifact, md5sum, Modified over baseline")
                     exit(1)
 
                 tableHeaders=["Component","Revision Number","Build #","TAG","Artifact","md5sum","Modified over baseline"]
                 #The column headers should only be the ones present in tableHeaders list and in that specific order.
                 for i in range(7):
                     if firstRowColumnNames[i] != tableHeaders[i]:
-                        log("The table structure on confluence page is not correct. The seven column headers should be in this order : Component, Revision Number, Build #, TAG, Artifact, md5sum, Modified over baseline")
+                        log("The table structure on confluence page is not correct. There should only be seven column headers and in this order : Component, Revision Number, Build #, TAG, Artifact, md5sum, Modified over baseline")
                         exit(1)
                     else:
                         continue
