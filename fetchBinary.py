@@ -304,7 +304,7 @@ with open(logfile_path, 'w+') as logfile:
         scheduledReleaseDict.update({relName:pageNameRelease})
 
   
-    if action == "Deploy" or action == "Promote" or (action == "ScheduleDeploy" and len(shipNamesScheduled) != 0):
+    if action == "Deploy" or action == "Promote" or action == "Rollback" or (action == "ScheduleDeploy" and len(shipNamesScheduled) != 0):
 
         if action == "Deploy" and deploymentEnv == "PRODUCTION" and targetShipName not in shipNamesScheduled:
             log("\n\nERROR : The MW for deployment of " + relName + " on " + targetShipName + " is not scheduled for today.\n\n")
@@ -450,7 +450,5 @@ with open(logfile_path, 'w+') as logfile:
 
                     with open(builds_file_path, 'a+') as f:
                         f.write(component + " : " + str(component_build_mapping[componentConfluence]) + " : " + str(component_md5sum_mapping[componentConfluence]) + "\n")
-    elif action == "Rollback":
-        log("\n\nfetchBinary stage is not required for Rollback.\n\n")
     else:
         log("\n\nThere is no ship currently scheduled for deployment.\n\n")

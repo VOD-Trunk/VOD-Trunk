@@ -1127,6 +1127,7 @@ verify() {
 		log
 		#echo "Failed( Version : $timestamp_release )"
 	fi
+	echo $timestamp_status
 }
 
 deploy_master() {
@@ -1315,18 +1316,30 @@ case "${1}" in
 	-r|--rollback)
 	  if [ $partial_flag == 2 ]
 	  then
+	  	  log "Checking which components to rollback..."
+	      log
 	  	  iter=1
-	  	  for component in `ls /root/Releases/$new_release`
+          components=`cat /root/Releases/tmp/component_build_mapping.txt`
+          IFS=$'\n'
+          for row in $components
 		  do
 		  	 if [ $iter == 1 ]
-			  then
-			  	log
-				log "================================================================================================================"
-				log "Starting rollback of $new_release : All components"
-				log
-			  fi
-			  deploy_master $component $abort_on_fail rollback
-			  iter=$((iter+1))
+				then
+					log
+					log "================================================================================================================"
+					log "Starting rollback of $new_release : All components"
+					log
+				fi
+          	 component=`echo $row | cut -d' ' -f1`
+          	 comp_status=$(verify $component)
+			 
+			 if [ "$comp_status" == "1" ]
+			 then
+				
+				deploy_master $component $abort_on_fail rollback
+			 fi
+			 iter=$((iter+1))
+			 
 		  done
 		  log
 		  log
@@ -1346,7 +1359,13 @@ case "${1}" in
 				log "Starting rollback of $new_release : Selected components"
 				log
 			  fi
-			  deploy_master $component $abort_on_fail rollback
+			  
+			  comp_status=$(verify $component | cut -d ' ' -f1)
+			 
+			  if [ "$comp_status" == "1" ]
+			  then
+			    deploy_master $component $abort_on_fail rollback
+			  fi
 			  iter=$((iter+1))
 		  done
 		  log
