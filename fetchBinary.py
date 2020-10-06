@@ -277,7 +277,6 @@ with open(logfile_path, 'w+') as logfile:
         if contentID == 0:
             log(errorValue)
         else:
-            verifyConfluenceTable(contentID,headers)
             shipNames,releasePage,releaseVersion,deploymentDate,deploymentStatus =GetScheduleContentInformation(contentID,headers)
             
             for rls in releaseVersion:
@@ -374,6 +373,7 @@ with open(logfile_path, 'w+') as logfile:
                 if contentID ==0:
                     log(errorValue)
                 else:
+                    verifyConfluenceTable(contentID,headers)
                     applicationName,applicationVersion,applicationBuild,artifactoryUrl,confluence_md5sum,yesNo =GetContentInformation(contentID,headers)
 
                 if components == "All":
