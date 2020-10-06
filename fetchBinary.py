@@ -97,6 +97,7 @@ with open(logfile_path, 'w+') as logfile:
             exit(1)
 
         searchString = response.text
+        log(searchString)
         subTable = re.findall(r'<td>(.+?)</td>',searchString)
         recordCount=0
         columnCount=0
@@ -113,8 +114,12 @@ with open(logfile_path, 'w+') as logfile:
             columnValue=TAG_RE.sub('', x)
             columnValue = columnValue.strip()
 
+            headers = []
             if recordCount in range(7):
-                log(columnValue) 
+                headers[recordCount] = columnValue
+            
+            if 
+                
 
             if recordCount%7 == 0:  #Ignore first record
                     applicationName.append(columnValue)
