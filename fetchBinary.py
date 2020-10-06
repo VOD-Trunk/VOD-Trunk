@@ -97,7 +97,6 @@ with open(logfile_path, 'w+') as logfile:
             exit(1)
 
         searchString = response.text
-        log(searchString)
         subTable = re.findall(r'<td>(.+?)</td>',searchString)
         recordCount=0
         columnCount=0
@@ -114,9 +113,31 @@ with open(logfile_path, 'w+') as logfile:
             columnValue=TAG_RE.sub('', x)
             columnValue = columnValue.strip()
 
-            headers = []
-            if recordCount in range(7):
-                headers[recordCount] = columnValue
+            if recordCount == 0 and columnValue != "Component":
+                log("The table structure on confluence page is not correct. First column header should be Component.")
+                exit(1)
+            elif recordCount == 1 and columnValue != "Revision Number":
+                log("The table structure on confluence page is not correct. Second column header should be Revision Number.")
+                exit(1)
+            elif recordCount == 2 and columnValue != "Build #":
+                log("The table structure on confluence page is not correct. Third column header should be Build #.")
+                exit(1)
+            elif recordCount == 3 and columnValue != "TAG":
+                log("The table structure on confluence page is not correct. Fourth column header should be TAG.")
+                exit(1)
+            elif recordCount == 4 and columnValue != "Artifact":
+                log("The table structure on confluence page is not correct. Fifth column header should be Artifact.")
+                exit(1)
+            elif recordCount == 5 and columnValue != "md5sum":
+                log("The table structure on confluence page is not correct. Sixth column header should be md5sum.")
+                exit(1)
+            elif recordCount == 6 and columnValue != "Modified over baseline":
+                log("The table structure on confluence page is not correct. Seventh column header should be Modified over baseline.")
+                exit(1)
+            elif recordCount == 13 and columnValue not in ["Y","N"]:
+                log("The table structure on confluence page is not correct. There should be 7 columns in the table.")
+                exit(1)
+
                 
 
             if recordCount%7 == 0:  #Ignore first record
