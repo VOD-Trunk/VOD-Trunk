@@ -116,7 +116,7 @@ with open(logfile_path, 'w+') as logfile:
                 #The column headers should only be the ones present in tableHeaders list and in that specific order.
                 for i in range(7):
                     if firstRowColumnNames[i] != tableHeaders[i]:
-                        log("\n\nERROR : The table structure on confluence page is not correct. The seven column headers should be in this order : Component, Revision Number, Build #, TAG, Artifact, md5sum, Modified over baseline \n\n")
+                        log("\n\nERROR : The table structure on confluence page is not correct. The seven column headers should have names and order as : Component, Revision Number, Build #, TAG, Artifact, md5sum, Modified over baseline \n\n")
                         exit(1)
                     else:
                         continue
