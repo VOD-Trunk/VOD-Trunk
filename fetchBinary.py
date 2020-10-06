@@ -102,10 +102,13 @@ with open(logfile_path, 'w+') as logfile:
         TAG_RE = re.compile(r'<[^>]+>')
         for x in subTable:
 
-            columnValue=TAG_RE.sub('', x)
+            columnValue=TAG_RE.sub(' ', x)
             columnValue = columnValue.strip()
+            
+            if recordCount == 0:
+                log(columnValue)
 
-            log(columnValue)
+            recordCount= recordCount + 1
 
 
 
