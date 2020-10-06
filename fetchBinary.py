@@ -108,7 +108,7 @@ with open(logfile_path, 'w+') as logfile:
             if recordCount == 0:
                 firstRowColumnNames = columnValue.split()
                 if len(firstRowColumnNames) != 7:
-                    log "Abhishek: Column count error"
+                    log("Abhishek: Column count error")
                     exit(1)
 
             recordCount= recordCount + 1
