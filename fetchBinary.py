@@ -77,7 +77,7 @@ with open(logfile_path, 'w+') as logfile:
     # end of function //CheckConfluencePage
 
     def verifyConfluenceTable(ContentId,headers):
-        '''This function is used to scrap through the confluence page and fetch different columns from the HTML table in that confluence page'''
+        '''This function is used to validate all the column header names.'''
 
         url = "https://carnival.atlassian.net/wiki/rest/api/content/" +str(ContentId) + "?expand=body.storage"
 
