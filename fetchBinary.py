@@ -107,7 +107,6 @@ with open(logfile_path, 'w+') as logfile:
             
             if recordCount == 0:
                 firstRowColumnNames = re.split(r'\s{2,}', columnValue)
-                log(str(firstRowColumnNames))
                 if len(firstRowColumnNames) != 7:    #count of columns headers should be 7 fixed.
                     log("\n\nERROR : The table structure on confluence page is not correct. There should be exactly seven column headers and in this order : Component, Revision Number, Build #, TAG, Artifact, md5sum, Modified over baseline \n\n")
                     exit(1)
