@@ -1337,6 +1337,9 @@ case "${1}" in
 			 then
 				
 				deploy_master $component $abort_on_fail rollback
+			 else
+			 	log "$component does not need to be rolled back."
+				 continue
 			 fi
 			 iter=$((iter+1))
 			 
@@ -1365,6 +1368,9 @@ case "${1}" in
 			  if [ "$comp_status" == "1" ]
 			  then
 			    deploy_master $component $abort_on_fail rollback
+			  else
+			 	log "$component does not need to be rolled back."
+				continue
 			  fi
 			  iter=$((iter+1))
 		  done

@@ -76,6 +76,37 @@ with open(logfile_path, 'w+') as logfile:
 
     # end of function //CheckConfluencePage
 
+    def verifyConfluenceTable(ContentId,headers):
+        '''This function is used to scrap through the confluence page and fetch different columns from the HTML table in that confluence page'''
+
+        url = "https://carnival.atlassian.net/wiki/rest/api/content/" +str(ContentId) + "?expand=body.storage"
+
+        response = requests.request(
+           "GET",
+           url,
+           headers=headers
+        )
+
+        if response.status_code == 200:
+            log ("Query successful:Confluence page exist")
+        else:
+            log(response)
+            log ("ERROR : Confluence page not exist or other error::" + url)
+            exit(1)
+
+        searchString = response.text
+        subTable = re.findall(r'<tr>(.+?)</tr>',searchString)
+        recordCount=0
+        columnCount=0
+        
+        TAG_RE = re.compile(r'<[^>]+>')
+        for x in subTable:
+
+            columnValue=TAG_RE.sub('', x)
+            columnValue = columnValue.strip()
+
+            log(columnValue)
+
 
 
     def GetContentInformation(ContentId,headers):
@@ -246,6 +277,7 @@ with open(logfile_path, 'w+') as logfile:
         if contentID == 0:
             log(errorValue)
         else:
+            verifyConfluenceTable(contentID,headers)
             shipNames,releasePage,releaseVersion,deploymentDate,deploymentStatus =GetScheduleContentInformation(contentID,headers)
             
             for rls in releaseVersion:
