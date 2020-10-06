@@ -102,11 +102,11 @@ with open(logfile_path, 'w+') as logfile:
         TAG_RE = re.compile(r'<[^>]+>')
         for x in subTable:
 
-            columnValue=TAG_RE.sub(' ', x)
+            columnValue=TAG_RE.sub(',', x)
             columnValue = columnValue.strip()
             
             if recordCount == 0:
-                firstRowColumnNames = columnValue.split()
+                firstRowColumnNames = columnValue.split(",")
                 log(firstRowColumnNames)
                 if len(firstRowColumnNames) != 7:    #count of columns headers should be 7 fixed.
                     log("\n\nERROR : The table structure on confluence page is not correct. There should only be seven column headers and in this order : Component, Revision Number, Build #, TAG, Artifact, md5sum, Modified over baseline \n\n")
@@ -122,7 +122,7 @@ with open(logfile_path, 'w+') as logfile:
                         continue
 
             recordCount= recordCount + 1
-        return("\nConfluence page validated successfully.\n")
+        return("Confluence page validated successfully.")
 
 
 
