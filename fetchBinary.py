@@ -117,8 +117,6 @@ with open(logfile_path, 'w+') as logfile:
             headers = []
             if recordCount in range(7):
                 headers[recordCount] = columnValue
-            
-            if 
                 
 
             if recordCount%7 == 0:  #Ignore first record
