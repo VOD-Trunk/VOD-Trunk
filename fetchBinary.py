@@ -30,12 +30,11 @@ task = sys.argv[17]
 
 log_path = 'logs'
 
-if os.path.isdir(workspace + '/logs') == True:
-    shutil.rmtree((workspace + '/logs')
-
 path = os.path.join(workspace,log_path)
 if os.path.isdir(path) != True:
    os.makedirs(path)
+else:
+    shutil.rmtree(path)
 
 
 logfile_path = workspace + '/logs/fetchBinaryStage.log'
