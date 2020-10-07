@@ -1,4 +1,4 @@
-#Last modified : 9/01/2020
+#Last modified : 10/07/2020
 
 import sys
 import requests
@@ -34,12 +34,12 @@ path = os.path.join(workspace,log_path)
 if os.path.isdir(path) != True:
    os.makedirs(path)
 else:
-    for filename in os.listdir(path):
-        file_path = os.path.join(path, filename)
-        os.unlink(file_path)
+    filename = task + 'Stage.log'
+    file_path = os.path.join(path, filename)
+    os.unlink(file_path)
 
 
-logfile_path = workspace + '/logs/fetchBinaryStage.log'
+logfile_path = workspace + '/logs/' + task + 'Stage.log'
 with open(logfile_path, 'w+') as logfile:
 
     def log(text):
