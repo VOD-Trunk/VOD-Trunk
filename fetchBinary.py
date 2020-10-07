@@ -77,7 +77,7 @@ with open(logfile_path, 'w+') as logfile:
     # end of function //CheckConfluencePage
 
     def verifyConfluenceTable(ContentId,headers):
-        '''This function is used to validate all the column header names.'''
+        '''This function is used to validate all the column header names on the release confluence page.'''
 
         url = "https://carnival.atlassian.net/wiki/rest/api/content/" +str(ContentId) + "?expand=body.storage"
 
@@ -96,18 +96,13 @@ with open(logfile_path, 'w+') as logfile:
 
         searchString = response.text
         subTable = re.findall(r'<tr>(.+?)</tr>',searchString)
-        recordCount=0
-        columnCount=0
+        
         
         TAG_RE = re.compile(r'<[^>]+>')
-        # for x in subTable:
 
         columnValue=TAG_RE.sub('  ', subTable[0])
         columnValue = columnValue.strip()
 
-        log(str(columnValue))
-        
-        # if recordCount == 0:
         firstRowColumnNames = re.split(r'\s{2,}', columnValue)
         if len(firstRowColumnNames) != 7:    #count of columns headers should be 7 fixed.
             log("\n\nERROR : The table structure on confluence page is not correct. There should be exactly seven column headers and in this order : Component, Revision Number, Build #, TAG, Artifact, md5sum, Modified over baseline \n\n")
@@ -121,9 +116,9 @@ with open(logfile_path, 'w+') as logfile:
                 exit(1)
             else:
                 continue
-
-        # recordCount= recordCount + 1
         return("Confluence page validated successfully.")
+
+    # end of function //verifyConfluenceTable
 
 
 
