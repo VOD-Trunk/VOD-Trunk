@@ -76,7 +76,7 @@ with open(logfile_path, 'w+') as logfile:
 
     # end of function //CheckConfluencePage
 
-    def verifyConfluenceTable(ContentId,headers):
+    def verifyReleaseConfluenceTable(ContentId,headers,pageType):
         '''This function is used to validate all the column header names on the release confluence page.'''
 
         url = "https://carnival.atlassian.net/wiki/rest/api/content/" +str(ContentId) + "?expand=body.storage"
@@ -104,21 +104,42 @@ with open(logfile_path, 'w+') as logfile:
         columnValue = columnValue.strip()
 
         firstRowColumnNames = re.split(r'\s{2,}', columnValue)
-        if len(firstRowColumnNames) != 7:    #count of columns headers should be 7 fixed.
-            log("\n\nERROR : The table structure on confluence page is not correct. There should be exactly seven column headers and in this order : Component, Revision Number, Build #, TAG, Artifact, md5sum, Modified over baseline \n\n")
-            exit(1)
 
-        tableHeaders=["Component","Revision Number","Build #","TAG","Artifact","md5sum","Modified over baseline"]
-        #The column headers should only be the ones present in tableHeaders list and in that specific order.
-        for i in range(7):
-            if firstRowColumnNames[i] != tableHeaders[i]:
-                log("\n\nERROR : The table structure on confluence page is not correct. The seven column headers should have names and order as : Component, Revision Number, Build #, TAG, Artifact, md5sum, Modified over baseline \n\n")
+        if pageType == "Release":
+
+            if len(firstRowColumnNames) != 7:    #count of columns headers on release page should be 7 fixed.
+                log("\n\nERROR : The table structure on release confluence page is not correct. There should be exactly seven column headers and in this order : Component, Revision Number, Build #, TAG, Artifact, md5sum, Modified over baseline \n\n")
                 exit(1)
-            else:
-                continue
+
+            tableHeaders=["Component","Revision Number","Build #","TAG","Artifact","md5sum","Modified over baseline"]
+            #The column headers should only be the ones present in tableHeaders list and in that specific order.
+            for i in range(7):
+                if firstRowColumnNames[i] != tableHeaders[i]:
+                    log("\n\nERROR : The table structure on release confluence page is not correct. The seven column headers should have names and order as : Component, Revision Number, Build #, TAG, Artifact, md5sum, Modified over baseline \n\n")
+                    exit(1)
+                else:
+                    continue
+
+        elif pageType == "MW":
+
+            if len(firstRowColumnNames) != 5:    #count of columns headers on MW page should be 5 fixed.
+                log("\n\nERROR : The table structure on MW confluence page is not correct. There should be exactly five column headers and in this order : Ship-Name, Release Path, Release-Version, Date, Status \n\n")
+                exit(1)
+
+            tableHeaders=["Ship-Name","Release Path","Release-Version","Date","Status"]
+            #The column headers should only be the ones present in tableHeaders list and in that specific order.
+            for i in range(5):
+                if firstRowColumnNames[i] != tableHeaders[i]:
+                    log("\n\nERROR : The table structure on MW confluence page is not correct. The five column headers should have names and order as : Ship-Name, Release Path, Release-Version, Date, Status \n\n")
+                    exit(1)
+                else:
+                    continue
+        else:
+            log("\n\nERROR : Wrong input for pageType.\n\n")
+
         return("Confluence page validated successfully.")
 
-    # end of function //verifyConfluenceTable
+    # end of function //verifyReleaseConfluenceTable
 
 
 
@@ -263,6 +284,8 @@ with open(logfile_path, 'w+') as logfile:
         if contentID == 0:
             log(errorValue)
         else:
+            verificationResult= verifyReleaseConfluenceTable(contentID,headers,"MW")
+            log(verificationResult)
             shipNames,releasePage,releaseVersion,deploymentDate,deploymentStatus =GetScheduleContentInformation(contentID,headers)
             
             for rls in releaseVersion:
@@ -359,8 +382,7 @@ with open(logfile_path, 'w+') as logfile:
                 if contentID ==0:
                     log(errorValue)
                 else:
-                    verificationResult= verifyConfluenceTable(contentID,headers)
-
+                    verificationResult= verifyReleaseConfluenceTable(contentID,headers,"Release")
                     log(verificationResult)
 
                     applicationName,applicationVersion,applicationBuild,artifactoryUrl,confluence_md5sum,yesNo =GetContentInformation(contentID,headers)
