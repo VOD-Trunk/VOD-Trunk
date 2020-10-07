@@ -76,7 +76,7 @@ with open(logfile_path, 'w+') as logfile:
 
     # end of function //CheckConfluencePage
 
-    def verifyReleaseConfluenceTable(ContentId,headers,pageType):
+    def verifyConfluenceTable(ContentId,headers,pageType):
         '''This function is used to validate all the column header names on the release confluence page.'''
 
         url = "https://carnival.atlassian.net/wiki/rest/api/content/" +str(ContentId) + "?expand=body.storage"
@@ -139,7 +139,7 @@ with open(logfile_path, 'w+') as logfile:
 
         return("Confluence page validated successfully.")
 
-    # end of function //verifyReleaseConfluenceTable
+    # end of function //verifyConfluenceTable
 
 
 
@@ -284,7 +284,7 @@ with open(logfile_path, 'w+') as logfile:
         if contentID == 0:
             log(errorValue)
         else:
-            verificationResult= verifyReleaseConfluenceTable(contentID,headers,"MW")
+            verificationResult= verifyConfluenceTable(contentID,headers,"MW")
             log(verificationResult)
             shipNames,releasePage,releaseVersion,deploymentDate,deploymentStatus =GetScheduleContentInformation(contentID,headers)
             
@@ -382,7 +382,7 @@ with open(logfile_path, 'w+') as logfile:
                 if contentID ==0:
                     log(errorValue)
                 else:
-                    verificationResult= verifyReleaseConfluenceTable(contentID,headers,"Release")
+                    verificationResult= verifyConfluenceTable(contentID,headers,"Release")
                     log(verificationResult)
 
                     applicationName,applicationVersion,applicationBuild,artifactoryUrl,confluence_md5sum,yesNo =GetContentInformation(contentID,headers)
