@@ -36,7 +36,6 @@ node {
 
                     sh """
                         #!/bin/bash
-                        #${env.WORKSPACE}/checkUserAccessRights.sh "${LoginUser}" "${AllowedUsers}" "${Activity}" "${Deployment_Environment}" "${Promoting_From}" "${UserAccessEnv}" "${UserAllowedOperation}" "${env.WORKSPACE}"
                         python ${env.WORKSPACE}/fetchBinary.py "$Confluence_Page" $Release_Version $Activity "${env.WORKSPACE}" "$Components" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "${Transfer_Of_Artifacts}" "XICMS MW-Schedule" $Deployment_Environment "${Ship_Name}" "${LoginUser}" "${AllowedUsers}" "${Promoting_From}" "${UserAccessEnv}" "${UserAllowedOperation}" "checkUserAccessRights"
                             
                     """
@@ -139,6 +138,10 @@ node {
 
             if [ -d ${env.WORKSPACE}/logs ]
             then
+                if [ -f ${env.WORKSPACE}/logs/errors.log ]
+                then
+                    rm -f ${env.WORKSPACE}/logs/errors.log
+                fi
                 grep -h "ERROR" ${env.WORKSPACE}/logs/* > ${env.WORKSPACE}/logs/errors.log
             fi
             
