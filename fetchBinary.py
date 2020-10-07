@@ -59,12 +59,14 @@ with open(logfile_path, 'w+') as logfile:
         promotingFromEnv  = promotingFrom.split('_')
 
         if action == "Promote":
-            deploymentEnv = promotingFromEnv[0]
+            environment = promotingFromEnv[0]
+        else
+            environment = deploymentEnv
         
-        if deploymentEnv in userAccessEnv:
-            log("User " + loginUser + " is allowed to perform $Activity operation in " + deploymentEnv)
+        if environment in userAccessEnv:
+            log("User " + loginUser + " is allowed to perform $Activity operation in " + environment)
         else:
-            log("ERROR : User " + loginUser + " is not allowed to perform $Activity operation in " + deploymentEnv + " environment of xiCMS using Jenkins pipeline.")
+            log("ERROR : User " + loginUser + " is not allowed to perform $Activity operation in " + environment + " environment of xiCMS using Jenkins pipeline.")
 
     # end of function checkUserAccessRights()
     
