@@ -21,6 +21,12 @@ transfer_flag = sys.argv[8]
 pageNameMW = sys.argv[9]
 deploymentEnv = sys.argv[10]
 targetShipName = sys.argv[11]
+loginUser = sys.argv[12]
+allowedUsers = sys.argv[13]
+promotingFrom = sys.argv[14]
+userAccessEnv = sys.argv[15]
+userAllowedOperation = sys.argv[16]
+task = sys.argv[17]
 
 log_path = 'logs'
 path = os.path.join(workspace,log_path)
@@ -34,7 +40,34 @@ with open(logfile_path, 'w+') as logfile:
     def log(text):
         print text
         logfile.write(text + "\n")
+    
+    def checkUserAccessRights():
 
+        if loginUser in allowedUsers:
+            log("User exists, checking Allowed Operations...")
+        else:
+            log(f"ERROR : User {loginUser} does not exist in the list of users able to perform any operation on the xiCMS Jenkins Pipeline")
+
+        log(f"Allowed Operations for user {loginUser} are : {userAllowedOperation}")
+        log(f"Allowed access environments for user {loginUser} are : {userAccessEnv}")
+
+        if action in userAllowedOperation:
+            log(f"User has access rights to perform {action} operation.")
+        else:
+            log(f"ERROR : User {loginUser} is not allowed to perform {action} on the xiCMS Jenkins Pipeline")
+
+        promotingFromEnv  = promotingFrom.split('_')
+
+        if action == "Promote":
+            deploymentEnv = promotingFromEnv[0]
+        
+        if deploymentEnv in userAccessEnv:
+            log(f"User {loginUser} is allowed to perform $Activity operation in {deploymentEnv}")
+        else:
+            log(f"ERROR : User {loginUser} is not allowed to perform $Activity operation in {deploymentEnv} environment of xiCMS using Jenkins pipeline.")
+
+    # end of function checkUserAccessRights()
+    
     def CheckConfluencePage(pageName):
         '''This function checks if the confluence page with pageName exists or not. If exists it returns the contentID.'''
 
@@ -249,249 +282,254 @@ with open(logfile_path, 'w+') as logfile:
     #Main script
     log("Starting...\n")
 
-    headers = {
-               "Accept": "application/json",
-               "Content-Type": "application/json",
-               "Authorization": "Basic ZGVlcGFrLnJvaGlsbGFAaHNjLmNvbTpkMnl0NWJ4TGdmcFA4cG93S3VsOUQyNTE="
-              }
+    if task == "checkUserAccessRights":
+        checkUserAccessRights()
 
-    today = datetime.date.today()
+    elif task == "fetchBinary":
 
-    now = datetime.datetime.now()
+        headers = {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "Authorization": "Basic ZGVlcGFrLnJvaGlsbGFAaHNjLmNvbTpkMnl0NWJ4TGdmcFA4cG93S3VsOUQyNTE="
+                }
 
-    currentDate = now.strftime("%m/%d/%Y")
+        today = datetime.date.today()
 
-    partial_deploy = 2
+        now = datetime.datetime.now()
 
-    scheduled_ships_path = workspace + "/tmp/scheduled_ships.txt"
-    if os.path.exists(scheduled_ships_path):
-        with open(scheduled_ships_path, 'w') as f:
-            f.truncate()
+        currentDate = now.strftime("%m/%d/%Y")
 
-    if action == "ScheduleDeploy" or action == "Deploy":
-        #Page ID to get the page details
-        contentID=0
-        pageName = pageNameMW
-        contentID,errorValue = CheckConfluencePage(pageName)
-        shipNames=[]
-        releasePage=[]
-        releaseVersion=[]
-        deploymentDate=[]
-        deploymentStatus=[]
-        shipNamesScheduled=[]
-        releasePageScheduled=[]
-        releaseVersionScheduled=[]
-        if contentID == 0:
-            log(errorValue)
-        else:
-            verificationResult= verifyConfluenceTable(contentID,headers,"MW")
-            log(verificationResult)
-            shipNames,releasePage,releaseVersion,deploymentDate,deploymentStatus =GetScheduleContentInformation(contentID,headers)
-            
-            for rls in releaseVersion:
+        partial_deploy = 2
 
-                tmp_abs_path = os.path.join(workspace,'tmp')
-                if os.path.isdir(path) != True:
-                    os.makedirs(tmp_abs_path)
+        scheduled_ships_path = workspace + "/tmp/scheduled_ships.txt"
+        if os.path.exists(scheduled_ships_path):
+            with open(scheduled_ships_path, 'w') as f:
+                f.truncate()
 
-                tmp_rls_path = os.path.join(tmp_abs_path,rls)
-                if os.path.isdir(tmp_rls_path) != True:
-                    os.makedirs(tmp_rls_path)
-
-                builds_file_hist = workspace + "/tmp/" + rls + "/component_build_mapping.txt"
-                if os.path.exists(builds_file_hist):
-                    with open(builds_file_hist, 'w') as f:
-                        f.truncate()
-                url_file_hist = workspace + "/tmp/" + rls + "/urls.txt"
-                if os.path.exists(url_file_hist):
-                    with open(url_file_hist, 'w') as f:
-                        f.truncate()
-
-            for i, shipName in enumerate(shipNames):
-
-                if len(deploymentDate[i]) != 0:
-                    if action == "Deploy":
-                        date_obj = datetime.datetime.strptime(deploymentDate[i], '%m/%d/%Y').strftime('%Y-%m-%d')
-                        if date_obj == now.strftime('%Y-%m-%d'):
-                            shipNamesScheduled.append(shipName)
-                    elif action == "ScheduleDeploy":
-                        date_time_obj = datetime.datetime.strptime(deploymentDate[i], '%m/%d/%Y')
-                        if date_time_obj >= now:
-                            shipNamesScheduled.append(shipName)
-                            releasePageScheduled.append(releasePage[i])
-                            releaseVersionScheduled.append(releaseVersion[i])
-                            jenkinsconfig_path = workspace + "/jenkinsconfig.json"
-                            with open(jenkinsconfig_path) as f:
-                                r = json.load(f)
-                                ipaddr_json = ast.literal_eval(json.dumps(r))
-                                if shipName == "XS" or shipName == "HSC_Test":
-                                    ipaddr = ipaddr_json["jenkins"]["environments"]["QA"][0][shipName]
-                                elif shipName == "SUPPORT":
-                                    ipaddr = ipaddr_json["jenkins"]["environments"]["SUPPORT"][0][shipName]
-                                else:
-                                    ipaddr = ipaddr_json["jenkins"]["environments"]["PRODUCTION"][0][shipName]
-                                log("\nShip " + shipName + " is ready for release deployment. Initiating transfer of artifacts to " + ipaddr)
-
-                            with open(scheduled_ships_path, 'a+') as f:
-                                f.write(shipName + ":" + ipaddr + ":" +  releaseVersion[i]+"\n")
-                        else:
-                            log("\nShip " +shipName +" is not ready for release Deployment.")
-
-    scheduledReleaseDict={}
-    if action == "ScheduleDeploy":
-        scheduledReleaseDict = dict(zip(releaseVersionScheduled,releasePageScheduled))
-    else:
-        scheduledReleaseDict.update({relName:pageNameRelease})
-
-  
-    if action == "Deploy" or action == "Promote" or action == "Rollback" or (action == "ScheduleDeploy" and len(shipNamesScheduled) != 0):
-
-        if action == "Deploy" and deploymentEnv == "PRODUCTION" and targetShipName not in shipNamesScheduled:
-            log("\n\nERROR : The MW for deployment of " + relName + " on " + targetShipName + " is not scheduled for today.\n\n")
-            exit(1)
-        else:
+        if action == "ScheduleDeploy" or action == "Deploy":
             #Page ID to get the page details
             contentID=0
-            for releaseName, pageName in scheduledReleaseDict.items():
-
-                applicationName=[]
-                applicationVersion=[]
-                applicationBuild=[]
-                yesNo=[]
-                finalArtifactoryUrl={}
-                component_md5sum_mapping={}
-                component_build_mapping={}
+            pageName = pageNameMW
+            contentID,errorValue = CheckConfluencePage(pageName)
+            shipNames=[]
+            releasePage=[]
+            releaseVersion=[]
+            deploymentDate=[]
+            deploymentStatus=[]
+            shipNamesScheduled=[]
+            releasePageScheduled=[]
+            releaseVersionScheduled=[]
+            if contentID == 0:
+                log(errorValue)
+            else:
+                verificationResult= verifyConfluenceTable(contentID,headers,"MW")
+                log(verificationResult)
+                shipNames,releasePage,releaseVersion,deploymentDate,deploymentStatus =GetScheduleContentInformation(contentID,headers)
                 
+                for rls in releaseVersion:
 
-                releaseComponents=[]
-                releaseArtifactsUrl=[]
-                releaseBuildNumbers=[]
-                releaseArtifactMd5sum=[]
+                    tmp_abs_path = os.path.join(workspace,'tmp')
+                    if os.path.isdir(path) != True:
+                        os.makedirs(tmp_abs_path)
 
-                releasesPath = workspace + '/Releases/'
-                newReleaseDir = releasesPath + releaseName
+                    tmp_rls_path = os.path.join(tmp_abs_path,rls)
+                    if os.path.isdir(tmp_rls_path) != True:
+                        os.makedirs(tmp_rls_path)
 
-                if os.path.isdir(newReleaseDir) == True:
-                    shutil.rmtree(newReleaseDir)
+                    builds_file_hist = workspace + "/tmp/" + rls + "/component_build_mapping.txt"
+                    if os.path.exists(builds_file_hist):
+                        with open(builds_file_hist, 'w') as f:
+                            f.truncate()
+                    url_file_hist = workspace + "/tmp/" + rls + "/urls.txt"
+                    if os.path.exists(url_file_hist):
+                        with open(url_file_hist, 'w') as f:
+                            f.truncate()
 
-                builds_file_path = workspace + "/tmp/" + releaseName + "/component_build_mapping.txt"
-                url_file_path = workspace + "/tmp/" + releaseName + "/urls.txt"
+                for i, shipName in enumerate(shipNames):
 
-                contentID,errorValue = CheckConfluencePage(pageName)
-                log("Content id is " + contentID)
-                if contentID ==0:
-                    log(errorValue)
-                else:
-                    verificationResult= verifyConfluenceTable(contentID,headers,"Release")
-                    log(verificationResult)
+                    if len(deploymentDate[i]) != 0:
+                        if action == "Deploy":
+                            date_obj = datetime.datetime.strptime(deploymentDate[i], '%m/%d/%Y').strftime('%Y-%m-%d')
+                            if date_obj == now.strftime('%Y-%m-%d'):
+                                shipNamesScheduled.append(shipName)
+                        elif action == "ScheduleDeploy":
+                            date_time_obj = datetime.datetime.strptime(deploymentDate[i], '%m/%d/%Y')
+                            if date_time_obj >= now:
+                                shipNamesScheduled.append(shipName)
+                                releasePageScheduled.append(releasePage[i])
+                                releaseVersionScheduled.append(releaseVersion[i])
+                                jenkinsconfig_path = workspace + "/jenkinsconfig.json"
+                                with open(jenkinsconfig_path) as f:
+                                    r = json.load(f)
+                                    ipaddr_json = ast.literal_eval(json.dumps(r))
+                                    if shipName == "XS" or shipName == "HSC_Test":
+                                        ipaddr = ipaddr_json["jenkins"]["environments"]["QA"][0][shipName]
+                                    elif shipName == "SUPPORT":
+                                        ipaddr = ipaddr_json["jenkins"]["environments"]["SUPPORT"][0][shipName]
+                                    else:
+                                        ipaddr = ipaddr_json["jenkins"]["environments"]["PRODUCTION"][0][shipName]
+                                    log("\nShip " + shipName + " is ready for release deployment. Initiating transfer of artifacts to " + ipaddr)
 
-                    applicationName,applicationVersion,applicationBuild,artifactoryUrl,confluence_md5sum,yesNo =GetContentInformation(contentID,headers)
+                                with open(scheduled_ships_path, 'a+') as f:
+                                    f.write(shipName + ":" + ipaddr + ":" +  releaseVersion[i]+"\n")
+                            else:
+                                log("\nShip " +shipName +" is not ready for release Deployment.")
 
-                if components == "All":
-                    partial_deploy = 2
-                else:
-                    component_list = components.split(",")
-                    partial_deploy = 1
+        scheduledReleaseDict={}
+        if action == "ScheduleDeploy":
+            scheduledReleaseDict = dict(zip(releaseVersionScheduled,releasePageScheduled))
+        else:
+            scheduledReleaseDict.update({relName:pageNameRelease})
 
-                if partial_deploy == 2:
-                    for index, element in enumerate(yesNo):
-                            if element == "Y":
-                                releaseComponents.append(applicationName[index])
-                                releaseBuildNumbers.append(applicationBuild[index])
-                                releaseArtifactsUrl.append(artifactoryUrl[index])
-                                releaseArtifactMd5sum.append(confluence_md5sum[index])
-                                finalArtifactoryUrl = dict(zip(releaseComponents,releaseArtifactsUrl))
-                                component_build_mapping = dict(zip(releaseComponents,releaseBuildNumbers))
-                                component_md5sum_mapping = dict(zip(releaseComponents,releaseArtifactMd5sum))
-                else:
-                    for index, element in enumerate(yesNo):
-                            if element == "Y" and applicationName[index] in component_list:
-                                releaseComponents.append(applicationName[index])
-                                releaseBuildNumbers.append(applicationBuild[index])
-                                releaseArtifactsUrl.append(artifactoryUrl[index])
-                                releaseArtifactMd5sum.append(confluence_md5sum[index])
-                                finalArtifactoryUrl = dict(zip(releaseComponents,releaseArtifactsUrl))
-                                component_build_mapping = dict(zip(releaseComponents,releaseBuildNumbers))
-                                component_md5sum_mapping = dict(zip(releaseComponents,releaseArtifactMd5sum))
-                            elif element == "N" and applicationName[index] in component_list:
-                                log("INFO--->  Selected component " + applicationName[index] + " is not a part of Release : " + releaseName)
+    
+        if action == "Deploy" or action == "Promote" or action == "Rollback" or (action == "ScheduleDeploy" and len(shipNamesScheduled) != 0):
+
+            if action == "Deploy" and deploymentEnv == "PRODUCTION" and targetShipName not in shipNamesScheduled:
+                log("\n\nERROR : The MW for deployment of " + relName + " on " + targetShipName + " is not scheduled for today.\n\n")
+                exit(1)
+            else:
+                #Page ID to get the page details
+                contentID=0
+                for releaseName, pageName in scheduledReleaseDict.items():
+
+                    applicationName=[]
+                    applicationVersion=[]
+                    applicationBuild=[]
+                    yesNo=[]
+                    finalArtifactoryUrl={}
+                    component_md5sum_mapping={}
+                    component_build_mapping={}
+                    
+
+                    releaseComponents=[]
+                    releaseArtifactsUrl=[]
+                    releaseBuildNumbers=[]
+                    releaseArtifactMd5sum=[]
+
+                    releasesPath = workspace + '/Releases/'
+                    newReleaseDir = releasesPath + releaseName
+
+                    if os.path.isdir(newReleaseDir) == True:
+                        shutil.rmtree(newReleaseDir)
+
+                    builds_file_path = workspace + "/tmp/" + releaseName + "/component_build_mapping.txt"
+                    url_file_path = workspace + "/tmp/" + releaseName + "/urls.txt"
+
+                    contentID,errorValue = CheckConfluencePage(pageName)
+                    log("Content id is " + contentID)
+                    if contentID ==0:
+                        log(errorValue)
+                    else:
+                        verificationResult= verifyConfluenceTable(contentID,headers,"Release")
+                        log(verificationResult)
+
+                        applicationName,applicationVersion,applicationBuild,artifactoryUrl,confluence_md5sum,yesNo =GetContentInformation(contentID,headers)
+
+                    if components == "All":
+                        partial_deploy = 2
+                    else:
+                        component_list = components.split(",")
+                        partial_deploy = 1
+
+                    if partial_deploy == 2:
+                        for index, element in enumerate(yesNo):
+                                if element == "Y":
+                                    releaseComponents.append(applicationName[index])
+                                    releaseBuildNumbers.append(applicationBuild[index])
+                                    releaseArtifactsUrl.append(artifactoryUrl[index])
+                                    releaseArtifactMd5sum.append(confluence_md5sum[index])
+                                    finalArtifactoryUrl = dict(zip(releaseComponents,releaseArtifactsUrl))
+                                    component_build_mapping = dict(zip(releaseComponents,releaseBuildNumbers))
+                                    component_md5sum_mapping = dict(zip(releaseComponents,releaseArtifactMd5sum))
+                    else:
+                        for index, element in enumerate(yesNo):
+                                if element == "Y" and applicationName[index] in component_list:
+                                    releaseComponents.append(applicationName[index])
+                                    releaseBuildNumbers.append(applicationBuild[index])
+                                    releaseArtifactsUrl.append(artifactoryUrl[index])
+                                    releaseArtifactMd5sum.append(confluence_md5sum[index])
+                                    finalArtifactoryUrl = dict(zip(releaseComponents,releaseArtifactsUrl))
+                                    component_build_mapping = dict(zip(releaseComponents,releaseBuildNumbers))
+                                    component_md5sum_mapping = dict(zip(releaseComponents,releaseArtifactMd5sum))
+                                elif element == "N" and applicationName[index] in component_list:
+                                    log("INFO--->  Selected component " + applicationName[index] + " is not a part of Release : " + releaseName)
+                                    continue
+
+                    if len(finalArtifactoryUrl) == 0:
+                        log("ERROR : None of the selected components is a part of Release : " + releaseName)
+                        exit(1)
+
+                    log("\n\nFollowing are the artifacts in: " + releaseName + "\n\n")
+                    for key, value in finalArtifactoryUrl.items():
+
+                        if targetShipName in ["KODM","NADM","EUDM","WEDM","NSDM","NODM","VODM","ZUDM","OSDM","Ovation","Encore","Odyssey"]:
+                            if key == "EXM Notification plugin":
+                                continue
+                            
+                        componentConfluence = str(key)
+                        url = str(value)
+                        
+                        if componentConfluence == "EXM V2":
+                            component = "v2"
+                        elif componentConfluence == "LeftNav":
+                            component = "exm-client-leftnav2"
+                        elif componentConfluence == "Admin Tool":
+                            component = "exm-admin-tool"
+                        elif componentConfluence == "Cruise Client":
+                            component = "exm-client-cruise"
+                        elif componentConfluence == "EXM Lite Client (Serial)":
+                            component = "exm-client-lite"
+                        elif componentConfluence == "Startup Client":
+                            component = "exm-client-startup"
+                        elif componentConfluence == "NACOS Listener":
+                            component = "nacos"
+                        elif componentConfluence == "LeftNav Signage":
+                            component = "exm-client-leftnav2-signage"
+                        elif componentConfluence == "Exm-v2-plugin-location (Location Services Plugin)":
+                            component = "location"
+                        elif componentConfluence == "Mute Daemon":
+                            component = "mutedaemon"
+                        elif componentConfluence == "EXM Diagnostic Application":
+                            component = "exm-diagnostic-app"
+                        elif componentConfluence == "EXM Diagnostic plugin":
+                            component = "diagnostics"
+                        elif componentConfluence == "EXM Notification plugin":
+                            component = "notification-service"
+                        elif componentConfluence == "Mute Status Service":
+                            component = "mute"
+                        elif componentConfluence == "DB":
+                            component = "db-upgrade-dir"
+                        elif componentConfluence == "UIEWowzaLib":
+                            component = "UIEWowzaLib"
+                        else:
+                            continue
+
+
+                        log( componentConfluence + ' -> ' + url + '\n')
+
+                        path = os.path.join(newReleaseDir,component)
+                        if os.path.isdir(path) != True:
+                            os.makedirs(path)
+                                    
+                        with open(url_file_path, 'a+') as f:
+                            f.write(componentConfluence + " > " + url + "\n")
+
+                        target_path = releasesPath + releaseName + '/' + component + '/' + url.split("/")[-1]
+
+                        if (action == "Deploy" and transfer_flag == "true") or action == "ScheduleDeploy":
+
+                            log("\nDownloading " + component +" ...\n")
+
+                            response = requests.get(url, auth = HTTPBasicAuth(username,password), stream=True)
+                            if response.status_code == 200:
+                                with open(target_path, 'wb') as f:
+                                    f.write(response.raw.read())
+                                    log("File successfully stored at : " + target_path + "\n")
+                            else:
+                                log("Couldn't reach the provided url with response : "+ str(response.status_code) + "\n")
                                 continue
 
-                if len(finalArtifactoryUrl) == 0:
-                    log("ERROR : None of the selected components is a part of Release : " + releaseName)
-                    exit(1)
-
-                log("\n\nFollowing are the artifacts in: " + releaseName + "\n\n")
-                for key, value in finalArtifactoryUrl.items():
-
-                    if targetShipName in ["KODM","NADM","EUDM","WEDM","NSDM","NODM","VODM","ZUDM","OSDM","Ovation","Encore","Odyssey"]:
-                        if key == "EXM Notification plugin":
-                            continue
-                        
-                    componentConfluence = str(key)
-                    url = str(value)
-                    
-                    if componentConfluence == "EXM V2":
-                        component = "v2"
-                    elif componentConfluence == "LeftNav":
-                        component = "exm-client-leftnav2"
-                    elif componentConfluence == "Admin Tool":
-                        component = "exm-admin-tool"
-                    elif componentConfluence == "Cruise Client":
-                        component = "exm-client-cruise"
-                    elif componentConfluence == "EXM Lite Client (Serial)":
-                        component = "exm-client-lite"
-                    elif componentConfluence == "Startup Client":
-                        component = "exm-client-startup"
-                    elif componentConfluence == "NACOS Listener":
-                        component = "nacos"
-                    elif componentConfluence == "LeftNav Signage":
-                        component = "exm-client-leftnav2-signage"
-                    elif componentConfluence == "Exm-v2-plugin-location (Location Services Plugin)":
-                        component = "location"
-                    elif componentConfluence == "Mute Daemon":
-                        component = "mutedaemon"
-                    elif componentConfluence == "EXM Diagnostic Application":
-                        component = "exm-diagnostic-app"
-                    elif componentConfluence == "EXM Diagnostic plugin":
-                        component = "diagnostics"
-                    elif componentConfluence == "EXM Notification plugin":
-                        component = "notification-service"
-                    elif componentConfluence == "Mute Status Service":
-                        component = "mute"
-                    elif componentConfluence == "DB":
-                        component = "db-upgrade-dir"
-                    elif componentConfluence == "UIEWowzaLib":
-                        component = "UIEWowzaLib"
-                    else:
-                        continue
-
-
-                    log( componentConfluence + ' -> ' + url + '\n')
-
-                    path = os.path.join(newReleaseDir,component)
-                    if os.path.isdir(path) != True:
-                        os.makedirs(path)
-                                
-                    with open(url_file_path, 'a+') as f:
-                        f.write(componentConfluence + " > " + url + "\n")
-
-                    target_path = releasesPath + releaseName + '/' + component + '/' + url.split("/")[-1]
-
-                    if (action == "Deploy" and transfer_flag == "true") or action == "ScheduleDeploy":
-
-                        log("\nDownloading " + component +" ...\n")
-
-                        response = requests.get(url, auth = HTTPBasicAuth(username,password), stream=True)
-                        if response.status_code == 200:
-                            with open(target_path, 'wb') as f:
-                                f.write(response.raw.read())
-                                log("File successfully stored at : " + target_path + "\n")
-                        else:
-                            log("Couldn't reach the provided url with response : "+ str(response.status_code) + "\n")
-                            continue
-
-                    with open(builds_file_path, 'a+') as f:
-                        f.write(component + " : " + str(component_build_mapping[componentConfluence]) + " : " + str(component_md5sum_mapping[componentConfluence]) + "\n")
-    else:
-        log("\n\nThere is no ship currently scheduled for deployment.\n\n")
+                        with open(builds_file_path, 'a+') as f:
+                            f.write(component + " : " + str(component_build_mapping[componentConfluence]) + " : " + str(component_md5sum_mapping[componentConfluence]) + "\n")
+        else:
+            log("\n\nThere is no ship currently scheduled for deployment.\n\n")
