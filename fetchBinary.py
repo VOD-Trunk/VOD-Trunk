@@ -29,6 +29,10 @@ userAllowedOperation = sys.argv[16]
 task = sys.argv[17]
 
 log_path = 'logs'
+
+if os.path.isdir(workspace + '/logs') == True:
+    shutil.rmtree((workspace + '/logs')
+
 path = os.path.join(workspace,log_path)
 if os.path.isdir(path) != True:
    os.makedirs(path)
@@ -64,9 +68,9 @@ with open(logfile_path, 'w+') as logfile:
             environment = deploymentEnv
         
         if environment in userAccessEnv:
-            log("User " + loginUser + " is allowed to perform $Activity operation in " + environment)
+            log("User " + loginUser + " is allowed to perform " + action + " operation in " + environment)
         else:
-            log("ERROR : User " + loginUser + " is not allowed to perform $Activity operation in " + environment + " environment of xiCMS using Jenkins pipeline.")
+            log("ERROR : User " + loginUser + " is not allowed to perform " + action + " operation in " + environment + " environment of xiCMS using Jenkins pipeline.")
 
     # end of function checkUserAccessRights()
     
