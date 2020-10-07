@@ -46,15 +46,15 @@ with open(logfile_path, 'w+') as logfile:
         if loginUser in allowedUsers:
             log("User exists, checking Allowed Operations...")
         else:
-            log(f"ERROR : User {loginUser} does not exist in the list of users able to perform any operation on the xiCMS Jenkins Pipeline")
+            log("ERROR : User " + loginUser + " does not exist in the list of users able to perform any operation on the xiCMS Jenkins Pipeline")
 
-        log(f"Allowed Operations for user {loginUser} are : {userAllowedOperation}")
-        log(f"Allowed access environments for user {loginUser} are : {userAccessEnv}")
+        log("Allowed Operations for user " + loginUser + " are : " + userAllowedOperation)
+        log("Allowed access environments for user " + loginUser + " are : " + userAccessEnv)
 
         if action in userAllowedOperation:
-            log(f"User has access rights to perform {action} operation.")
+            log("User has access rights to perform " + action + " operation.")
         else:
-            log(f"ERROR : User {loginUser} is not allowed to perform {action} on the xiCMS Jenkins Pipeline")
+            log("ERROR : User " + loginUser + " is not allowed to perform " + action + " on the xiCMS Jenkins Pipeline")
 
         promotingFromEnv  = promotingFrom.split('_')
 
@@ -62,9 +62,9 @@ with open(logfile_path, 'w+') as logfile:
             deploymentEnv = promotingFromEnv[0]
         
         if deploymentEnv in userAccessEnv:
-            log(f"User {loginUser} is allowed to perform $Activity operation in {deploymentEnv}")
+            log("User " + loginUser + " is allowed to perform $Activity operation in " + deploymentEnv)
         else:
-            log(f"ERROR : User {loginUser} is not allowed to perform $Activity operation in {deploymentEnv} environment of xiCMS using Jenkins pipeline.")
+            log("ERROR : User " + loginUser + " is not allowed to perform $Activity operation in " + deploymentEnv + " environment of xiCMS using Jenkins pipeline.")
 
     # end of function checkUserAccessRights()
     
