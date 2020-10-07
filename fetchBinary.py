@@ -100,27 +100,29 @@ with open(logfile_path, 'w+') as logfile:
         columnCount=0
         
         TAG_RE = re.compile(r'<[^>]+>')
-        for x in subTable:
+        # for x in subTable:
 
-            columnValue=TAG_RE.sub('  ', x)
-            columnValue = columnValue.strip()
-            
-            if recordCount == 0:
-                firstRowColumnNames = re.split(r'\s{2,}', columnValue)
-                if len(firstRowColumnNames) != 7:    #count of columns headers should be 7 fixed.
-                    log("\n\nERROR : The table structure on confluence page is not correct. There should be exactly seven column headers and in this order : Component, Revision Number, Build #, TAG, Artifact, md5sum, Modified over baseline \n\n")
-                    exit(1)
+        columnValue=TAG_RE.sub('  ', subTable[0])
+        columnValue = columnValue.strip()
 
-                tableHeaders=["Component","Revision Number","Build #","TAG","Artifact","md5sum","Modified over baseline"]
-                #The column headers should only be the ones present in tableHeaders list and in that specific order.
-                for i in range(7):
-                    if firstRowColumnNames[i] != tableHeaders[i]:
-                        log("\n\nERROR : The table structure on confluence page is not correct. The seven column headers should have names and order as : Component, Revision Number, Build #, TAG, Artifact, md5sum, Modified over baseline \n\n")
-                        exit(1)
-                    else:
-                        continue
+        log(str(columnValue))
+        
+        # if recordCount == 0:
+        firstRowColumnNames = re.split(r'\s{2,}', columnValue)
+        if len(firstRowColumnNames) != 7:    #count of columns headers should be 7 fixed.
+            log("\n\nERROR : The table structure on confluence page is not correct. There should be exactly seven column headers and in this order : Component, Revision Number, Build #, TAG, Artifact, md5sum, Modified over baseline \n\n")
+            exit(1)
 
-            recordCount= recordCount + 1
+        tableHeaders=["Component","Revision Number","Build #","TAG","Artifact","md5sum","Modified over baseline"]
+        #The column headers should only be the ones present in tableHeaders list and in that specific order.
+        for i in range(7):
+            if firstRowColumnNames[i] != tableHeaders[i]:
+                log("\n\nERROR : The table structure on confluence page is not correct. The seven column headers should have names and order as : Component, Revision Number, Build #, TAG, Artifact, md5sum, Modified over baseline \n\n")
+                exit(1)
+            else:
+                continue
+
+        # recordCount= recordCount + 1
         return("Confluence page validated successfully.")
 
 
