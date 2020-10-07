@@ -36,7 +36,8 @@ if os.path.isdir(path) != True:
 else:
     filename = task + 'Stage.log'
     file_path = os.path.join(path, filename)
-    os.unlink(file_path)
+    if os.path.isfile(file_path):
+        os.unlink(file_path)
 
 
 logfile_path = workspace + '/logs/' + task + 'Stage.log'
