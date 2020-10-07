@@ -60,7 +60,7 @@ with open(logfile_path, 'w+') as logfile:
 
         if action == "Promote":
             environment = promotingFromEnv[0]
-        else
+        else:
             environment = deploymentEnv
         
         if environment in userAccessEnv:
