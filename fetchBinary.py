@@ -229,7 +229,10 @@ with open(logfile_path, 'w+') as logfile:
         for x in subTable:
 
             columnValue=TAG_RE.sub('', x)
-            columnValue = columnValue.strip()              
+            columnValue = columnValue.strip()
+
+            if recordCount < 7:
+                continue
 
             if recordCount%7 == 0:  #Ignore first record
                     applicationName.append(columnValue)
@@ -283,15 +286,18 @@ with open(logfile_path, 'w+') as logfile:
             columnValue=TAG_RE.sub('', x)
             columnValue = columnValue.strip()
 
+            if recordCount < 5:
+                continue
+
             if recordCount%5 == 0:
                 shipName.append(columnValue)
             elif recordCount%5== 1:
                 releasePage.append(columnValue)
-            elif recordCount%5== 2 and columnValue:
+            elif recordCount%5== 2:
                 releaseVersion.append(columnValue)
-            elif recordCount%5== 3 and columnValue:
+            elif recordCount%5== 3:
                 deploymentDate.append(columnValue)
-            elif recordCount%5== 4 and columnValue:
+            elif recordCount%5== 4:
                 deploymentStatus.append(columnValue)
 
 
