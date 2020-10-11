@@ -232,19 +232,20 @@ with open(logfile_path, 'w+') as logfile:
             columnValue = columnValue.strip()
 
             if recordCount < 7:
+                recordCount= recordCount + 1
                 continue
             elif recordCount%7 == 0:  #Ignore first record
-                    applicationName.append(columnValue)
+                applicationName.append(columnValue)
             elif recordCount%7== 1:
-                    applicationVersion.append(columnValue)
+                applicationVersion.append(columnValue)
             elif recordCount%7== 2:
-                    applicationBuild.append(columnValue)
+                applicationBuild.append(columnValue)
             elif recordCount%7== 4:
-                    artifactoryUrl.append(columnValue)
+                artifactoryUrl.append(columnValue)
             elif recordCount%7== 5:
-                    confluence_md5sum.append(columnValue)
+                confluence_md5sum.append(columnValue)
             elif recordCount%7== 6:
-                    yesNo.append(columnValue)
+                yesNo.append(columnValue)
 
 
             recordCount= recordCount + 1
@@ -286,6 +287,7 @@ with open(logfile_path, 'w+') as logfile:
             columnValue = columnValue.strip()
 
             if recordCount < 5:
+                recordCount= recordCount + 1
                 continue
             elif recordCount%5 == 0:
                 shipName.append(columnValue)
