@@ -229,9 +229,7 @@ with open(logfile_path, 'w+') as logfile:
         for x in subTable:
 
             columnValue=TAG_RE.sub('', x)
-            columnValue = columnValue.strip()  
-
-            log("\n\n recordCount : " + str(recordCount) + ", columnValue : " + str(columnValue) + "\n\n")              
+            columnValue = columnValue.strip()              
 
             if recordCount%7 == 0:  #Ignore first record
                     applicationName.append(columnValue)
@@ -284,8 +282,6 @@ with open(logfile_path, 'w+') as logfile:
 
             columnValue=TAG_RE.sub('', x)
             columnValue = columnValue.strip()
-
-            log("\n\n recordCount : " + str(recordCount) + ", columnValue : " + str(columnValue) + "\n\n")
 
             if recordCount%5 == 0:
                 shipName.append(columnValue)
@@ -350,7 +346,7 @@ with open(logfile_path, 'w+') as logfile:
                 verificationResult= verifyConfluencePage(contentID,headers,"MW")
                 log(verificationResult)
                 shipNames,releasePage,releaseVersion,deploymentDate,deploymentStatus =GetScheduleContentInformation(contentID,headers)
-                
+                log(str(shipNames))
                 for rls in releaseVersion:
 
                     tmp_abs_path = os.path.join(workspace,'tmp')
@@ -449,7 +445,8 @@ with open(logfile_path, 'w+') as logfile:
                         log(verificationResult)
 
                         applicationName,applicationVersion,applicationBuild,artifactoryUrl,confluence_md5sum,yesNo =GetContentInformation(contentID,headers)
-
+                    
+                    log(str(applicationName))
                     if components == "All":
                         partial_deploy = 2
                     else:
