@@ -283,7 +283,7 @@ with open(logfile_path, 'w+') as logfile:
             columnValue=TAG_RE.sub('', x)
             columnValue = columnValue.strip()
 
-            log("\n\n recordCount : " + recordCount + ", columnValue : " + columnValue + "\n\n")
+            log("\n\n recordCount : " + str(recordCount) + ", columnValue : " + str(columnValue) + "\n\n")
 
             if recordCount%5 == 0 and columnValue != "Ship-Name":  
                 shipName.append(columnValue)
