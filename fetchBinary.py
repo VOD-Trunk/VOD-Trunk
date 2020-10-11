@@ -233,8 +233,7 @@ with open(logfile_path, 'w+') as logfile:
 
             if recordCount < 7:
                 continue
-
-            if recordCount%7 == 0:  #Ignore first record
+            elif recordCount%7 == 0:  #Ignore first record
                     applicationName.append(columnValue)
             elif recordCount%7== 1:
                     applicationVersion.append(columnValue)
@@ -288,8 +287,7 @@ with open(logfile_path, 'w+') as logfile:
 
             if recordCount < 5:
                 continue
-
-            if recordCount%5 == 0:
+            elif recordCount%5 == 0:
                 shipName.append(columnValue)
             elif recordCount%5== 1:
                 releasePage.append(columnValue)
