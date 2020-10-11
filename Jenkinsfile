@@ -1,4 +1,3 @@
-//Last modified : 9/01/2020
 node {
 
     try {

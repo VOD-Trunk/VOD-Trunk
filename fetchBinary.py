@@ -1,5 +1,3 @@
-#Last modified : 10/07/2020
-
 import sys
 import requests
 from requests.auth import HTTPBasicAuth
@@ -75,6 +73,20 @@ with open(logfile_path, 'w+') as logfile:
             log("ERROR : User " + loginUser + " is not allowed to perform " + action + " operation in " + environment + " environment of xiCMS using Jenkins pipeline.")
 
     # end of function checkUserAccessRights()
+
+    def checkArtifactsProperty():
+
+        PARAMS=(('properties',QA_PROMOTION_TIME),)
+
+        with open(workspace + '/tmp/' + relName + '/urls.txt') as f:
+            artifactRelPaths = f.readlines()
+
+        for i in artifactRelPaths:
+            url_part = artifactRelPaths[i].split('>')[0].strip()
+
+            url = "http://artifactory.tools.ocean.com/artifactory/api/storage/" + url_part
+
+            log(url)
     
     def CheckConfluencePage(pageName):
         '''This function checks if the confluence page with pageName exists or not. If exists it returns the contentID.'''
@@ -117,7 +129,7 @@ with open(logfile_path, 'w+') as logfile:
 
     # end of function //CheckConfluencePage
 
-    def verifyConfluenceTable(ContentId,headers,pageType):
+    def verifyConfluencePage(ContentId,headers,pageType):
         '''This function is used to validate all the column header names on the release confluence page.'''
 
         url = "https://carnival.atlassian.net/wiki/rest/api/content/" +str(ContentId) + "?expand=body.storage"
@@ -180,7 +192,7 @@ with open(logfile_path, 'w+') as logfile:
 
         return("Confluence page validated successfully.")
 
-    # end of function //verifyConfluenceTable
+    # end of function //verifyConfluencePage
 
 
 
@@ -270,6 +282,9 @@ with open(logfile_path, 'w+') as logfile:
 
             columnValue=TAG_RE.sub('', x)
             columnValue = columnValue.strip()
+
+            log("\n\n recordCount : " + recordCount ", columnValue : " + columnValue + "\n\n")
+
             if recordCount%5 == 0 and columnValue != "Ship-Name":  
                 shipName.append(columnValue)
             elif recordCount%5== 1 and columnValue != "Release Path":
@@ -330,7 +345,7 @@ with open(logfile_path, 'w+') as logfile:
             if contentID == 0:
                 log(errorValue)
             else:
-                verificationResult= verifyConfluenceTable(contentID,headers,"MW")
+                verificationResult= verifyConfluencePage(contentID,headers,"MW")
                 log(verificationResult)
                 shipNames,releasePage,releaseVersion,deploymentDate,deploymentStatus =GetScheduleContentInformation(contentID,headers)
                 
@@ -428,7 +443,7 @@ with open(logfile_path, 'w+') as logfile:
                     if contentID ==0:
                         log(errorValue)
                     else:
-                        verificationResult= verifyConfluenceTable(contentID,headers,"Release")
+                        verificationResult= verifyConfluencePage(contentID,headers,"Release")
                         log(verificationResult)
 
                         applicationName,applicationVersion,applicationBuild,artifactoryUrl,confluence_md5sum,yesNo =GetContentInformation(contentID,headers)

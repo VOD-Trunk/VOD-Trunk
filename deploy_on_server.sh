@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#Last modified : 9/08/2020
-
 ts=`date +'%s'`
 logfile='/root/Releases/tmp/exm-deployment.log'
 new_release=$2
@@ -730,7 +728,6 @@ deploy_new_build() {
 		log "`ls -l $releases_path | grep current`"
 		log
 	fi
-
 
 	if [ "$component" == "mute" ]
 	then
