@@ -229,7 +229,9 @@ with open(logfile_path, 'w+') as logfile:
         for x in subTable:
 
             columnValue=TAG_RE.sub('', x)
-            columnValue = columnValue.strip()                
+            columnValue = columnValue.strip()  
+
+            log("\n\n recordCount : " + str(recordCount) + ", columnValue : " + str(columnValue) + "\n\n")              
 
             if recordCount%7 == 0:  #Ignore first record
                     applicationName.append(columnValue)
