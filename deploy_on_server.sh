@@ -2,13 +2,11 @@
 
 ts=`date +'%s'`
 logfile='/root/Releases/tmp/exm-deployment.log'
+action=$1
 new_release=$2
 component_choice=$3
 abort_on_fail=$4
-action=$1
-
 server=$5
-
 transfer_flag=$6
 
 declare -A statusArray
@@ -250,10 +248,7 @@ restart_services() {
 		log "Stopping tomcat7 service for $component..."
 		pkill -9 -u tomcat java #Stop_Tomcat_Service
 		sleep 5
-
-		log
 		log "================================================================================================================"
-		log	
 	fi
 
 	if  ([ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]) && [ "$start_stop" == "start" ]
@@ -702,9 +697,18 @@ deploy_new_build() {
 
 	if [ "$component" == "UIEWowzaLib" ]
 	then
-		ssh media01 "chmod 777 /home/wowza/media /home/wowza/media/v2/wowza /home/wowza/media/v2/wowza/running.json"
-		monit stop 
-		ssh media01 "echo 'y' | ./xevo-wowza-addon.sh UIEWowzaLib-1.0.2.5.jar"
+		# new_build=`cd /root/Releases/$new_release/$component/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
+		log "Copying $component contents to media01..."
+		scp -r /root/Releases/$new_release/$component media01:/root/$component
+		log "Changing permissions on required files..."
+		ssh media01 "chmod 777 /root/UIEWowzaLib/xevo-wowza-addon.sh /home/wowza/media /home/wowza/media/v2/wowza /home/wowza/media/v2/wowza/running.json"
+		log "Stopping WowzaStreamingEngine service..."
+		ssh media01 "monit stop WowzaStreamingEngine"
+		sleep 20
+		ssh media01 "new_build=`cd /root/UIEWowzaLib/ && find . -mindepth 1 -maxdepth 1 -type f -name "*.jar" -printf '%f\n'` && echo 'y' | ./xevo-wowza-addon.sh $new_build"
+		log "Starting WowzaStreamingEngine service..."
+		ssh media01 "monit start WowzaStreamingEngine"
+		sleep 20
 	fi
 
 
