@@ -287,15 +287,15 @@ with open(logfile_path, 'w+') as logfile:
 
             log("\n\n recordCount : " + str(recordCount) + ", columnValue : " + str(columnValue) + "\n\n")
 
-            if recordCount%5 == 0 and columnValue != "Ship-Name":  
+            if recordCount%5 == 0:
                 shipName.append(columnValue)
-            elif recordCount%5== 1 and columnValue != "Release Path":
+            elif recordCount%5== 1:
                 releasePage.append(columnValue)
-            elif recordCount%5== 2 and columnValue != "Release-Version":
+            elif recordCount%5== 2 and columnValue:
                 releaseVersion.append(columnValue)
-            elif recordCount%5== 3 and columnValue != "Date":
+            elif recordCount%5== 3 and columnValue:
                 deploymentDate.append(columnValue)
-            elif recordCount%5== 4 and columnValue != "Status":
+            elif recordCount%5== 4 and columnValue:
                 deploymentStatus.append(columnValue)
 
 
