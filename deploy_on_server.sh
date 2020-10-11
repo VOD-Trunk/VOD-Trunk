@@ -80,8 +80,8 @@ err() {
 }
 
 log(){
-    echo "$@\n" >&1 2>&1
-    echo "$@\n" >> ${logfile}
+    echo "$@" >&1 2>&1
+    echo "$@" >> ${logfile}
 }
 
 get_current_build() {

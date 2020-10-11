@@ -18,9 +18,9 @@ log(){
     then
         :
     else
-        echo "$@\n" >&1 2>&1
+        echo "$@" >&1 2>&1
     fi
-    echo "$@\n" >> $JenkinsWorkspace/logs/"${logfile}"
+    echo "$@" >> $JenkinsWorkspace/logs/"${logfile}"
 }
 
 if [ -f  $workspace/logs/"${logfile}" ]
