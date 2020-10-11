@@ -352,7 +352,6 @@ with open(logfile_path, 'w+') as logfile:
                 verificationResult= verifyConfluencePage(contentID,headers,"MW")
                 log(verificationResult)
                 shipNames,releasePage,releaseVersion,deploymentDate,deploymentStatus =GetScheduleContentInformation(contentID,headers)
-                log(str(shipNames))
                 for rls in releaseVersion:
 
                     tmp_abs_path = os.path.join(workspace,'tmp')
@@ -452,7 +451,6 @@ with open(logfile_path, 'w+') as logfile:
 
                         applicationName,applicationVersion,applicationBuild,artifactoryUrl,confluence_md5sum,yesNo =GetContentInformation(contentID,headers)
                     
-                    log(str(applicationName))
                     if components == "All":
                         partial_deploy = 2
                     else:
