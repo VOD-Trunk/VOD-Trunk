@@ -80,8 +80,8 @@ err() {
 }
 
 log(){
-    echo "$@" >&1 2>&1
-    echo "$@" >> ${logfile}
+    echo "$@\n" >&1 2>&1
+    echo "$@\n" >> ${logfile}
 }
 
 get_current_build() {
@@ -95,7 +95,6 @@ get_current_build() {
 			if [ ! -d /apps/exm-admin-tool/releases ]
 			then
 				log "Creating directory /apps/exm-admin-tool/releases as it was not present."
-				log
 				mkdir -p /apps/exm-admin-tool/releases
 			fi
 			current_build=`ls -la /apps/exm-admin-tool/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
@@ -107,7 +106,6 @@ get_current_build() {
 			if [ ! -d /apps/exm-client/releases ]
 			then
 				log "Creating directory /apps/exm-client/releases as it was not present."
-				log
 				mkdir -p /apps/exm-client/releases
 			fi
 			current_build=`ls -la /apps/exm-client/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
@@ -119,7 +117,6 @@ get_current_build() {
 			if [ ! -d /apps/clientmap/exm-precor-client/releases ]
 			then
 				log "Creating directory /apps/clientmap/exm-precor-client/releases as it was not present."
-				log
 				mkdir -p /apps/clientmap/exm-precor-client/releases
 			fi
 			current_build=`ls -la /apps/clientmap/exm-precor-client/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
@@ -131,7 +128,6 @@ get_current_build() {
 			if [ ! -d /apps/clientmap/exm-client-startup/releases ]
 			then
 				log "Creating directory /apps/clientmap/exm-client-startup/releases as it was not present."
-				log
 				mkdir -p /apps/clientmap/exm-client-startup/releases
 			fi
 			current_build=`ls -la /apps/clientmap/exm-client-startup/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
@@ -143,7 +139,6 @@ get_current_build() {
 			if [ ! -d /apps/clientmap/exm-client-leftnav2/releases ]
 			then
 				log "Creating directory /apps/clientmap/exm-client-leftnav2/releases as it was not present."
-				log
 				mkdir -p /apps/clientmap/exm-client-leftnav2/releases
 			fi
 			current_build=`ls -la /apps/clientmap/exm-client-leftnav2/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
@@ -155,7 +150,6 @@ get_current_build() {
 			if [ ! -d /apps/clientmap/exm-client-leftnav2-signage/releases ]
 			then
 				log "Creating directory /apps/clientmap/exm-client-leftnav2-signage/releases as it was not present."
-				log
 				mkdir -p /apps/clientmap/exm-client-leftnav2-signage/releases
 			fi
 			current_build=`ls -la /apps/clientmap/exm-client-leftnav2-signage/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
@@ -167,7 +161,6 @@ get_current_build() {
 			if [ ! -d /apps/exm-diagnostic-app/releases ]
 			then
 				log "Creating directory /apps/exm-diagnostic-app/releases as it was not present."
-				log
 				mkdir -p /apps/exm-diagnostic-app/releases
 			fi
 			current_build=`ls -la /apps/exm-diagnostic-app/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
@@ -179,7 +172,6 @@ get_current_build() {
 			if [ ! -d /apps/clientmap/exm-client-lite/releases ]
 			then
 				log "Creating directory /apps/clientmap/exm-client-lite/releases as it was not present."
-				log
 				mkdir -p /apps/clientmap/exm-client-lite/releases
 			fi
 			current_build=`ls -la /apps/clientmap/exm-client-lite/ | grep current | cut -d '>' -f 2 | sed 's/ //g'`
@@ -191,7 +183,6 @@ get_current_build() {
 			if [ ! -d /apps/mute/releases ]
 			then
 				log "Creating directory /apps/mute/releases as it was not present."
-				log
 				mkdir -p /apps/mute/releases
 			fi
 			current_build=`ls -la /apps/mute/current | grep "server.js" | cut -d '>' -f 2 | cut -d '/' -f 1-5| sed 's/ //g'`
@@ -227,7 +218,6 @@ get_current_build() {
 			if [ ! -d /usr/local/nacos/releases ]
 			then
 				log "Creating directory /usr/local/nacos/releases as it was not present."
-				log
 				mkdir -p /usr/local/nacos/releases
 			fi
 			current_build=`ls -la /usr/local/nacos/ | grep "nacos.daemon.jar " | cut -d '>' -f 2 | sed 's/ //g' | cut -d '/' -f 6`
@@ -239,7 +229,6 @@ get_current_build() {
 			if [ ! -d /usr/local/mutedaemon/releases ]
 			then
 				log "Creating directory /usr/local/mutedaemon/releases as it was not present."
-				log
 				mkdir -p /usr/local/mutedaemon/releases
 			fi
 			current_build=`ls -la /usr/local/mutedaemon/ | grep "mutedaemon.jar " | cut -d '>' -f 2 | sed 's/ //g' | cut -d '/' -f 6`
@@ -259,7 +248,6 @@ restart_services() {
 	if  ([ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]) && [ "$start_stop" == "stop" ]
 	then
 		log "Stopping tomcat7 service for $component..."
-		log
 		pkill -9 -u tomcat java #Stop_Tomcat_Service
 		sleep 5
 
@@ -271,7 +259,6 @@ restart_services() {
 	if  ([ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]) && [ "$start_stop" == "start" ]
 	then
 		log "Starting tomcat7 service for $component..."
-		log
 		service tomcat7 start #Start_Tomcat_Service
 		if [ "$component" == "notification-service" ]
 		then
@@ -288,45 +275,35 @@ restart_services() {
 			echo "tomcat7 failed to start"
 		fi	
 
-		log
-		log "================================================================================================================"
-		log	
+		log "================================================================================================================"	
 	fi
 	
 	if ([ "$component" == "nacos" ] || [ "$component" == "mutedaemon" ]) && [ "$start_stop" == "stop" ]
 	then
 		log "Checking if $component service is running on this server..."
-		log
 
 		isServiceRunning=`monit summary | grep $component | tr -s ' ' |  cut -d ' ' -f 3 | grep Running | wc -l`
 
 		if [ $isServiceRunning == 1 ]
 		then
 			log "Stopping $component service..."
-			log
 			monit stop $component
-			log
 			sleep 5
 		else
 			log "$component service doesn't need to be restarted on this server."
-			log
 		fi
-		log
 		log "================================================================================================================"
-		log
 	fi
 
 	if ([ "$component" == "nacos" ] || [ "$component" == "mutedaemon" ]) && [ "$start_stop" == "start" ]
 	then
 		log "Checking if the $component Service is stopped..."
-		log
 
 		isServiceRunning=`monit summary | grep $component | tr -s ' ' |  cut -d ' ' -f 3 | grep Running | wc -l`
 
 		if [ $isServiceRunning -eq 0 ]
 		then
 			log "Starting $component service..."
-			log
 			monit start $component
 			sleep 7
 			
@@ -335,19 +312,14 @@ restart_services() {
 			if [ $service_status -gt 1 ]
 			then
 				log "$component started successfully."
-				log
 			else
 				log "$component failed to start."
-				log
 			fi
 		else
 			log "$component service doesn't need to be restarted on this server."
-			log
 		fi
 
-		log
 		log "================================================================================================================"
-		log
 	fi
 }
 
@@ -365,10 +337,8 @@ deploy_new_build() {
 	if [ "$component" == "db-upgrade-dir" ]
 	then
 		log "Starting the DB upgrade"
-		log
         
         log "Taking DB backup"
-		log
 
 		if [ ! -d /root/Releases/$new_release/dbbackup ]
 		then
@@ -394,12 +364,10 @@ deploy_new_build() {
 				log "DB backed up successfully. Backup can be found at /root/Releases/$new_release/dbbackup/exm-backup.sql"
 			else
 				log "ERROR : DB backup failed!! Backup file is incomplete. Aborting build..."
-			    log
 			    exit 1
 			fi
 		else
 		    log "ERROR : DB backup failed!! Aborting build..."
-		    log
 		    exit 1
 		fi
 
@@ -410,15 +378,12 @@ deploy_new_build() {
 		if [ $? = 0 ]
 		then
 			log "DB Upgrade ZIP is present"
-			log
 		else
 			log "ERROR : DB Upgrade ZIP is missing"
-			log
 			exit 1
 		fi
 
 		log "Unzipping $file_name ..."
-		log
 
 		unzip -qq /root/Releases/$new_release/$component/$file_name -d /root/Releases/$new_release/$component/
 
@@ -435,7 +400,6 @@ deploy_new_build() {
 		if [ $count -eq 2 ]
 		then
 			log "Liquibase Update Successful"
-			log
 		else
 			log "ERROR : DB upgrade was unsuccessful. Please check logs at /root/update/$new_release/db-upgrade-dir/$new_build"
 			exit 1
@@ -446,7 +410,6 @@ deploy_new_build() {
 		if [ $? -eq 0 ]
 		then
 			log "Upgrade Finished."
-			log
 		else
 			log "ERROR : DB upgrade was unsuccessful. Please check logs at /root/update/$new_release/db-upgrade-dir/$new_build"
 			exit 1
@@ -460,14 +423,11 @@ deploy_new_build() {
 	then
 
 		log "Starting the deployment of $component"
-		log
 		log "Taking backup of the current build."
-		log
 
 		if [ ! -d $releases_path/Backup ]
 		then
 			log "Creating directory $releases_path/Backup as it was not present."
-			log
 			mkdir -p $releases_path/Backup
 		elif [ -d $releases_path/Backup ]
 		then
@@ -480,40 +440,33 @@ deploy_new_build() {
 		file_name=`ls /root/Releases/$new_release/$component/*.tar.gz | cut -d "/" -f 6`
 
 		log "Extracting tarball $file_name ..."
-		log
 
 		tar -xf /root/Releases/$new_release/$component/$file_name -C /root/Releases/$new_release/$component/
 		new_build=`cd /root/Releases/$new_release/$component/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
 
 		log "Copying $new_build to $releases_path/releases"
-		log
 
 		cp -r /root/Releases/$new_release/$component/$new_build $releases_path/releases/
 		link_present=`ls $releases_path | grep current | wc -l`
 		if [ $link_present == 1 ]
 		then 
 			log "Unlinking current symlink..."
-			log
 			log "current symlink is :"
 			log "`ls -l $releases_path | grep current`"
-			log
 
 			unlink $releases_path/current
 		fi
 
 		log "Creating new symlink current ..."
-		log
 
 		ln -s $releases_path/releases/$new_build $releases_path/current
 
 		log "New symlink is:"
 		log "`ls -l $releases_path | grep current`"
-		log
 
 		if [ "$component" == "exm-client-cruise" ]
 		then
 			log "Setting permission on new release folder for cruise client..."
-			log
 			chmod -R 777 $releases_path/releases/$new_build
 			chown -R apache:apache $releases_path/releases/$new_build
 
@@ -525,16 +478,12 @@ deploy_new_build() {
 	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursion" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]
 	then
 		log "Starting deployment of $component"
-		log
 		log "Copying $releases_path/$component.war and $releases_path/$component to /root/War_Backup/ for backup."
-		log
 		log "Taking backup of the current build."
-		log
 
 		if [ ! -d /root/War_Backup/$component ]
 		then
 			log "Creating directory /root/War_Backup/$component as it was not present."
-			log
 			mkdir -p /root/War_Backup/$component
 		elif [ -d /root/War_Backup/$component ]
 		then
@@ -548,7 +497,6 @@ deploy_new_build() {
 		rm -rf $releases_path/$component $releases_path/$component.war
 
 		log "Copying new war file to $releases_path/$component.war"
-		log
 
 		cp /root/Releases/$new_release/$component/* $releases_path/$component.war
 	fi
@@ -558,12 +506,10 @@ deploy_new_build() {
 	if  [ "$component"  == "nacos" ] || [ "$component"  == "mutedaemon" ]
 	then
 		log "Starting deployment of $component"
-		log
 				
 		if [ ! -d $releases_path/Backup ]
 		then
 			log "Creating directory $releases_path/Backup as it was not present."
-			log
 			mkdir -p $releases_path/Backup
 		elif [ -d $releases_path/Backup ]
 		then
@@ -576,27 +522,21 @@ deploy_new_build() {
 		if [ ! -d $releases_path/releases/$new_release ]
 		then
 			log "Creating directory $releases_path/releases/$new_release as it was not present."
-			log
 			mkdir -p $releases_path/releases/$new_release
 		elif [ -d $releases_path/releases/$new_release ]
 		then
-			log "Taking backup of the current build."
-			log
-	
+			log "Taking backup of the current build."	
 			cp -r $releases_path/releases/$current_build $releases_path/Backup/
 
 			for i in `ls $releases_path/releases/$new_release`
 			do
 				rm -rf $releases_path/releases/$new_release/$i
 			done
-		fi
-		
-		
+		fi		
 
 		new_build=`ls /root/Releases/$new_release/$component/*.jar | cut -d "/" -f 6`
 
 		log "Copying $new_build to $releases_path/$new_release"
-		log
 
 		if [ $component  == "nacos" ]
 		then
@@ -610,28 +550,20 @@ deploy_new_build() {
 		cp /root/Releases/$new_release/$component/$new_build $releases_path/releases/$new_release
 
 		log "Unzipping the $component jar file"
-		log
 
 		unzip -qq $releases_path/releases/$new_release/$new_build -d $releases_path/releases/$new_release
 
 		log "Current $jar_symlink symlink is :"
-		log
 		log "`ls -l $releases_path | grep "$jar_symlink "`"
-		log
 		log "Unlinking $jar_symlink symlink..."
-		log
 		unlink $releases_path/$jar_symlink
 		log "Creating new symlink $jar_symlink ..."
-		log
 
 		ln -s $releases_path/releases/$new_release/$new_build $releases_path/$jar_symlink
 
 		log "New $jar_symlink symlink is :"
-		log
 		log "`ls -l $releases_path | grep "$jar_symlink"`"
-		log
 		log "Copying properties.uie file to $releases_path/releases/$new_release"
-		log
 		if [ "$component" == "nacos" ]
 		then
 			cp $releases_path/Backup/$new_release/properties.uie $releases_path/releases/$new_release
@@ -640,14 +572,11 @@ deploy_new_build() {
 		fi
 
 		log "Current properties.uie symlink is :"
-		log
 		log "`ls -l $releases_path | grep "properties.uie"`"
-		log
 
 		unlink $releases_path/properties.uie
 
 		log "Creating new symlink properties.uie ..."
-		log
 
 		if [ "$component" == "nacos" ]
 		then
@@ -657,10 +586,7 @@ deploy_new_build() {
 		fi
 
 		log "New properties.uie symlink is :"
-		log
 		log "`ls -l $releases_path | grep "properties.uie"`"
-		log
-
 		
 	fi
 
@@ -668,14 +594,11 @@ deploy_new_build() {
 	if [ "$component" == "exm-precor-client" ]
 	then
 		log "Starting the deployment of $component"
-		log
 		log "Taking backup of the current build."
-		log
 
 		if [ ! -d $releases_path/Backup ]
 		then
 			log "Creating directory $releases_path/Backup as it was not present."
-			log
 			mkdir -p $releases_path/Backup
 		elif [ -d $releases_path/Backup ]
 		then
@@ -689,21 +612,18 @@ deploy_new_build() {
 		if [ ! -d $releases_path/releases ]
 		then
 			log "Creating directory $releases_path/releases as it was not present."
-			log
 			mkdir -p $releases_path/releases
 		fi
 
 		file_name=`ls /root/Releases/$new_release/$component/*.zip | cut -d "/" -f 6`
 
 		log "Unzipping $file_name ..."
-		log
 
 		unzip -qq /root/Releases/$new_release/$component/$file_name -d /root/Releases/$new_release/$component/
 
 		new_build=`cd /root/Releases/$new_release/$component/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
 
 		log "Copying $new_build to $releases_path/releases/"
-		log
 
 		cp -r /root/Releases/$new_release/$component/$new_build $releases_path/releases/
 
@@ -711,35 +631,27 @@ deploy_new_build() {
 		if [ $link_present == 1 ]
 		then 
 			log "Unlinking current symlink..."
-			log
 			log "current symlink is :"
 			log "`ls -l $releases_path | grep current`"
-			log
 
 			unlink $releases_path/current
 		fi
 
 		log "Creating new symlink current ..."
-		log
-
 		ln -s $releases_path/releases/$new_build $releases_path/current
 
 		log "New symlink is:"
 		log "`ls -l $releases_path | grep current`"
-		log
 	fi
 
 	if [ "$component" == "mute" ]
 	then
 		log "Starting the deployment of $component"
-		log
 		log "Taking backup of the current build."
-		log
 
 		if [ ! -d $releases_path/Backup ]
 		then
 			log "Creating directory $releases_path/Backup as it was not present."
-			log
 			mkdir -p $releases_path/Backup
 		elif [ -d $releases_path/Backup ]
 		then
@@ -753,46 +665,38 @@ deploy_new_build() {
 		if [ ! -d $releases_path/releases ]
 		then
 			log "Creating directory $releases_path/releases as it was not present."
-			log
 			mkdir -p $releases_path/releases
 		fi
 
 		file_name=`ls /root/Releases/$new_release/$component/*.zip | cut -d "/" -f 6`
 
 		log "Unzipping $file_name ..."
-		log
 
 		unzip -qq /root/Releases/$new_release/$component/$file_name -d /root/Releases/$new_release/$component/
 
 		new_build=`cd /root/Releases/$new_release/$component/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
 
 		log "Copying $new_build to $releases_path/releases/"
-		log
 
 		cp -r /root/Releases/$new_release/$component/$new_build $releases_path/releases/
-
 		
 		link_present=`ls $releases_path/current | grep "server.js" | wc -l`
 
 		if [ $link_present == 1 ]
 		then 
 			log "Unlinking current symlink..."
-			log
 			log "current symlink is :"
 			log "`ls -l $releases_path/current | grep 'server.js'`"
-			log
 
 			unlink $releases_path/current/server.js
 		fi
 
 		log "Creating new symlink current ..."
-		log
 
 		ln -s $releases_path/releases/$new_build/*.js $releases_path/current/server.js
 
 		log "New symlink is:"
 		log "`ls -l $releases_path/current | grep 'server.js'`"
-		log
 		
 	fi
 
@@ -818,23 +722,16 @@ rollback() {
 	then
 
 		log "Starting rollback of $component"
-		log
-
 		rollback_build=`cd $releases_path/Backup/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
 
 		log "Unlinking the current link..."
-		log
-
 		unlink $releases_path/current
 
 		log "Creating a new link using the Backup build..."
-		log
-
 		ln -s $releases_path/releases/$rollback_build $releases_path/current
 
 		log "New symlink is:"
 		log "`ls -l $releases_path | grep current`"
-		log
 		
 	fi
 
@@ -844,14 +741,11 @@ rollback() {
 	then
 
 		log "Starting rollback of $component"
-		log
 		log "Removing current build"
-		log
 
 		rm -rf $releases_path/$component*
 
 		log "Copying rollbcak build to $releases_path"
-		log
 		cp /root/War_Backup/$component/$component.war $releases_path/$component.war
 	fi
 
@@ -861,7 +755,6 @@ rollback() {
 	then
 
 		log "Starting rollback of $component"
-		log
 
 		if [ $component  == "nacos" ]
 		then
@@ -875,42 +768,29 @@ rollback() {
 		rollback_build=`cd /$releases_path/Backup/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
 
 		log "Unlinking the current $jar_symlink symlink..."
-		log
 
 		unlink $releases_path/$jar_symlink
 
 		log "Creating a new link using the Backup build..."
-		log
 
 		ln -s $releases_path/releases/$rollback_build/*.jar $releases_path/nacos.daemon.jar
 
 		log "New $jar_symlink symlink is :"
-		log
 		log "`ls -l $releases_path | grep "$jar_symlink"`"
-		log
-
-
 		log "Unlinking the current properties.uie symlink..."
-		log
-
 		unlink $releases_path/properties.uie
 
 		log "Creating a new link using the Backup build..."
-		log
 
 		ln -s $releases_path/releases/$rollback_build/*.uie $releases_path/properties.uie
 
 		log "New properties.uie symlink is :"
-		log
 		log "`ls -l $releases_path | grep "properties.uie"`"
-		log
-
 	fi
 
 	if  [ "$component"  == "mute" ]
 	then
 		log "Starting rollback of $component"
-		log
 
 		rollback_build=`cd /$releases_path/Backup/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
 
@@ -919,28 +799,22 @@ rollback() {
 		if [ $link_present == 1 ]
 		then 
 			log "Unlinking current symlink..."
-			log
 			log "current symlink is :"
 			log "`ls -l $releases_path/current | grep 'server.js'`"
-			log
 
 			unlink $releases_path/current/server.js
 		fi
 
 		log "Creating new symlink current ..."
-		log
-
 		ln -s $releases_path/releases/$rollback_build/*.js $releases_path/current/server.js
 
 		log "New symlink is:"
 		log "`ls -l $releases_path/current | grep 'server.js'`"
-		log
 	fi
 
 	if  [ "$component"  == "db-upgrade-dir" ]
 	then
 		log "Rollback logic not present for DB upgrade."
-		log
 	fi
 }
 
@@ -1012,13 +886,11 @@ verify() {
 		if (( PID_FILE_SIZE > SIZE ));
 		then
 			log "tomcat7 service has a PID."
-			log
 		else
 			services_status=2
 			if [ $abort_on_fail == "Abort" ]
 			then
 				log "ERROR : Aborting the deployment as tomcat was not restarted properly. Please check tomcat7 service. Thanks."
-				log
 				exit 1
 			fi
 
@@ -1034,7 +906,6 @@ verify() {
 			if [ $abort_on_fail == "Abort" ]
 			then
 				log "ERROR : Aborting mission during $component deployment as tomcat was not restarted properly. Please check tomcat7 service. Thanks."
-				log
 				exit 1
 			fi
 		fi
@@ -1049,13 +920,11 @@ verify() {
 		if (( PID_FILE_SIZE > SIZE ));
 		then
 			log "$component Service has a PID."
-			log
 		else
 			services_status=2
 			if [ $abort_on_fail == "Abort" ]
 			then
 				log "ERROR : Aborting mission during $component deployment as $component service was not restarted properly. Please check $component service. Thanks."
-				log
 				exit 1
 			fi
 
@@ -1066,13 +935,11 @@ verify() {
 		if [ $? -eq 0 ]
 		then
 			log "$component service is running"
-			log
 		else
 			services_status=2
 			if [ $abort_on_fail == "Abort" ]
 			then
 				log "ERROR : Aborting mission during $component deployment as $component service was not restarted properly. Please check $component service. Thanks."
-				log
 				exit 1
 			fi
 		fi
@@ -1096,20 +963,12 @@ verify() {
 	if [ $timestamp_status -eq 1 ] && [ $services_status -eq 1 ]
 	then
 		statusArray[$component]="Successful( Deployed Build Number : $timestamp_build, Build Number on Confluence :  $release_build )"
-		log
-		log
-		log
 		log "================================================================================================================"
 		log "The deployment/rollback of $component was successful."
 		log "================================================================================================================"
-		log
-		log
 		#echo "Successful( Version : $timestamp_release )"
 	else
 		statusArray[$component]="Failed( Deployed Build Number : $timestamp_build, Build Number on Confluence :  $release_build )"
-		log
-		log
-		log
 		log "================================================================================================================"
 		log "The deployment/rollback of $component has failed."
 		if [ $timestamp_status -eq 1 ]
@@ -1120,8 +979,6 @@ verify() {
 			log "The desired build of $component has not been deployed/rolled back. Please check the symlink at $releases_path."
 		fi
 		log "================================================================================================================"
-		log
-		log
 		#echo "Failed( Version : $timestamp_release )"
 	fi
 	echo $timestamp_status
@@ -1175,14 +1032,11 @@ checkComponent() {
         :
     else
         log "ERROR : $component has not been transferred. Please transfer it from artifactory and then deploy."
-        log
         exit 1
     fi
 }
 
 #main script
-		log
-		log
 		log "================================`date`================================"
 
 if [[ $# -eq 0 ]]; then
@@ -1200,16 +1054,13 @@ then
 	if [ $isDbUpgradeReqd -eq 1 ]
 	then
 		component="db-upgrade-dir"
-		log
 		log "Starting DB upgrade of release $new_release"
-		log
 		confluence_md5sum=`grep "db-upgrade-dir" /root/Releases/tmp/component_build_mapping.txt | cut -d ':' -f 3 | awk '{$1=$1};1'`
 	    comp_md5sum=`cd /root/Releases/$new_release/$component && find -type f -exec md5sum "{}" + | cut -d' ' -f1`
 
 	    if [ "$confluence_md5sum" == "$comp_md5sum" ]
 	    then
 	      	log "md5sum is same on confluence and server. $component has been transferred to app01 successfully."
-	      	log
 	    else
 	    	log "ERROR : $component could not be transferred successfully. md5sum is not matching between confluence and server. Aborting Build !!"
 	        exit 1
@@ -1220,7 +1071,6 @@ then
 		
 		deploy_master $component $abort_on_fail deploy
 	else
-		log
 		log "DB upgrade is not required."
 	fi
 fi
@@ -1240,7 +1090,6 @@ case "${1}" in
 	        if [ "$confluence_md5sum" == "$comp_md5sum" ]
 	        then
 	          	log "md5sum is same on confluence and server. $component has been transferred to app01 successfully."
-	          	log
 	        else
 	        	log "ERROR : $component could not be transferred successfully. md5sum is not matching between confluence and server. Aborting Build !!"
 	            exit 1
@@ -1251,7 +1100,6 @@ case "${1}" in
 	  if [ $partial_flag == 2 ]
 	  then
 		  log "Checking if components are present..."
-	      log
 	  	  iter=1
           components=`cat /root/Releases/tmp/component_build_mapping.txt`
           IFS=$'\n'
@@ -1266,20 +1114,15 @@ case "${1}" in
           	component=`echo $row | cut -d' ' -f1`
 		  	if [ $iter == 1 ]
 			then
-			log
 			log "================================================================================================================"
 			log "Starting deployment of $new_release all components"
-			log
 			fi
 		  	deploy_master $component $abort_on_fail deploy
 			iter=$((iter+1))
 		  done
-		  log
-		  log 
 		  log "===============FINAL DEPLOYMENT STATUS( $server )==============="
 	  else
 	  	  log "Checking if components are present..."
-	      log
           for component in "${choice_list[@]}"
 	  	  do
           	if [ "$component" == "All" ]
@@ -1297,16 +1140,12 @@ case "${1}" in
             then
             	continue
             fi
-			log
 			log "================================================================================================================"
 			log "Starting deployment of $new_release selected components"
-			log
 			fi
 			deploy_master $component $abort_on_fail deploy
 			iter=$((iter+1))
 		  done
-		  log
-		  log
 		  log "===============FINAL DEPLOYMENT STATUS( $server )==============="
 	  fi
 	  ;;
@@ -1314,7 +1153,6 @@ case "${1}" in
 	  if [ $partial_flag == 2 ]
 	  then
 	  	  log "Checking which components to rollback..."
-	      log
 	  	  iter=1
           components=`cat /root/Releases/tmp/component_build_mapping.txt`
           IFS=$'\n'
@@ -1322,10 +1160,8 @@ case "${1}" in
 		  do
 		  	 if [ $iter == 1 ]
 				then
-					log
 					log "================================================================================================================"
 					log "Starting rollback of $new_release : All components"
-					log
 				fi
           	 component=`echo $row | cut -d' ' -f1`
           	 comp_status=$(verify $component)
@@ -1341,8 +1177,6 @@ case "${1}" in
 			 iter=$((iter+1))
 			 
 		  done
-		  log
-		  log
 		  log "===============FINAL ROLLBACK STATUS( $server )==============="
 	  else
 	  	  iter=1
@@ -1354,10 +1188,8 @@ case "${1}" in
                 then
                     continue
                 fi
-			  	log
 				log "================================================================================================================"
 				log "Starting rollback of $new_release : Selected components"
-				log
 			  fi
 			  
 			  comp_status=$(verify $component | cut -d ' ' -f1)
@@ -1371,8 +1203,6 @@ case "${1}" in
 			  fi
 			  iter=$((iter+1))
 		  done
-		  log
-		  log
 		  log "===============FINAL ROLLBACK STATUS( $server )==============="
 	  fi
 	  ;;
@@ -1392,7 +1222,6 @@ case "${1}" in
 		        if [ "$confluence_md5sum" == "$comp_md5sum" ]
 		        then
 		          	log "md5sum is same on confluence and server. $component has been transferred to app01 successfully."
-		          	log
 		          	
 			    else
 		        	log "ERROR : $component could not be transferred properly. md5sum is not matching between confluence and server. Aborting Build !!"
@@ -1400,18 +1229,13 @@ case "${1}" in
 		        fi
 		      done
 
-		      log
 		      log "Transferring artifacts to app02."
-		      log
 		      { #try
 		      	ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi' && scp -r /root/Releases/$new_release /root/Releases/tmp  app02:/root/Releases
 		      } || { # catch
-		      			log
 					    log "Could not connect to app02 server."
-					    log
 			  }
 		  else
-		  	  log
 		  	  log "ERROR : Aborting build. Files have not been transferred."
 		  	  exit 1
 		  fi	
@@ -1424,29 +1248,20 @@ case "${1}" in
 	  ;;
 esac
 
-log
-log
 log "================================================================"
-log
 for key in ${!statusArray[@]};
 do
 	log "${key} : ${statusArray[${key}]}"
-    log
 	log "================================================================"
-    log
 done
 
 if [ "$server" == "app01" ] && [ "$transfer_flag" == "true" ] && [ "$action" == "deploy" ]
 then
-	log
 	log "Transferring artifacts to app02."
-	log
 	{ #try
 	ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
 	scp -r /root/Releases/$new_release /root/Releases/tmp  app02:/root/Releases
 	} || { # catch
-  			log
 		    log "Could not connect to app02 server."
-		    log
 	}
 fi
