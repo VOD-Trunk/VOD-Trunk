@@ -1275,6 +1275,8 @@ do
 	log "================================================================"
 done
 
+log "server : $server, transfer_flag : $transfer_flag, action : $action"
+
 if [ "$server" == "app01" ] && [ "$transfer_flag" == "true" ] && [ "$action" == "-d" ]
 then
 	log "Transferring artifacts to app02."
