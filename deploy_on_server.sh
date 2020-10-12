@@ -707,15 +707,15 @@ deploy_new_build() {
 			ssh $Mserver "chmod 777 /root/UIEWowzaLib/xevo-wowza-addon.sh /home/wowza/media /home/wowza/media/v2/wowza /home/wowza/media/v2/wowza/running.json"
 			
 			log "Stopping WowzaStreamingEngine service on $Mserver..."
-			ssh $Mserver "service WowzaStreamingEngine stop"
-			sleep 20
+			#ssh $Mserver "service WowzaStreamingEngine stop"
+			#sleep 20
 			
 			log "Executing script xevo-wowza-addon.sh on $Mserver"
 			ssh $Mserver "cd /root/UIEWowzaLib/ && echo 'y' | ./xevo-wowza-addon.sh *.jar"
 			
 			log "Starting WowzaStreamingEngine service on $Mserver..."
-			ssh $Mserver "service WowzaStreamingEngine start"
-			sleep 20
+			#ssh $Mserver "service WowzaStreamingEngine start"
+			#sleep 20
 		done
 	else
 		log "UIEWowzaLib has already been deployed on media servers in the previous run from app01."
