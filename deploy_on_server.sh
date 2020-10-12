@@ -841,13 +841,13 @@ verify() {
 	releases_path=$2
 	current_build=$3
 	abort_on_fail=$4
-	action=$5
+	activity=$5
 	services_status=1
 
 	if  [ "$component" == "exm-admin-tool" ] || [ "$component" == "exm-client-cruise" ] || [ "$component" == "exm-client-startup" ] || [ "$component" == "exm-client-leftnav2" ] || [ "$component" == "exm-client-leftnav2-signage" ] || [ "$component" == "exm-client-lite" ] || [ "$component" == "exm-diagnostic-app" ] || [ "$component" == "exm-precor-client" ]
 	then
 		timestamp_build=`cat $current_build/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
-		if [ "$action" == "deploy" ]
+		if [ "$activity" == "deploy" ]
 		then
 			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep -w "$component " | cut -d ":" -f 2 | sed 's/ //g'`
 		else
@@ -860,7 +860,7 @@ verify() {
 	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursion" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]
 	then
 		timestamp_build=`cat $releases_path/$component/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
-		if [ "$action" == "deploy" ]
+		if [ "$activity" == "deploy" ]
 		then
 			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep -w "$component " | cut -d ":" -f 2 | sed 's/ //g'`
 		else
@@ -871,7 +871,7 @@ verify() {
 	if [ "$component" == "mute" ]
 	then
 		timestamp_build=`cat $current_build/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
-		if [ "$action" == "deploy" ]
+		if [ "$activity" == "deploy" ]
 		then
 			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep -w "$component " | cut -d ":" -f 2 | sed 's/ //g'`
 		else
@@ -883,7 +883,7 @@ verify() {
 	if [ "$component" == "nacos" ] || [ "$component"  == "mutedaemon" ]
 	then
 		timestamp_build=`cat $releases_path/releases/$new_release/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
-		if [ "$action" == "deploy" ]
+		if [ "$activity" == "deploy" ]
 		then
 			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep -w "$component " | cut -d ":" -f 2 | sed 's/ //g'`
 		else
@@ -1033,7 +1033,7 @@ deploy_master() {
 	if [ "$component" != "db-upgrade-dir" ]
 	then
 		current_build=$(get_current_build $component | cut -d ":" -f 1)
-		verify $component $releases_path $current_build $abort_on_fail $action
+		verify $component $releases_path $current_build $abort_on_fail $activity
 	fi
 }
 
