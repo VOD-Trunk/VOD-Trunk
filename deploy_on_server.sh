@@ -711,7 +711,7 @@ deploy_new_build() {
 			#sleep 20
 			
 			log "Executing script xevo-wowza-addon.sh on $Mserver"
-			ssh $Mserver "cd /root/UIEWowzaLib/ && echo 'y' | ./xevo-wowza-addon.sh *.jar > /dev/null"
+			ssh $Mserver "mv /usr/local/WowzaStreamingEngine/lib/UIEWowzaLib.jar /root/Wowza_backup && cp /root/UIEWowzaLib/*.jar /usr/local/WowzaStreamingEngine/lib/UIEWowzaLib.jar"
 			
 			log "Starting WowzaStreamingEngine service on $Mserver..."
 			#ssh $Mserver "service WowzaStreamingEngine start"

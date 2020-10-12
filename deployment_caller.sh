@@ -40,10 +40,6 @@ then
     log "Transferring artifacts to the target server ( $env )"
     log
     sshpass -p $pass ssh  -o "StrictHostKeyChecking=no"  root@$env 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
-    if [ -d $workspace/Releases/$release/UIEWowzaLib ]
-    then
-        cp $workspace/xevo-wowza-addon.sh $workspace/Releases/$release/UIEWowzaLib
-    fi
     sshpass -p $pass scp -o "StrictHostKeyChecking=no" -r $workspace/Releases/$release root@$env:/root/Releases
     sshpass -p $pass scp -o "StrictHostKeyChecking=no" -r $workspace/tmp/$release root@$env:/root/Releases/tmp
     sshpass -p $pass ssh -o "StrictHostKeyChecking=no" root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app01" "$transfer_flag" >> $workspace/logs/"${logfile}"
@@ -87,10 +83,6 @@ then
             log
             
             sshpass -p $pass ssh  -o "StrictHostKeyChecking=no"  root@$ipaddr 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
-            if [ -d $workspace/Releases/$relName/UIEWowzaLib ]
-            then
-                cp $workspace/xevo-wowza-addon.sh $workspace/Releases/$relName/UIEWowzaLib
-            fi
             sshpass -p $pass scp -o "StrictHostKeyChecking=no" -r $workspace/Releases/$relName root@$ipaddr:/root/Releases
             sshpass -p $pass scp -o "StrictHostKeyChecking=no" -r $workspace/tmp/$relName root@$ipaddr:/root/Releases/tmp
             sshpass -p $pass ssh -o "StrictHostKeyChecking=no" root@$ipaddr "bash -s" -- < $workspace/deploy_on_server.sh -t "$relName" "$component" "$abort_on_fail" "app01" "$transfer_flag" >> $workspace/logs/"${logfile}"
