@@ -974,33 +974,29 @@ verify() {
 			exit 1
 		fi
 	fi
-	if [ "$component" == "UIEWowzaLib" ]
+	
+	if [ $timestamp_status -eq 1 ] && [ $services_status -eq 1 ]
 	then
-		:
+		statusArray[$component]="Successful( Deployed Build Number : $timestamp_build, Build Number on Confluence :  $release_build )"
+		log "================================================================================================================"
+		log "The deployment/rollback of $component was successful."
+		log "================================================================================================================"
+		#echo "Successful( Version : $timestamp_release )"
 	else
-		if [ $timestamp_status -eq 1 ] && [ $services_status -eq 1 ]
+		statusArray[$component]="Failed( Deployed Build Number : $timestamp_build, Build Number on Confluence :  $release_build )"
+		log "================================================================================================================"
+		log "The deployment/rollback of $component has failed."
+		if [ $timestamp_status -eq 1 ]
 		then
-			statusArray[$component]="Successful( Deployed Build Number : $timestamp_build, Build Number on Confluence :  $release_build )"
-			log "================================================================================================================"
-			log "The deployment/rollback of $component was successful."
-			log "================================================================================================================"
-			#echo "Successful( Version : $timestamp_release )"
-		else
-			statusArray[$component]="Failed( Deployed Build Number : $timestamp_build, Build Number on Confluence :  $release_build )"
-			log "================================================================================================================"
-			log "The deployment/rollback of $component has failed."
-			if [ $timestamp_status -eq 1 ]
-			then
-				log "There was a problem in restarting the service associated with $component. Please check and re-deploy/rollback $component."
-			elif [ $services_status -eq 1 ]
-			then
-				log "The desired build of $component has not been deployed/rolled back. Please check the symlink at $releases_path."
-			fi
-			log "================================================================================================================"
-			#echo "Failed( Version : $timestamp_release )"
+			log "There was a problem in restarting the service associated with $component. Please check and re-deploy/rollback $component."
+		elif [ $services_status -eq 1 ]
+		then
+			log "The desired build of $component has not been deployed/rolled back. Please check the symlink at $releases_path."
 		fi
+		log "================================================================================================================"
+		#echo "Failed( Version : $timestamp_release )"
 	fi
-	echo $timestamp_status
+	#echo $timestamp_status
 }
 
 deploy_master() {
