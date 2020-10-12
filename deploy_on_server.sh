@@ -1002,7 +1002,7 @@ verify() {
 			#echo "Failed( Version : $timestamp_release )"
 		fi
 	fi
-	#echo $timestamp_status
+	echo $timestamp_status
 }
 
 deploy_master() {

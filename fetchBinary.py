@@ -27,10 +27,9 @@ userAllowedOperation = sys.argv[16]
 task = sys.argv[17]
 
 log_path = 'logs'
-
 path = os.path.join(workspace,log_path)
 if os.path.isdir(path) != True:
-   os.makedirs(path)
+    os.makedirs(path)
 else:
     filename = task + 'Stage.log'
     file_path = os.path.join(path, filename)
@@ -44,7 +43,7 @@ with open(logfile_path, 'w+') as logfile:
     def log(text):
         print text
         logfile.write(text + "\n")
-    
+
     def checkUserAccessRights():
 
         if loginUser in allowedUsers:
@@ -74,20 +73,6 @@ with open(logfile_path, 'w+') as logfile:
 
     # end of function checkUserAccessRights()
 
-    def checkArtifactsProperty():
-
-        PARAMS=(('properties',QA_PROMOTION_TIME),)
-
-        with open(workspace + '/tmp/' + relName + '/urls.txt') as f:
-            artifactRelPaths = f.readlines()
-
-        for i in artifactRelPaths:
-            url_part = artifactRelPaths[i].split('>')[0].strip()
-
-            url = "http://artifactory.tools.ocean.com/artifactory/api/storage/" + url_part
-
-            log(url)
-    
     def CheckConfluencePage(pageName):
         '''This function checks if the confluence page with pageName exists or not. If exists it returns the contentID.'''
 
@@ -141,10 +126,10 @@ with open(logfile_path, 'w+') as logfile:
         )
 
         if response.status_code == 200:
-            log ("Query successful:Confluence page exist")
+            log ("Query successful:Confluence page exists")
         else:
             log(response)
-            log ("ERROR : Confluence page not exist or other error::" + url)
+            log ("ERROR : Confluence page does not exist or other error::" + url)
             exit(1)
 
         searchString = response.text
@@ -161,14 +146,14 @@ with open(logfile_path, 'w+') as logfile:
         if pageType == "Release":
 
             if len(firstRowColumnNames) != 7:    #count of columns headers on release page should be 7 fixed.
-                log("\n\nERROR : The table structure on release confluence page is not correct. There should be exactly seven column headers and in this order : Component, Revision Number, Build #, TAG, Artifact, md5sum, Modified over baseline \n\n")
+                log("ERROR : The table structure on release confluence page is not correct. There should be exactly seven column headers and in this order : Component, Revision Number, Build #, TAG, Artifact, md5sum, Modified over baseline")
                 exit(1)
 
             tableHeaders=["Component","Revision Number","Build #","TAG","Artifact","md5sum","Modified over baseline"]
             #The column headers should only be the ones present in tableHeaders list and in that specific order.
             for i in range(7):
                 if firstRowColumnNames[i] != tableHeaders[i]:
-                    log("\n\nERROR : The table structure on release confluence page is not correct. The seven column headers should have names and order as : Component, Revision Number, Build #, TAG, Artifact, md5sum, Modified over baseline \n\n")
+                    log("ERROR : The table structure on release confluence page is not correct. The seven column headers should have names and order as : Component, Revision Number, Build #, TAG, Artifact, md5sum, Modified over baseline")
                     exit(1)
                 else:
                     continue
@@ -176,19 +161,19 @@ with open(logfile_path, 'w+') as logfile:
         elif pageType == "MW":
 
             if len(firstRowColumnNames) != 5:    #count of columns headers on MW page should be 5 fixed.
-                log("\n\nERROR : The table structure on MW confluence page is not correct. There should be exactly five column headers and in this order : Ship-Name, Release Path, Release-Version, Date, Status \n\n")
+                log("ERROR : The table structure on MW confluence page is not correct. There should be exactly five column headers and in this order : Ship-Name, Release Path, Release-Version, Date, Status")
                 exit(1)
 
             tableHeaders=["Ship-Name","Release Path","Release-Version","Date","Status"]
             #The column headers should only be the ones present in tableHeaders list and in that specific order.
             for i in range(5):
                 if firstRowColumnNames[i] != tableHeaders[i]:
-                    log("\n\nERROR : The table structure on MW confluence page is not correct. The five column headers should have names and order as : Ship-Name, Release Path, Release-Version, Date, Status \n\n")
+                    log("ERROR : The table structure on MW confluence page is not correct. The five column headers should have names and order as : Ship-Name, Release Path, Release-Version, Date, Status")
                     exit(1)
                 else:
                     continue
         else:
-            log("\n\nERROR : Wrong input for pageType.\n\n")
+            log("ERROR : Wrong input for pageType.")
 
         return("Confluence page validated successfully.")
 
@@ -208,10 +193,10 @@ with open(logfile_path, 'w+') as logfile:
         )
 
         if response.status_code == 200:
-            log ("Query successful:Confluence page exist")
+            log ("Query successful:Confluence page exists")
         else:
             log(response)
-            log ("ERROR : Confluence page not exist or other error::" + url)
+            log ("ERROR : Confluence page does not exist or other error::" + url)
             exit(1)
 
         searchString = response.text
@@ -230,6 +215,7 @@ with open(logfile_path, 'w+') as logfile:
 
             columnValue=TAG_RE.sub('', x)
             columnValue = columnValue.strip()
+
 
             if recordCount < 7:
                 recordCount= recordCount + 1
@@ -264,10 +250,10 @@ with open(logfile_path, 'w+') as logfile:
         )
 
         if response.status_code == 200:
-            log ("Query successful:Confluence page exist")
+            log ("Query successful:Confluence page exists")
         else:
             log(response)
-            log ("ERROR : Confluence page not exist or other error::" + url)
+            log ("ERROR : Confluence page does not exist or other error::" + url)
             exit(1)
 
         searchString = response.text
@@ -289,7 +275,7 @@ with open(logfile_path, 'w+') as logfile:
             if recordCount < 5:
                 recordCount= recordCount + 1
                 continue
-            elif recordCount%5 == 0:
+            if recordCount%5 == 0:  
                 shipName.append(columnValue)
             elif recordCount%5== 1:
                 releasePage.append(columnValue)
@@ -326,7 +312,7 @@ with open(logfile_path, 'w+') as logfile:
 
         currentDate = now.strftime("%m/%d/%Y")
 
-        partial_deploy = 2
+        deploymentType = "DEPLOY_ALL"
 
         scheduled_ships_path = workspace + "/tmp/scheduled_ships.txt"
         if os.path.exists(scheduled_ships_path):
@@ -352,6 +338,7 @@ with open(logfile_path, 'w+') as logfile:
                 verificationResult= verifyConfluencePage(contentID,headers,"MW")
                 log(verificationResult)
                 shipNames,releasePage,releaseVersion,deploymentDate,deploymentStatus =GetScheduleContentInformation(contentID,headers)
+                
                 for rls in releaseVersion:
 
                     tmp_abs_path = os.path.join(workspace,'tmp')
@@ -411,7 +398,7 @@ with open(logfile_path, 'w+') as logfile:
         if action == "Deploy" or action == "Promote" or action == "Rollback" or (action == "ScheduleDeploy" and len(shipNamesScheduled) != 0):
 
             if action == "Deploy" and deploymentEnv == "PRODUCTION" and targetShipName not in shipNamesScheduled:
-                log("\n\nERROR : The MW for deployment of " + relName + " on " + targetShipName + " is not scheduled for today.\n\n")
+                log("ERROR : The MW for deployment of " + relName + " on " + targetShipName + " is not scheduled for today.")
                 exit(1)
             else:
                 #Page ID to get the page details
@@ -450,14 +437,14 @@ with open(logfile_path, 'w+') as logfile:
                         log(verificationResult)
 
                         applicationName,applicationVersion,applicationBuild,artifactoryUrl,confluence_md5sum,yesNo =GetContentInformation(contentID,headers)
-                    
+
                     if components == "All":
-                        partial_deploy = 2
+                        deploymentType = "DEPLOY_ALL"
                     else:
                         component_list = components.split(",")
-                        partial_deploy = 1
+                        deploymentType = "DEPLOY_PARTIAL"
 
-                    if partial_deploy == 2:
+                    if deploymentType = "DEPLOY_ALL":
                         for index, element in enumerate(yesNo):
                                 if element == "Y":
                                     releaseComponents.append(applicationName[index])
@@ -485,7 +472,7 @@ with open(logfile_path, 'w+') as logfile:
                         log("ERROR : None of the selected components is a part of Release : " + releaseName)
                         exit(1)
 
-                    log("\n\nFollowing are the artifacts in: " + releaseName + "\n\n")
+                    log("Following are the artifacts in: " + releaseName)
                     for key, value in finalArtifactoryUrl.items():
 
                         if targetShipName in ["KODM","NADM","EUDM","WEDM","NSDM","NODM","VODM","ZUDM","OSDM","Ovation","Encore","Odyssey"]:
@@ -558,4 +545,4 @@ with open(logfile_path, 'w+') as logfile:
                         with open(builds_file_path, 'a+') as f:
                             f.write(component + " : " + str(component_build_mapping[componentConfluence]) + " : " + str(component_md5sum_mapping[componentConfluence]) + "\n")
         else:
-            log("\n\nThere is no ship currently scheduled for deployment.\n\n")
+            log("There is no ship currently scheduled for deployment.")
