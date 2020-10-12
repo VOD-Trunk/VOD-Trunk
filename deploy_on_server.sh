@@ -697,7 +697,8 @@ deploy_new_build() {
 
 	if [ "$component" == "UIEWowzaLib" ] && [ "$server" == "app01" ]
 	then
-		for Mserver in "media01 media02"
+		Mservers="media01 media02"
+		for Mserver in $Mservers
 		do
 			log "Copying $component contents to $Mserver..."
 			scp -r /root/Releases/$new_release/$component $Mserver:/root/$component
