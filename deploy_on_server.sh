@@ -711,7 +711,7 @@ deploy_new_build() {
 			#sleep 20
 			
 			log "Executing script xevo-wowza-addon.sh on $Mserver"
-			ssh $Mserver "cd /root/UIEWowzaLib/ && echo 'y' | ./xevo-wowza-addon.sh *.jar"
+			ssh $Mserver "cd /root/UIEWowzaLib/ && echo 'y' | ./xevo-wowza-addon.sh *.jar > /dev/null"
 			
 			log "Starting WowzaStreamingEngine service on $Mserver..."
 			#ssh $Mserver "service WowzaStreamingEngine start"
@@ -1277,5 +1277,14 @@ then
 	scp -r /root/Releases/$new_release /root/Releases/tmp  app02:/root/Releases
 	} || { # catch
 		    log "Could not connect to app02 server."
+	}
+elif [ "$server" == "app01" ] && [ "$transfer_flag" == "false" ] && [ "$action" == "deploy" ]
+then
+	log "Transferring tmp folder to app02."
+	{ #try
+	ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else mv /root/Releases/tmp /root/Releases/tmp_`date +%Y_%m_%d__%H_%M_%S`; fi'
+	scp -r /root/Releases/tmp  app02:/root/Releases/
+	} || { # catch
+		log "Could not connect to app02 server."
 	}
 fi
