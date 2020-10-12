@@ -695,30 +695,30 @@ deploy_new_build() {
 		
 	fi
 
-	if [ "$component" == "UIEWowzaLib" ] && [ "$server" == "app01" ]
+	if [ "$component" == "UIEWowzaLib" ] && ([ "$server" == "media01" ] || [ "$server" == "media02" ])
 	then
-		Mservers="media01 media02"
-		for Mserver in $Mservers
-		do
-			log "Copying $component contents to $Mserver..."
-			scp -r /root/Releases/$new_release/$component $Mserver:/root/$component
-
-			log "Changing permissions on required files on $Mserver..."
-			ssh $Mserver "chmod 777 /root/UIEWowzaLib/xevo-wowza-addon.sh /home/wowza/media /home/wowza/media/v2/wowza /home/wowza/media/v2/wowza/running.json"
-			
-			log "Stopping WowzaStreamingEngine service on $Mserver..."
-			#ssh $Mserver "service WowzaStreamingEngine stop"
-			#sleep 20
-			
-			log "Executing script xevo-wowza-addon.sh on $Mserver"
-			ssh $Mserver "if [ ! -d /root/Wowza_backup ]; then mkdir -p /root/Wowza_backup; fi && mv /usr/local/WowzaStreamingEngine/lib/UIEWowzaLib.jar /root/Wowza_backup && cp /root/UIEWowzaLib/*.jar /usr/local/WowzaStreamingEngine/lib/UIEWowzaLib.jar"
-			
-			log "Starting WowzaStreamingEngine service on $Mserver..."
-			#ssh $Mserver "service WowzaStreamingEngine start"
-			#sleep 20
-		done
-	else
-		log "UIEWowzaLib has already been deployed on media servers in the previous run from app01."
+		log "Changing permissions on required files on $Mserver..."
+ 		chmod 777 /home/wowza/media /home/wowza/media/v2/wowza /home/wowza/media/v2/wowza/running.json
+		
+		log "Stopping WowzaStreamingEngine service..."
+		#service WowzaStreamingEngine stop
+		#sleep 20
+		
+		log "Taking backup of existing UIEWowzaLib.jar to /root/Wowza_backup and replacing with new jar..."
+		
+		if [ ! -d /root/Wowza_backup ]
+		then 
+			mkdir -p /root/Wowza_backup
+		fi
+		
+		mv /usr/local/WowzaStreamingEngine/lib/UIEWowzaLib.jar /root/Wowza_backup
+		cp /root/UIEWowzaLib/*.jar /usr/local/WowzaStreamingEngine/lib/UIEWowzaLib.jar
+		
+		log "Starting WowzaStreamingEngine service..."
+		#service WowzaStreamingEngine start
+		#sleep 20
+	elif [ "$component" == "UIEWowzaLib" ] && ([ "$server" == "app01" ] || [ "$server" == "app02" ])
+		log "UIEWowzaLib is not supposed to b deployed on app servers."
 	fi
 
 
@@ -1246,7 +1246,12 @@ case "${1}" in
 		      log "Transferring artifacts to app02."
 		      { #try
 		      	ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi' && scp -r /root/Releases/$new_release /root/Releases/tmp  app02:/root/Releases
-		      } || { # catch
+		      	if [ -d /root/Releases/$new_release/UIEWowzaLib ]
+				then
+					scp -r /root/Releases/$new_release/UIEWowzaLib media01:/root/
+					scp -r /root/Releases/$new_release/UIEWowzaLib media02:/root/
+				fi
+			  } || { # catch
 					    log "Could not connect to app02 server."
 			  }
 		  else
@@ -1275,6 +1280,11 @@ then
 	{ #try
 	ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
 	scp -r /root/Releases/$new_release /root/Releases/tmp  app02:/root/Releases
+	if [ -d /root/Releases/$new_release/UIEWowzaLib ]
+	then
+		scp -r /root/Releases/$new_release/UIEWowzaLib media01:/root/
+		scp -r /root/Releases/$new_release/UIEWowzaLib media02:/root/
+	fi
 	} || { # catch
 		    log "Could not connect to app02 server."
 	}
