@@ -712,7 +712,7 @@ deploy_new_build() {
 		fi
 		
 		mv /usr/local/WowzaStreamingEngine/lib/UIEWowzaLib.jar /root/Wowza_backup
-		cp /root/UIEWowzaLib/*.jar /usr/local/WowzaStreamingEngine/lib/UIEWowzaLib.jar
+		cp /root/Releases/$new_release/UIEWowzaLib/*.jar /usr/local/WowzaStreamingEngine/lib/UIEWowzaLib.jar
 		
 		log "Starting WowzaStreamingEngine service..."
 		#service WowzaStreamingEngine start
