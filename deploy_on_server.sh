@@ -695,20 +695,29 @@ deploy_new_build() {
 		
 	fi
 
-	if [ "$component" == "UIEWowzaLib" ]
+	if [ "$component" == "UIEWowzaLib" ] && [ "$server" == "app01" ]
 	then
-		# new_build=`cd /root/Releases/$new_release/$component/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
-		log "Copying $component contents to media01..."
-		scp -r /root/Releases/$new_release/$component media01:/root/$component
-		log "Changing permissions on required files..."
-		ssh media01 "chmod 777 /root/UIEWowzaLib/xevo-wowza-addon.sh /home/wowza/media /home/wowza/media/v2/wowza /home/wowza/media/v2/wowza/running.json"
-		log "Stopping WowzaStreamingEngine service..."
-		ssh media01 "monit stop WowzaStreamingEngine"
-		sleep 20
-		ssh media01 "new_build=`cd /root/UIEWowzaLib/ && find . -mindepth 1 -maxdepth 1 -type f -name "*.jar" -printf '%f\n'` && echo 'y' | ./xevo-wowza-addon.sh $new_build"
-		log "Starting WowzaStreamingEngine service..."
-		ssh media01 "monit start WowzaStreamingEngine"
-		sleep 20
+		for Mserver in "media01 media02"
+		do
+			log "Copying $component contents to $Mserver..."
+			scp -r /root/Releases/$new_release/$component $Mserver:/root/$component
+
+			log "Changing permissions on required files on $Mserver..."
+			ssh $Mserver "chmod 777 /root/UIEWowzaLib/xevo-wowza-addon.sh /home/wowza/media /home/wowza/media/v2/wowza /home/wowza/media/v2/wowza/running.json"
+			
+			log "Stopping WowzaStreamingEngine service on $Mserver..."
+			ssh $Mserver "service WowzaStreamingEngine stop"
+			sleep 20
+			
+			log "Executing script xevo-wowza-addon.sh on $Mserver"
+			ssh $Mserver "cd /root/UIEWowzaLib/ && echo 'y' | ./xevo-wowza-addon.sh *.jar"
+			
+			log "Starting WowzaStreamingEngine service on $Mserver..."
+			ssh $Mserver "service WowzaStreamingEngine start"
+			sleep 20
+		done
+	else
+		log "UIEWowzaLib has already been deployed on media servers in the previous run from app01."
 	fi
 
 
