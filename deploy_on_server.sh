@@ -1005,7 +1005,7 @@ deploy_master() {
 
 	component=$1
 	abort_on_fail=$2
-	action=$3
+	activity=$3
 
 	if [ "$component" != "db-upgrade-dir" ]
 	then
@@ -1018,7 +1018,7 @@ deploy_master() {
 	then
 		restart_services $component stop
 	fi
-	if [ "$action" == "deploy" ]
+	if [ "$activity" == "deploy" ]
 	then
 		deploy_new_build $new_release $component $releases_path $current_build
 	else
@@ -1275,7 +1275,7 @@ do
 	log "================================================================"
 done
 
-if [ "$server" == "app01" ] && [ "$transfer_flag" == "true" ] && [ "$action" == "deploy" ]
+if [ "$server" == "app01" ] && [ "$transfer_flag" == "true" ] && [ "$action" == "-d" ]
 then
 	log "Transferring artifacts to app02."
 	{ #try
@@ -1291,7 +1291,7 @@ then
 	} || { # catch
 		    log "Could not connect to app02 server."
 	}
-elif [ "$server" == "app01" ] && [ "$transfer_flag" == "false" ] && [ "$action" == "deploy" ]
+elif [ "$server" == "app01" ] && [ "$transfer_flag" == "false" ] && [ "$action" == "-d" ]
 then
 	log "Transferring tmp folder to app02."
 	{ #try
