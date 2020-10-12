@@ -718,7 +718,8 @@ deploy_new_build() {
 		#service WowzaStreamingEngine start
 		#sleep 20
 	elif [ "$component" == "UIEWowzaLib" ] && ([ "$server" == "app01" ] || [ "$server" == "app02" ])
-		log "UIEWowzaLib is not supposed to b deployed on app servers."
+	then
+		log "UIEWowzaLib is not supposed to be deployed on app servers."
 	fi
 
 
