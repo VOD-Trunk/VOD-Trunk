@@ -974,27 +974,31 @@ verify() {
 			exit 1
 		fi
 	fi
-
-	if [ $timestamp_status -eq 1 ] && [ $services_status -eq 1 ]
+	if [ "$component" == "UIEWowzaLib" ]
 	then
-		statusArray[$component]="Successful( Deployed Build Number : $timestamp_build, Build Number on Confluence :  $release_build )"
-		log "================================================================================================================"
-		log "The deployment/rollback of $component was successful."
-		log "================================================================================================================"
-		#echo "Successful( Version : $timestamp_release )"
+		:
 	else
-		statusArray[$component]="Failed( Deployed Build Number : $timestamp_build, Build Number on Confluence :  $release_build )"
-		log "================================================================================================================"
-		log "The deployment/rollback of $component has failed."
-		if [ $timestamp_status -eq 1 ]
+		if [ $timestamp_status -eq 1 ] && [ $services_status -eq 1 ]
 		then
-			log "There was a problem in restarting the service associated with $component. Please check and re-deploy/rollback $component."
-		elif [ $services_status -eq 1 ]
-		then
-			log "The desired build of $component has not been deployed/rolled back. Please check the symlink at $releases_path."
+			statusArray[$component]="Successful( Deployed Build Number : $timestamp_build, Build Number on Confluence :  $release_build )"
+			log "================================================================================================================"
+			log "The deployment/rollback of $component was successful."
+			log "================================================================================================================"
+			#echo "Successful( Version : $timestamp_release )"
+		else
+			statusArray[$component]="Failed( Deployed Build Number : $timestamp_build, Build Number on Confluence :  $release_build )"
+			log "================================================================================================================"
+			log "The deployment/rollback of $component has failed."
+			if [ $timestamp_status -eq 1 ]
+			then
+				log "There was a problem in restarting the service associated with $component. Please check and re-deploy/rollback $component."
+			elif [ $services_status -eq 1 ]
+			then
+				log "The desired build of $component has not been deployed/rolled back. Please check the symlink at $releases_path."
+			fi
+			log "================================================================================================================"
+			#echo "Failed( Version : $timestamp_release )"
 		fi
-		log "================================================================================================================"
-		#echo "Failed( Version : $timestamp_release )"
 	fi
 	echo $timestamp_status
 }
@@ -1161,7 +1165,12 @@ case "${1}" in
 			deploy_master $component $abort_on_fail deploy
 			iter=$((iter+1))
 		  done
-		  log "===============FINAL DEPLOYMENT STATUS( $server )==============="
+		  if [ ${#statusArray[@]} == 0 ]
+		  then
+		  	:
+		  else
+		  	log "===============FINAL DEPLOYMENT STATUS( $server )==============="
+		  fi
 	  fi
 	  ;;
 	-r|--rollback)
@@ -1192,7 +1201,12 @@ case "${1}" in
 			 iter=$((iter+1))
 			 
 		  done
-		  log "===============FINAL ROLLBACK STATUS( $server )==============="
+		  if [ ${#statusArray[@]} == 0 ]
+		  then
+		  	:
+		  else
+		  	log "===============FINAL ROLLBACK STATUS( $server )==============="
+		  fi
 	  else
 	  	  iter=1
 	  	  for component in "${choice_list[@]}"
@@ -1218,7 +1232,12 @@ case "${1}" in
 			  fi
 			  iter=$((iter+1))
 		  done
-		  log "===============FINAL ROLLBACK STATUS( $server )==============="
+		  if [ ${#statusArray[@]} == 0 ]
+		  then
+		  	:
+		  else
+		  	log "===============FINAL ROLLBACK STATUS( $server )==============="
+		  fi
 	  fi
 	  ;;
 	-t|--transfer)
@@ -1267,15 +1286,17 @@ case "${1}" in
 	  exit 1
 	  ;;
 esac
-
-log "================================================================"
-for key in ${!statusArray[@]};
-do
-	log "${key} : ${statusArray[${key}]}"
+if [ ${#statusArray[@]} == 0 ]
+then
+	:
+else
 	log "================================================================"
-done
-
-log "server : $server, transfer_flag : $transfer_flag, action : $action"
+	for key in ${!statusArray[@]};
+	do
+		log "${key} : ${statusArray[${key}]}"
+		log "================================================================"
+	done
+fi
 
 if [ "$server" == "app01" ] && [ "$transfer_flag" == "true" ] && [ "$action" == "-d" ]
 then
