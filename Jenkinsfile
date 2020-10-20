@@ -151,7 +151,7 @@ node {
         
             }      
 
-            else if( "${env.JOB_NAME}" == "exm-deployment"){
+            else {
             
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: '${Artifactory_Credentials}',
                         usernameVariable: 'ArtifactoryUser', passwordVariable: 'ArtifactoryPassword']]) {
