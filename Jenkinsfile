@@ -7,13 +7,13 @@ node {
             if( "${env.JOB_NAME}" == "exm-health-check")
             {
                 stage('Git Checkout') {
-                    last_started = env.STAGE_NAME
+                    //last_started = env.STAGE_NAME
                     checkout scm
                     sh "chmod 755 ${env.WORKSPACE}/*"
                 }
 
                 stage('Run health check script') {
-                    last_started = env.STAGE_NAME
+                    //last_started = env.STAGE_NAME
 
                     sh """
                         python fetchHealthReports.py $WORKSPACE
@@ -35,7 +35,7 @@ node {
                         usernameVariable: 'ArtifactoryUser', passwordVariable: 'ArtifactoryPassword']]) {
             
                     stage('Git Checkout') {
-                            last_started = env.STAGE_NAME
+                            //last_started = env.STAGE_NAME
                             checkout scm
                             sh "chmod 755 ${env.WORKSPACE}/*"
                     }
@@ -50,7 +50,7 @@ node {
 
                     stage('Check User Access Rights') {
                         
-                        last_started = env.STAGE_NAME
+                        //last_started = env.STAGE_NAME
 
                         sh """
                             #!/bin/bash
@@ -65,7 +65,7 @@ node {
                                         
                         stage('Fetch binaries from artifactory') {
 
-                            last_started = env.STAGE_NAME
+                            //last_started = env.STAGE_NAME
                     
                             sh """
                                 #!/bin/bash -e
@@ -75,21 +75,21 @@ node {
                         }
 
 
-                        stage('Check artifact property') {
+                        /*stage('Check artifact property') {
                             
-                            last_started = env.STAGE_NAME
+                            //last_started = env.STAGE_NAME
 
                             sh """
                                 #!/bin/bash -e      
                                 ${env.WORKSPACE}/checkArtifactProperty.sh "${Deployment_Environment}" "${Activity}" "${Release_Version}" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "${Promoting_From}" "${env.WORKSPACE}" "$LoginUser" "${Ship_Name}"
 
                             """
-                        }
+                        }*/
 
                     
                     stage('Deploy'){
 
-                            last_started = env.STAGE_NAME
+                            //last_started = env.STAGE_NAME
 
                             Artifacts = "$Components"
 
@@ -105,14 +105,14 @@ node {
                     } else {
                         stage('Promote'){
 
-                            last_started = env.STAGE_NAME
+                            //last_started = env.STAGE_NAME
 
                             sh """
                                 #!/bin/bash -e
 
                                 python ${env.WORKSPACE}/fetchBinary.py "$Confluence_Page" $Release_Version $Activity "${env.WORKSPACE}" "$Components" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "${Transfer_Of_Artifacts}" "XICMS MW-Schedule" $Deployment_Environment "${Ship_Name}" "${LoginUser}" "${AllowedUsers}" "${Promoting_From}" "${UserAccessEnv}" "${UserAllowedOperation}" "fetchBinary"
 
-                                ${env.WORKSPACE}/checkArtifactProperty.sh "${Deployment_Environment}" "${Activity}" "${Release_Version}" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}"  "${Promoting_From}" "${env.WORKSPACE}" "$LoginUser" "${Ship_Name}"
+                                # ${env.WORKSPACE}/checkArtifactProperty.sh "${Deployment_Environment}" "${Activity}" "${Release_Version}" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}"  "${Promoting_From}" "${env.WORKSPACE}" "$LoginUser" "${Ship_Name}"
 
                             """
                         }
@@ -124,7 +124,7 @@ node {
        
     } catch(error) {
 
-      echo "An exception has occured in stage '$last_started'. This build has FAILED !! ${error}"
+      echo "An exception has occured. This build has FAILED !! ${error}"
         currentBuild.result = 'FAILURE'
         throw error
     }
