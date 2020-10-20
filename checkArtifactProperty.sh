@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#Last modified : 9/01/2020
-
 Deployment_Env=$1
 Activity=$2
 ReleaseVersion=$3
@@ -23,9 +21,9 @@ log(){
     echo "$@" >> $JenkinsWorkspace/logs/"${logfile}"
 }
 
-if [ -f  $workspace/logs/"${logfile}" ]
+if [ -f  $JenkinsWorkspace/logs/"${logfile}" ]
 then
-    rm -f $workspace/logs/"${logfile}"
+    rm -f $JenkinsWorkspace/logs/"${logfile}"
 fi
 
 export DateTimeStamp=$(date +%Y%m%d-%H%M)
@@ -94,8 +92,6 @@ do
     then
         log "Property checking not required."
     fi
-
-
 
 
     if [ "$Activity" == "Promote" ] && [ "$PromotingFrom" == "QA_TO_SUPPORT" ]

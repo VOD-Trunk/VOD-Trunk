@@ -475,9 +475,10 @@ with open(logfile_path, 'w+') as logfile:
                     log("Following are the artifacts in: " + releaseName)
                     for key, value in finalArtifactoryUrl.items():
 
-                        if targetShipName in ["KODM","NADM","EUDM","WEDM","NSDM","NODM","VODM","ZUDM","OSDM","Ovation","Encore","Odyssey"]:
-                            if key == "EXM Notification plugin":
-                                continue
+                        if targetShipName in ["KODM","NADM","EUDM","WEDM","NSDM","NODM","VODM","ZUDM","OSDM","Ovation","Encore","Odyssey"] and key == "EXM Notification plugin":
+                            continue
+                        elif targetShipName not in ["KODM","NADM","EUDM","WEDM","NSDM","NODM","VODM","ZUDM","OSDM","Ovation","Encore","Odyssey"] and key == "exm-v2-plugin-excursions":
+                            continue
                             
                         componentConfluence = str(key)
                         url = str(value)
@@ -510,10 +511,12 @@ with open(logfile_path, 'w+') as logfile:
                             component = "notification-service"
                         elif componentConfluence == "Mute Status Service":
                             component = "mute"
-                        elif componentConfluence == "DB":
-                            component = "db-upgrade-dir"
+                        elif componentConfluence == "exm-db-upgrade":
+                            component = "exm-db-upgrade"
                         elif componentConfluence == "UIEWowzaLib":
                             component = "UIEWowzaLib"
+                        elif componentConfluence == "exm-v2-plugin-excursions":
+                            component = "exm-v2-plugin-excursions"
                         else:
                             continue
 

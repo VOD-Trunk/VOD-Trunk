@@ -1,30 +1,48 @@
 {
 	"jenkins": {
 		"Release": {
-			"2.63.0": "xiCMS 2.63.0: Artifacts for Jenkins testing",	
-            "2.64.0": "xiCMS 2.64.0: Artifacts for Jenkins testing",
-			"2.65.0": "xiCMS 2.65.0: Artifacts for Jenkins testing"
+			"2.63.0": "xiCMS 2.63.0: Artifacts + Installation Manual",	
+            "2.64.0": "xiCMS 2.64.0 : Artifacts + Installation Manual",
+            "2.65.0": "xiCMS 2.65.0-IntRel-03: Artifacts + Installation Manual"
 		},
 
 		"user_access": {
 	    	"dro7535": {
 		        "operations": "Build,Deploy,Promote,Rollback",
 		        "env": "DEV,QA,SUPPORT,PRODUCTION"
-	      },
+		  },
+			"ach5776": {
+				"operations": "Build,Deploy,Promote,Rollback",
+				"env": "SUPPORT,QA,PRODUCTION"
+		  },
 	    	"dsa9123": {
-		        "operations": "Deploy,Promote",
+		        "operations": "Deploy,Promote,Rollback",
 		        "env": "DEV,QA"
 	      },
-			"hsctest": {
-		        "operations": "Build,Deploy,Promote,Rollback",
-		        "env": "DEV,QA,SUPPORT,PRODUCTION"
-	      },
-		  
-			"abh5436": {
-		        "operations": "Deploy,Promote",
+			"dno8196": {
+		        "operations": "Build,Deploy,Rollback",
 		        "env": "SUPPORT,PRODUCTION"
-	      }
-		  
+	      },
+			"tdu2838": {
+				"operations": "Build,Deploy,Rollback",
+				"env": "SUPPORT,PRODUCTION"
+		  },
+			"rsi2826": {
+				"operations": "Build,Deploy,Rollback",
+				"env": "SUPPORT,PRODUCTION"
+		  },
+			"pmi4404": {
+				"operations": "Build,Deploy,Rollback",
+				"env": "SUPPORT,PRODUCTION"
+		  },
+			"psh8326": {
+				"operations": "Build,Deploy,Rollback",
+				"env": "SUPPORT,PRODUCTION"
+		  },
+			"sga9397": {
+				"operations": "Build,Deploy,Rollback",
+				"env": "SUPPORT,PRODUCTION"
+		  }
 		},
 	   
 		"environments": {

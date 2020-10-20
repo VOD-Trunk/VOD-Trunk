@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#Last modified : 8/31/2020
-
 env=$1
 release=$2
 action=$3
@@ -21,8 +19,6 @@ log(){
     #echo "$@" >&1 2>&1
     echo "$@" >> $workspace/logs/"${logfile}"
 }
-
-log "Decoded password is : $serverPassword"
 
 if [ -f $workspace/logs/email_body.txt ]
 then

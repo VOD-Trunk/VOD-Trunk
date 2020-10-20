@@ -65,9 +65,12 @@ else
 		elif [ "${choice_list[$i]}" == "Mute Status Service" ]
 		then
 			choice_list[$i]="mute"
-		elif [ "${choice_list[$i]}" == "DB" ]
+		elif [ "${choice_list[$i]}" == "exm-db-upgrade" ]
 		then
-			choice_list[$i]="db-upgrade-dir"
+			choice_list[$i]="exm-db-upgrade"
+		elif [ "${choice_list[$i]}" == "exm-v2-plugin-excursions" ]
+		then
+			choice_list[$i]="exm-v2-plugin-excursions"
 		fi
 
 	done
@@ -211,6 +214,12 @@ get_current_build() {
 			releases_path='/var/lib/tomcat7/hosts/prod.uiexm.com/webapps'
 	fi
 
+	if [ "$component" == "exm-v2-plugin-excursions" ]
+	then
+			current_build='/var/lib/tomcat7/hosts/prod.uiexm.com/webapps/exm-v2-plugin-excursions.war'
+			releases_path='/var/lib/tomcat7/hosts/prod.uiexm.com/webapps'
+	fi
+
 	if [ "$component" == "nacos" ]
 	then
 			if [ ! -d /usr/local/nacos/releases ]
@@ -243,7 +252,7 @@ restart_services() {
 	component=$1
 	start_stop=$2
 	
-	if  ([ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]) && [ "$start_stop" == "stop" ]
+	if  ([ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ] || [ "$component" == "exm-v2-plugin-excursions" ]) && [ "$start_stop" == "stop" ]
 	then
 		log "Stopping tomcat7 service for $component..."
 		pkill -9 -u tomcat java #Stop_Tomcat_Service
@@ -251,7 +260,7 @@ restart_services() {
 		log "================================================================================================================"
 	fi
 
-	if  ([ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]) && [ "$start_stop" == "start" ]
+	if  ([ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ] || [ "$component" == "exm-v2-plugin-excursions" ]) && [ "$start_stop" == "start" ]
 	then
 		log "Starting tomcat7 service for $component..."
 		service tomcat7 start #Start_Tomcat_Service
@@ -329,7 +338,7 @@ deploy_new_build() {
 
 	#####Deployment of all clients have the same steps. So using the same code for both in below code block.
 
-	if [ "$component" == "db-upgrade-dir" ]
+	if [ "$component" == "exm-db-upgrade" ]
 	then
 		log "Starting the DB upgrade"
         
@@ -368,7 +377,7 @@ deploy_new_build() {
 
 		file_name=`ls /root/Releases/$new_release/$component/*.zip | cut -d "/" -f 6`
 
-		ls -l /root/Releases/$new_release/db-upgrade-dir/$file_name
+		ls -l /root/Releases/$new_release/exm-db-upgrade/$file_name
 
 		if [ $? = 0 ]
 		then
@@ -384,29 +393,29 @@ deploy_new_build() {
 
 		new_build=`cd /root/Releases/$new_release/$component/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
 
-		chmod +x /root/Releases/$new_release/db-upgrade-dir/$new_build/db-script.sh
+		chmod +x /root/Releases/$new_release/exm-db-upgrade/$new_build/db-script.sh
 		
-		cd /root/Releases/$new_release/db-upgrade-dir/$new_build
+		cd /root/Releases/$new_release/exm-db-upgrade/$new_build
 		
 		printf 'uie123\n' | ./db-script.sh --upgrade &>/dev/null
 		
-		count=`cat /root/update/$new_release/db-upgrade-dir/$new_build/*-dboper-*.log | grep -w "Liquibase Update Successful" | wc -l`
+		count=`cat /root/update/$new_release/exm-db-upgrade/$new_build/*-dboper-*.log | grep -w "Liquibase Update Successful" | wc -l`
 		 
 		if [ $count -eq 2 ]
 		then
 			log "Liquibase Update Successful"
 		else
-			log "ERROR : DB upgrade was unsuccessful. Please check logs at /root/update/$new_release/db-upgrade-dir/$new_build"
+			log "ERROR : DB upgrade was unsuccessful. Please check logs at /root/update/$new_release/exm-db-upgrade/$new_build"
 			exit 1
 		fi
 
-		cat /root/update/$new_release/db-upgrade-dir/$new_build/*-dboper-*.log | grep -w "finished upgrade"
+		cat /root/update/$new_release/exm-db-upgrade/$new_build/*-dboper-*.log | grep -w "finished upgrade"
 
 		if [ $? -eq 0 ]
 		then
 			log "Upgrade Finished."
 		else
-			log "ERROR : DB upgrade was unsuccessful. Please check logs at /root/update/$new_release/db-upgrade-dir/$new_build"
+			log "ERROR : DB upgrade was unsuccessful. Please check logs at /root/update/$new_release/exm-db-upgrade/$new_build"
 			exit 1
 		fi
 
@@ -470,7 +479,7 @@ deploy_new_build() {
 
 	#####Deployment of all .war files have the same steps. So using the same code for all in below code block.
 
-	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursion" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]
+	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursion" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ] || [ "$component" == "exm-v2-plugin-excursions" ]
 	then
 		log "Starting deployment of $component"
 		log "Copying $releases_path/$component.war and $releases_path/$component to /root/War_Backup/ for backup."
@@ -701,8 +710,8 @@ deploy_new_build() {
  		chmod 777 /home/wowza/media /home/wowza/media/v2/wowza /home/wowza/media/v2/wowza/running.json
 		
 		log "Stopping WowzaStreamingEngine service..."
-		#service WowzaStreamingEngine stop
-		#sleep 20
+		monit stop WowzaStreamingEngine
+		sleep 30
 		
 		log "Taking backup of existing UIEWowzaLib.jar to /root/Wowza_backup and replacing with new jar..."
 		
@@ -715,8 +724,9 @@ deploy_new_build() {
 		cp /root/Releases/$new_release/UIEWowzaLib/*.jar /usr/local/WowzaStreamingEngine/lib/UIEWowzaLib.jar
 		
 		log "Starting WowzaStreamingEngine service..."
-		#service WowzaStreamingEngine start
-		#sleep 20
+		monit start WowzaStreamingEngine
+		sleep 30
+		
 	elif [ "$component" == "UIEWowzaLib" ] && ([ "$server" == "app01" ] || [ "$server" == "app02" ])
 	then
 		log "UIEWowzaLib is not supposed to be deployed on app servers."
@@ -752,7 +762,7 @@ rollback() {
 
 
 
-	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursion" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]
+	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursion" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ] || [ "$component" == "exm-v2-plugin-excursions" ]
 	then
 
 		log "Starting rollback of $component"
@@ -827,7 +837,7 @@ rollback() {
 		log "`ls -l $releases_path/current | grep 'server.js'`"
 	fi
 
-	if  [ "$component"  == "db-upgrade-dir" ]
+	if  [ "$component"  == "exm-db-upgrade" ]
 	then
 		log "Rollback logic not present for DB upgrade."
 	fi
@@ -857,7 +867,7 @@ verify() {
 
 	fi
 
-	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursion" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]
+	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursion" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ] || [ "$component" == "exm-v2-plugin-excursions" ]
 	then
 		timestamp_build=`cat $releases_path/$component/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
 		if [ "$activity" == "deploy" ]
@@ -892,7 +902,7 @@ verify() {
 		fi
 	fi
 
-	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursion" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]
+	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursion" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ] || [ "$component" == "exm-v2-plugin-excursions" ]
 	then
 		PID_FILE_SIZE=`stat -c%s /var/run/tomcat7.pid`
 		SIZE=0
@@ -1002,7 +1012,7 @@ verify() {
 			#echo "Failed( Version : $timestamp_release )"
 		fi
 	fi
-	echo $timestamp_status
+	#echo $timestamp_status
 }
 
 deploy_master() {
@@ -1013,14 +1023,14 @@ deploy_master() {
 	abort_on_fail=$2
 	activity=$3
 
-	if [ "$component" != "db-upgrade-dir" ]
+	if [ "$component" != "exm-db-upgrade" ]
 	then
 		releases_path=$(get_current_build $component | cut -d ":" -f 2)
 		current_build=$(get_current_build $component | cut -d ":" -f 1)
 	fi
     
 
-	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "nacos" ] || [ "$component"  == "excursion" ] || [  "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]
+	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "nacos" ] || [ "$component"  == "excursion" ] || [  "$component" == "diagnostics" ] || [ "$component" == "notification-service" ] || [ "$component" == "exm-v2-plugin-excursions" ]
 	then
 		restart_services $component stop
 	fi
@@ -1031,12 +1041,12 @@ deploy_master() {
 		rollback $new_release $component $releases_path $current_build
 	fi
 
-	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "nacos" ] || [ "$component"  == "excursion" ] || [  "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]
+	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "nacos" ] || [ "$component"  == "excursion" ] || [  "$component" == "diagnostics" ] || [ "$component" == "notification-service" ] || [ "$component" == "exm-v2-plugin-excursions" ]
 	then
 		restart_services $component start
 	fi
 
-	if [ "$component" != "db-upgrade-dir" ]
+	if [ "$component" != "exm-db-upgrade" ]
 	then
 		current_build=$(get_current_build $component | cut -d ":" -f 1)
 		verify $component $releases_path $current_build $abort_on_fail $activity
@@ -1070,13 +1080,13 @@ fi
 
 if [ "$server" == "app01" ] && [ "$action" == "-d" ]
 then
-	isDbUpgradeReqd=`grep "db-upgrade-dir" /root/Releases/tmp/component_build_mapping.txt | wc -l`
+	isDbUpgradeReqd=`grep "exm-db-upgrade" /root/Releases/tmp/component_build_mapping.txt | wc -l`
 
 	if [ $isDbUpgradeReqd -eq 1 ]
 	then
-		component="db-upgrade-dir"
+		component="exm-db-upgrade"
 		log "Starting DB upgrade of release $new_release"
-		confluence_md5sum=`grep "db-upgrade-dir" /root/Releases/tmp/component_build_mapping.txt | cut -d ':' -f 3 | awk '{$1=$1};1'`
+		confluence_md5sum=`grep "exm-db-upgrade" /root/Releases/tmp/component_build_mapping.txt | cut -d ':' -f 3 | awk '{$1=$1};1'`
 	    comp_md5sum=`cd /root/Releases/$new_release/$component && find -type f -exec md5sum "{}" + | cut -d' ' -f1`
 
 	    if [ "$confluence_md5sum" == "$comp_md5sum" ]
@@ -1087,7 +1097,7 @@ then
 	        exit 1
 	    fi
 
-	    sed -i '/db-upgrade-dir/d' /root/Releases/tmp/component_build_mapping.txt
+	    sed -i '/exm-db-upgrade/d' /root/Releases/tmp/component_build_mapping.txt
 		sed -i '/^$/d' /root/Releases/tmp/component_build_mapping.txt
 		
 		deploy_master $component $abort_on_fail deploy
@@ -1190,7 +1200,9 @@ case "${1}" in
 					log "Starting rollback of $new_release : All components"
 				fi
           	 component=`echo $row | cut -d' ' -f1`
-          	 comp_status=$(verify $component)
+          	 verify $component
+			  
+			 comp_status=`grep 'Successful' "${statusArray[${component}]}" | wc -l`
 			 
 			 if [ "$comp_status" == "1" ]
 			 then
@@ -1223,7 +1235,9 @@ case "${1}" in
 				log "Starting rollback of $new_release : Selected components"
 			  fi
 			  
-			  comp_status=$(verify $component | cut -d ' ' -f1)
+			  verify $component
+			  
+			  comp_status=`grep 'Successful' "${statusArray[${component}]}" | wc -l`
 			 
 			  if [ "$comp_status" == "1" ]
 			  then
