@@ -39,7 +39,7 @@ then
     sshpass -p $serverPassword scp -o "StrictHostKeyChecking=no" -r $workspace/tmp/$release root@$env:/root/Releases/tmp
     sshpass -p $serverPassword ssh -o "StrictHostKeyChecking=no" root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app01" "$transfer_flag" >> $workspace/logs/"${logfile}"
     log "return value from app01 : $?"
-    if [ $? -eq 1 ]
+    if [ $? -ne 0 ]
 	then
         log "ERROR : Deployment failed on app01. Aborting build..."
         exit 1
@@ -57,7 +57,7 @@ then
     sshpass -p $serverPassword scp -o "StrictHostKeyChecking=no" -r $workspace/tmp/$release root@$env:/root/Releases/tmp
     sshpass -p $serverPassword ssh -o "StrictHostKeyChecking=no" root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app01" "$transfer_flag" >> $workspace/logs/"${logfile}"
     log "return value from app01 : $?"
-    if [ $? -eq 1 ]
+    if [ $? -ne 0 ]
 	then
         log "ERROR : Deployment failed on app01. Aborting build..."
         exit 1
