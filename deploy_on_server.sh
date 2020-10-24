@@ -985,7 +985,7 @@ verify() {
 		fi
 	fi
 
-	if ([ "$server" == "app01" ] || [ "$server" == "app02" ]) && "$component" == [ "UIEWowzaLib" ]
+	if ([ "$server" == "app01" ] || [ "$server" == "app02" ]) && [ "$component" == "UIEWowzaLib" ]
 	then
 		:
 	else
