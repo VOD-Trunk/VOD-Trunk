@@ -363,13 +363,13 @@ deploy_new_build() {
 		    size_prev_backup=$(find "/home/netsvcs/sqlback/`ls -Art /home/netsvcs/sqlback | tail -n 1`" -printf "%s")
 			size_curr_backup=`find "/root/Releases/$new_release/dbbackup/exm-backup.sql.gz" -printf "%s"`
 
-			if (( $size_curr_backup >= $size_prev_backup ))
-			then
-				log "DB backed up successfully. Backup can be found at /root/Releases/$new_release/dbbackup/exm-backup.sql"
-			else
-				log "ERROR : DB backup failed!! Backup file is incomplete. Aborting build..."
-			    exit 1
-			fi
+			#if (( $size_curr_backup >= $size_prev_backup ))
+			#then
+			#	log "DB backed up successfully. Backup can be found at /root/Releases/$new_release/dbbackup/exm-backup.sql"
+			#else
+			#	log "ERROR : DB backup failed!! Backup file is incomplete. Aborting build..."
+			 #   exit 1
+			#fi
 		else
 		    log "ERROR : DB backup failed!! Aborting build..."
 		    exit 1
