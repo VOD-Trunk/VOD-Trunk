@@ -393,7 +393,8 @@ deploy_new_build() {
 
 		new_build=`cd /root/Releases/$new_release/$component/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
 
-		chmod +x /root/Releases/$new_release/exm-db-upgrade/$new_build/db-script.sh
+		#chmod +x /root/Releases/$new_release/exm-db-upgrade/$new_build/db-script.sh
+		chmod +x /root/Releases/$new_release/exm-db-upgrade/db-script.sh
 		
 		cd /root/Releases/$new_release/exm-db-upgrade/$new_build
 		
@@ -409,7 +410,8 @@ deploy_new_build() {
 		#	exit 1
 		#fi
 
-		cat /root/Releases/$new_release/exm-db-upgrade/$new_build/*-dboper-*.log | grep -w "finished upgrade"
+		#cat /root/Releases/$new_release/exm-db-upgrade/$new_build/*-dboper-*.log | grep -w "finished upgrade"
+		cat /root/Releases/$new_release/exm-db-upgrade/*-dboper-*.log | grep -w "finished upgrade"
 
 		if [ $? -eq 0 ]
 		then
