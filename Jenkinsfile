@@ -30,8 +30,6 @@ node {
                 }
             
                 def LoginUser = env.BUILD_USER_ID
-
-                echo "${LoginUser}"
             
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: '${Artifactory_Credentials}',
                         usernameVariable: 'ArtifactoryUser', passwordVariable: 'ArtifactoryPassword']]) {
