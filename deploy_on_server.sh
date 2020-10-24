@@ -399,15 +399,15 @@ deploy_new_build() {
 		
 		printf 'uie123\n' | ./db-script.sh --upgrade &>/dev/null
 		
-		count=`cat /root/Releases/$new_release/exm-db-upgrade/$new_build/*-dboper-*.log | grep -w "Liquibase Update Successful" | wc -l`
+		#count=`cat /root/Releases/$new_release/exm-db-upgrade/$new_build/*-dboper-*.log | grep -w "Liquibase Update Successful" | wc -l`
 		 
-		if [ $count -eq 2 ]
-		then
-			log "Liquibase Update Successful"
-		else
-			log "ERROR : DB upgrade was unsuccessful. Please check logs at /root/update/$new_release/exm-db-upgrade/$new_build"
-			exit 1
-		fi
+		#if [ $count -eq 2 ]
+		#then
+		#	log "Liquibase Update Successful"
+		#else
+		#	log "ERROR : DB upgrade was unsuccessful. Please check logs at /root/update/$new_release/exm-db-upgrade/$new_build"
+		#	exit 1
+		#fi
 
 		cat /root/Releases/$new_release/exm-db-upgrade/$new_build/*-dboper-*.log | grep -w "finished upgrade"
 
