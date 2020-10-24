@@ -444,7 +444,7 @@ with open(logfile_path, 'w+') as logfile:
                         component_list = components.split(",")
                         deploymentType = "DEPLOY_PARTIAL"
 
-                    if deploymentType = "DEPLOY_ALL":
+                    if deploymentType == "DEPLOY_ALL":
                         for index, element in enumerate(yesNo):
                                 if element == "Y":
                                     releaseComponents.append(applicationName[index])
