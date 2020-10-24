@@ -375,7 +375,7 @@ deploy_new_build() {
 		    exit 1
 		fi
 
-		file_name=`ls /root/Releases/$new_release/$component/*.zip | cut -d "/" -f 6`
+		file_name=`ls /root/Releases/$new_release/$component/*.tar.gz | cut -d "/" -f 6`
 
 		ls -l /root/Releases/$new_release/exm-db-upgrade/$file_name
 
@@ -389,7 +389,7 @@ deploy_new_build() {
 
 		log "Unzipping $file_name ..."
 
-		unzip -qq /root/Releases/$new_release/$component/$file_name -d /root/Releases/$new_release/$component/
+		tar -xzf /root/Releases/$new_release/$component/$file_name -C /root/Releases/$new_release/$component/
 
 		new_build=`cd /root/Releases/$new_release/$component/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
 
