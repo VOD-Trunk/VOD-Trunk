@@ -713,7 +713,7 @@ deploy_new_build() {
 		
 		log "Stopping WowzaStreamingEngine service..."
 		monit stop WowzaStreamingEngine
-		sleep 30
+		sleep 10
 		
 		log "Taking backup of existing UIEWowzaLib.jar to /root/Wowza_backup and replacing with new jar..."
 		
@@ -727,7 +727,7 @@ deploy_new_build() {
 
 		log "Unzipping $component jar file..."
 
-		unzip /root/Releases/$new_release/UIEWowzaLib/*.jar
+		unzip -qq /root/Releases/$new_release/UIEWowzaLib/*.jar -d /root/Releases/$new_release/UIEWowzaLib
 		
 		log "Starting WowzaStreamingEngine service..."
 		monit start WowzaStreamingEngine
