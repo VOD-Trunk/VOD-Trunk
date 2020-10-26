@@ -1291,14 +1291,14 @@ case "${1}" in
 		        fi
 		      done
 
-		      log "Transferring artifacts to app02."
+		      log "Transferring artifacts to app02 and media servers..."
 		      { #try
-		      	ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi' && scp -r /root/Releases/$new_release /root/Releases/tmp  app02:/root/Releases
-		      	if [ -d /root/Releases/$new_release/UIEWowzaLib ]
-				then
-					scp -r /root/Releases/$new_release/UIEWowzaLib media01:/root/
-					scp -r /root/Releases/$new_release/UIEWowzaLib media02:/root/
-				fi
+		      	ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
+		      	ssh media01 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
+				ssh media02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
+				scp -r /root/Releases/$new_release /root/Releases/tmp  app02:/root/Releases
+				scp -r /root/Releases/$new_release /root/Releases/tmp media01:/root/Releases
+				scp -r /root/Releases/$new_release /root/Releases/tmp media02:/root/Releases
 			  } || { # catch
 					    log "Could not connect to app02 server."
 			  }
@@ -1328,7 +1328,7 @@ fi
 
 if [ "$server" == "app01" ] && [ "$transfer_flag" == "true" ] && [ "$action" == "-d" ]
 then
-	log "Transferring artifacts to app02."
+	log "Transferring artifacts to app02 and media servers..."
 	{ #try
 	ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
 	ssh media01 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
@@ -1342,7 +1342,7 @@ then
 	}
 elif [ "$server" == "app01" ] && [ "$transfer_flag" == "false" ] && [ "$action" == "-d" ]
 then
-	log "Transferring tmp folder to app02."
+	log "Transferring tmp folder to app02 and media servers..."
 	{ #try
 	ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else mv /root/Releases/tmp /root/Releases/tmp_`date +%Y_%m_%d__%H_%M_%S`; fi'
 	ssh media01 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else mv /root/Releases/tmp /root/Releases/tmp_`date +%Y_%m_%d__%H_%M_%S`; fi'
