@@ -708,7 +708,7 @@ deploy_new_build() {
 
 	if [ "$component" == "UIEWowzaLib" ] && ([ "$server" == "media01" ] || [ "$server" == "media02" ])
 	then
-		log "Changing permissions on required files on $Mserver..."
+		log "Changing permissions on required files on $server..."
  		chmod 777 /home/wowza/media /home/wowza/media/v2/wowza /home/wowza/media/v2/wowza/running.json
 		
 		log "Stopping WowzaStreamingEngine service..."
@@ -724,6 +724,10 @@ deploy_new_build() {
 		
 		mv /usr/local/WowzaStreamingEngine/lib/UIEWowzaLib.jar /root/Wowza_backup
 		cp /root/Releases/$new_release/UIEWowzaLib/*.jar /usr/local/WowzaStreamingEngine/lib/UIEWowzaLib.jar
+
+		log "Unzipping $component jar file..."
+
+		unzip /root/Releases/$new_release/UIEWowzaLib/*.jar
 		
 		log "Starting WowzaStreamingEngine service..."
 		monit start WowzaStreamingEngine
@@ -902,6 +906,12 @@ verify() {
 			rollback_build=`cd $releases_path/Backup/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
 			release_build=`cat $releases_path/Backup/$rollback_build/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
 		fi
+	fi
+
+	if [ "$component" == "UIEWowzaLib" ]
+	then
+		timestamp_build=`cat /root/Releases/$new_release/$component/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
+		release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep -w "$component " | cut -d ":" -f 2 | sed 's/ //g'`
 	fi
 
 	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursion" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ] || [ "$component" == "exm-v2-plugin-excursions" ]
