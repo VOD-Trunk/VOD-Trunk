@@ -139,8 +139,11 @@ fi
 if [ -f $workspace/logs/${logfile} ] && ([ "$action" == "Deploy" ] || [ "$action" == "Rollback" ])
 then
     sed -n '/STATUS( app01 )/,/Checking if components/p' $workspace/logs/${logfile} >> $workspace/logs/email_body.txt
+    echo >> $workspace/logs/email_body.txt
     sed -n '/STATUS( app02 )/,/Checking if components/p' $workspace/logs/${logfile} >> $workspace/logs/email_body.txt
+    echo >> $workspace/logs/email_body.txt
     sed -n '/STATUS( media01 )/,/Checking if components/p' $workspace/logs/${logfile} >> $workspace/logs/email_body.txt
+    echo >> $workspace/logs/email_body.txt
     sed -n '/STATUS( media02 )/,$p' $workspace/logs/${logfile} >> $workspace/logs/email_body.txt
     sed -i '/Transferring artifacts to app02/d' $workspace/logs/email_body.txt
     sed -i '/UTC 20/d' $workspace/logs/email_body.txt
