@@ -106,7 +106,7 @@
 
 		"configurations" : {
 			"app" : {
-				"1.txt": "/root/1.txt"
+				"ha.cf": "/etc/ha.d/ha.cf"
 			}
 		}
 	}

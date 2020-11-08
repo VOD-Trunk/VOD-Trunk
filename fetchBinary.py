@@ -481,7 +481,7 @@ with open(logfile_path, 'w+') as logfile:
                     log("releaseVersions :" + str(releaseVersions) + "\nserverNames :" + str(serverNames) + "\nfileNames :" + str(fileNames))
                     for i, release in enumerate(releaseVersions):
                         config_files_path = workspace + "/tmp/" + release + "/config_path_mapping.txt"
-                        server_file_path = config_json["jenkins"]["configurations"][serverNames[i]][fileNames[i]]
+                        server_file_path = config_json["jenkins"]["configurations"][str(serverNames[i])][str(fileNames[i])]
                         log("Writing into config_path_mapping.txt")
                         with open(config_files_path, 'a+') as f:
                             f.write(serverNames[i] + ":" + fileNames[i] + ":" + server_file_path + "\n")                  
