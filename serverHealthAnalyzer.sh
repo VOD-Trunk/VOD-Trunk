@@ -9,14 +9,16 @@ fi
 
 ERROR_FILE=$workspace/logs/errors
 CONTENT=$workspace/tmp/email1.txt
+CONTENT2=$workspace/tmp/email2.txt
 TEMP=$workspace/tmp/temp.txt
 TEMP2=$workspace/tmp/temp2.txt
 HEALTH_REPORTS=$workspace/Health_Reports
 email_body=$workspace/tmp/body.html
 
-rm -f $CONTENT
+rm -f $CONTENT $CONTENT2
 
-echo "Ship_name Stopped_service DB_replication_broken Media_storage_issue App_storage_issue Hard_disk_issue HDD_predictive_failure app01_load app02_load media01_load media02_load nfs_read_only Storage_failover Timezone Content_usage_issue Itinerary_present" >> $CONTENT
+echo "Ship_name | Stopped_service | DB_replication_broken | Media_storage_issue | App_storage_issue | app01_load | app02_load | media01_load | media02_load | nfs_read_only | Storage_failover | Timezone | Content_usage_issue | Itinerary_present" >> $CONTENT
+echo "Ship_name | RAID_Status | Memory_Status | Fan_Status | Battery_Status | Temp_Status | Processor_Status" >> $CONTENT2
 
 sed -i "s/'//g; s/\[//g; s/\]//g; s/\,/\n/g" $ERROR_FILE 
 sed -i 's/^[ \t]*//' $ERROR_FILE
@@ -25,7 +27,9 @@ rows=`cat $ERROR_FILE`
 IFS=$'\n'
 for row in $rows
 do
-	echo "$row  NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA" >> $CONTENT
+	echo "$row | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA | NA" >> $CONTENT
+	echo "$row | NA | NA | NA | NA | NA | NA" >> $CONTENT2
+
 done
 
 for i in `ls $HEALTH_REPORTS`
@@ -110,26 +114,6 @@ do
 	fi
 	
 		
-	grep "Media Error Count" $HEALTH_REPORTS/$i > $TEMP
-	
-	if [ -s $TEMP ]
-	then
-		media_errors=`tac $HEALTH_REPORTS/$i | sed -n '/Media Error Count/,/RAID/p'| tac`
-		hard_disk_issue="errors"
-	else
-		hard_disk_issue="OK"
-	fi
-	
-	grep "Predictive Failure Count" $HEALTH_REPORTS/$i > $TEMP
-	
-	if [ -s $TEMP ]
-	then
-		HDD_predictive_failure="Predictive_failure"
-	else
-		HDD_predictive_failure="OK"
-	fi
-
-	
 	#To display load average of 15 minutes on each of app and media server.
 	
 	sed -n '/CPU Load/,/Memory/p' $HEALTH_REPORTS/$i > $TEMP
@@ -198,48 +182,128 @@ do
 	else
 		Itinerary_present="OK"
 	fi
+
+	#hardware metrics
+
+	raid_status_count=`grep "RAID status" $HEALTH_REPORTS/$i | cut -d ':' -f 2- | grep "OK" | wc -l`
+	raid_status_orig=`grep "RAID status" $HEALTH_REPORTS/$i | cut -d ':' -f 2- | sort -u | grep -v "OK" | tr '\n' ','`
 	
+	memory_status_count=`grep "Memory Status" $HEALTH_REPORTS/$i | cut -d ':' -f 2- | grep "OK" | wc -l`
+	memory_status_orig=`grep "Memory Status" $HEALTH_REPORTS/$i | cut -d ':' -f 2- | sort -u | grep -v "OK" | tr '\n' ','`
+	
+	fan_status_count=`grep "Fan Status" $HEALTH_REPORTS/$i | cut -d ':' -f 2- | grep "OK" | wc -l`
+	fan_status_orig=`grep "Fan Status" $HEALTH_REPORTS/$i | cut -d ':' -f 2- | sort -u | grep -v "OK" | tr '\n' ','`
+	
+	battery_status_count=`grep "Battery Status" $HEALTH_REPORTS/$i | cut -d ':' -f 2- | grep "OK" | wc -l`
+	battery_status_orig=`grep "Battery Status" $HEALTH_REPORTS/$i | cut -d ':' -f 2- | sort -u | grep -v "OK" | tr '\n' ','`
+	
+	temp_status_count=`grep "Temp Status" $HEALTH_REPORTS/$i | cut -d ':' -f 2- | grep "OK" | wc -l`
+	temp_status_orig=`grep "Temp Status" $HEALTH_REPORTS/$i | cut -d ':' -f 2- | sort -u | grep -v "OK" | tr '\n' ','`
+	
+	processor_status_count=`grep "Processor Status" $HEALTH_REPORTS/$i | cut -d ':' -f 2- | grep "OK" | wc -l`
+	processor_status_orig=`grep "Processor Status" $HEALTH_REPORTS/$i | cut -d ':' -f 2- | sort -u | grep -v "OK" | tr '\n' ','`
+	
+
+	if [ $raid_status_count -eq 6 ]
+	then
+		raid_status="OK"
+	else
+		raid_status=$raid_status_orig
+	fi
+
+	if [ $memory_status_count -eq 6 ]
+	then
+		memory_status="OK"
+	else
+		memory_status=$memory_status_orig
+	fi
+
+	if [ $fan_status_count -eq 6 ]
+	then
+		fan_status="OK"
+	else
+		fan_status=$fan_status_orig
+	fi
+
+	if [ $battery_status_count -eq 6 ]
+	then
+		battery_status="OK"
+	else
+		battery_status=$battery_status_orig
+	fi
+
+	if [ $temp_status_count -eq 6 ]
+	then
+		temp_status="OK"
+	else
+		temp_status=$temp_status_orig
+	fi
+
+	if [ $processor_status_count -eq 6 ]
+	then
+		processor_status="OK"
+	else
+		processor_status=$processor_status_orig
+	fi
+
+
 		
-	echo "$ship $stopped_service $db_replication_flag $media_storage_issue $app_storage_issue $hard_disk_issue $HDD_predictive_failure $app01_load $app02_load $media01_load $media02_load $read_only $storage_failover $timezone $content_usage_issue $Itinerary_present" >> $CONTENT
-	
+	echo "$ship | $stopped_service | $db_replication_flag | $media_storage_issue | $app_storage_issue | $app01_load | $app02_load | $media01_load | $media02_load | $read_only | $storage_failover | $timezone | $content_usage_issue | $Itinerary_present" >> $CONTENT
+	echo "$ship | $raid_status | $memory_status | $fan_status | $battery_status | $temp_status | $processor_status" >> $CONTENT2
 done
 
 
 #echo "Please find attached the individual reports." >> $CONTENT
 
 sed -i 's/kp.ocean/Crown/; s/ex.ocean/Enchanted/; s/di.ocean/Diamond/; s/cbvod.cruises/Caribbean/; s/ep.ocean/Emerald/; s/gpvod2.cruises/Regal/; s/iptv.kodmdomain/KODM/; s/iptv.encdomain/Encore/; s/iptv.eudmdomain/EUDM/; s/mjvod.cruises/Majestic/; s/nadmiptv.com/NADM/; s/iptv.nsdmdomain/NSDM/; s/iptv.odydomain/Odyssey/; s/rp.ocean/Royal/; s/ru.ocean/Ruby/; s/savod.cruises/Sapphire/; s/spvod.cruises/Sun/; s/iptv.ovadomain/Ovation/; s/britanniavod.carnivaluk/Britannia/; s/ap.ocean/Grand/; s/iptv.nodmdomain/NODM/; s/yp.ocean/Sky/; s/iptv.vodmdomain/VODM/; s/iptv.osdmdomain/OSDM/; s/iptv.wedmdomain/WEDM/; s/co.ocean/Coral/;  s/iptv.zudmdomain/ZUDM/' $CONTENT
-
+sed -i 's/kp.ocean/Crown/; s/ex.ocean/Enchanted/; s/di.ocean/Diamond/; s/cbvod.cruises/Caribbean/; s/ep.ocean/Emerald/; s/gpvod2.cruises/Regal/; s/iptv.kodmdomain/KODM/; s/iptv.encdomain/Encore/; s/iptv.eudmdomain/EUDM/; s/mjvod.cruises/Majestic/; s/nadmiptv.com/NADM/; s/iptv.nsdmdomain/NSDM/; s/iptv.odydomain/Odyssey/; s/rp.ocean/Royal/; s/ru.ocean/Ruby/; s/savod.cruises/Sapphire/; s/spvod.cruises/Sun/; s/iptv.ovadomain/Ovation/; s/britanniavod.carnivaluk/Britannia/; s/ap.ocean/Grand/; s/iptv.nodmdomain/NODM/; s/yp.ocean/Sky/; s/iptv.vodmdomain/VODM/; s/iptv.osdmdomain/OSDM/; s/iptv.wedmdomain/WEDM/; s/co.ocean/Coral/;  s/iptv.zudmdomain/ZUDM/' $CONTENT2
 
 rm -f $TEMP $temp2
 
+printf "<p>\n</p>\n<!DOCTYPE html>\n<html>\n<head>\n<style>\ntable,th,td\n{\nborder:3px solid black ; padding: 15px; \nborder-collapse:collapse;\n}\n</style>\n</head>\n<Body>\n<p>Consolidated server health report :</p>\n<br>\n<br>\n<table>" > $email_body
 
-echo "<p>" > $email_body
-echo "</p>" >> $email_body
+IFS=$'\n'
+for table_row in `cat $CONTENT`
+do
+	echo "<tr>" >> $email_body
+	IFS=$'|'
+	for value in $table_row
+	do
+		value=`echo $value | xargs`
+		if [[ "$value" == "OK" ]] || [[ "$value" == *"GMT"* ]] || [[ $value =~ ^[0-9]*(\.[0-9]+)?$ ]] || [[ "$value" == "Ship_name" ]] || [[ "$value" == "Stopped_service" ]] || [[ "$value" == "DB_replication_broken" ]] || [[ "$value" == "Media_storage_issue" ]] || [[ "$value" == "App_storage_issue" ]] || [[ "$value" == "Hard_disk_issue" ]] || [[ "$value" == "HDD_predictive_failure" ]] || [[ "$value" == "app01_load" ]] || [[ "$value" == "app02_load" ]] || [[ "$value" == "media01_load" ]] || [[ "$value" == "media02_load" ]] || [[ "$value" == "nfs_read_only" ]] || [[ "$value" == "Storage_failover" ]] || [[ "$value" == "Timezone" ]] || [[ "$value" == "Content_usage_issue" ]] || [[ "$value" == "Itinerary_present" ]] || [[ "$value" == "Britannia" ]] || [[ "$value" == "Caribbean" ]] || [[ "$value" == "Coral" ]] || [[ "$value" == "Crown" ]] || [[ "$value" == "Diamond" ]] || [[ "$value" == "Emerald" ]] || [[ "$value" == "Enchanted" ]] || [[ "$value" == "Encore" ]] || [[ "$value" == "EUDM" ]] || [[ "$value" == "Grand" ]] || [[ "$value" == "OSDM" ]] || [[ "$value" == "KODM" ]] || [[ "$value" == "Majestic" ]] || [[ "$value" == *"NADM"* ]] || [[ "$value" == "NSDM" ]] || [[ "$value" == "NODM" ]] || [[ "$value" == "Odyssey" ]] || [[ "$value" == "Ovation" ]] || [[ "$value" == "Regal" ]] || [[ "$value" == "Ruby" ]] || [[ "$value" == "Sky" ]] || [[ "$value" == "Sun" ]] || [[ "$value" == "VODM" ]] || [[ "$value" == "WEDM" ]] || [[ "$value" == "Sapphire" ]] || [[ "$value" == "ZUDM" ]] || [[ "$value" == "Royal" ]]
+		then
+			echo "<td>" $value"</td>" >> $email_body
+		elif [[ "$value" == *":"* ]] || [[ "$value" == *"errors"* ]]
+		then
+			echo "<td bgcolor='#FFA500'>" $value"</td>" >> $email_body
+		else
+			echo "<td bgcolor='#FF0000'>" $value"</td>" >> $email_body
+		fi
+	done
+	echo "</tr>" >> $email_body
+done 
 
-awk '
-BEGIN{
-    print "<!DOCTYPE html>\n<html>\n<head>\n<style>\ntable,th,td\n{\nborder:3px solid black ; padding: 15px; \nborder-collapse:collapse;\n}\n</style>\n</head>\n<Body>\n<table>"
-    }
-    {print "<tr>"
-    for(i=1;i<=NF;i++)
-        if($i=="OK" || $i ~ /^GMT/ || $i ~ /^[0-9]/)
-        {
-                print "<td>" $i"</td>"
-        }
-        else if($i == "Ship_name" || $i == "Stopped_service" || $i == "DB_replication_broken" || $i == "Media_storage_issue" || $i == "App_storage_issue" || $i == "Hard_disk_issue" || $i == "HDD_predictive_failure" || $i == "app01_load" || $i == "app02_load" || $i == "media01_load" || $i == "media02_load" || $i == "nfs_read_only" || $i == "Storage_failover" || $i == "Timezone" || $i == "Content_usage_issue" || $i == "Itinerary_present" || $i == "Britannia" || $i == "Caribbean" || $i == "Coral" || $i == "Crown" || $i == "Diamond" || $i == "Emerald" || $i == "Enchanted" || $i == "Encore" || $i == "EUDM" || $i == "Grand" || $i == "OSDM" || $i == "KODM" || $i == "Majestic" || $i ~ /^NADM/ || $i == "NSDM" || $i == "NODM" || $i == "Odyssey" || $i == "Ovation" || $i == "Regal" || $i == "Ruby" || $i == "Sky" || $i == "Sun" || $i == "VODM" || $i == "WEDM" || $i == "Sapphire" || $i == "ZUDM" || $i == "Royal")
-        {
-                print "<td>" $i"</td>"
-        }
-        else if($i ~ /:/ || $i ~ /errors/)
-        {
-                print "<td bgcolor='#FFA500'>" $i"</td>"
-        }
-        else
-        {
-                print "<td bgcolor='#FF0000'>" $i"</td>"
-        }
-    print "</tr>"
-    }
-    END{
-    print "\n</table>\n</Body>\n</html>\n"
-    }' $CONTENT >> $email_body
+printf "</table>\n<br>\n<br>\n<p>Consolidated hardware components health report :</p>\n<br>\n<br>\n<table>" >> $email_body
+
+IFS=$'\n'
+for table2_row in `cat $CONTENT2`
+do
+	echo "<tr>" >> $email_body
+	IFS=$'|'
+	for value in $table2_row
+	do
+		value=`echo $value | xargs`
+		if [[ "$value" == "OK" ]] || [[ "$value" == "Ship_name" ]] || [[ "$value" == "RAID_Status" ]] || [[ "$value" == "Memory_Status" ]] || [[ "$value" == "Fan_Status" ]] || [[ "$value" == "Battery_Status" ]] || [[ "$value" == "Temp_Status" ]] || [[ "$value" == "Processor_Status" ]] || [[ "$value" == "Britannia" ]] || [[ "$value" == "Caribbean" ]] || [[ "$value" == "Coral" ]] || [[ "$value" == "Crown" ]] || [[ "$value" == "Diamond" ]] || [[ "$value" == "Emerald" ]] || [[ "$value" == "Enchanted" ]] || [[ "$value" == "Encore" ]] || [[ "$value" == "EUDM" ]] || [[ "$value" == "Grand" ]] || [[ "$value" == "OSDM" ]] || [[ "$value" == "KODM" ]] || [[ "$value" == "Majestic" ]] || [[ "$value" == *"NADM"* ]] || [[ "$value" == "NSDM" ]] || [[ "$value" == "NODM" ]] || [[ "$value" == "Odyssey" ]] || [[ "$value" == "Ovation" ]] || [[ "$value" == "Regal" ]] || [[ "$value" == "Ruby" ]] || [[ "$value" == "Sky" ]] || [[ "$value" == "Sun" ]] || [[ "$value" == "VODM" ]] || [[ "$value" == "WEDM" ]] || [[ "$value" == "Sapphire" ]] || [[ "$value" == "ZUDM" ]] || [[ "$value" == "Royal" ]]
+		then
+			echo "<td>" $value"</td>" >> $email_body
+		elif [[ "$value" == "Not available" ]]
+		then
+			echo "<td bgcolor='#FFA500'>" $value"</td>" >> $email_body
+		else
+			echo "<td bgcolor='#FF0000'>" $value"</td>" >> $email_body
+		fi
+	done
+	echo "</tr>" >> $email_body
+done
+
+printf "</table>\n</Body>\n</html>" >> $email_body

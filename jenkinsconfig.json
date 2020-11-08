@@ -1,9 +1,9 @@
 {
 	"jenkins": {
 		"Release": {
-			"2.63.0": "xiCMS 2.63.0: Artifacts for Jenkins testing",	
-            "2.64.0": "xiCMS 2.64.0: Artifacts for Jenkins testing",
-            "2.65.0": "Support- xiCMS 2.65.0: Artifacts + Installation Manual"
+			"2.63.0": "xiCMS 2.63.0: Artifacts + Installation Manual",	
+            "2.64.0": "xiCMS 2.64.0 : Artifacts + Installation Manual",
+            "2.65.0": "xiCMS 2.65.0: Artifacts + Installation Manual"
 		},
 
 		"user_access": {
@@ -40,18 +40,20 @@
 				"env": "SUPPORT,PRODUCTION"
 		  },
 			"sga9397": {
-				"operations": "Build,Deploy,Rollback",
-				"env": "SUPPORT,PRODUCTION"
-		  },
-			"hsctest": {
-				"operations": "Build,Deploy,Promote,Rollback",
-				"env": "DEV,QA,SUPPORT,PRODUCTION"
+				"operations": "Build,Promote,Deploy,Rollback",
+				"env": "QA,SUPPORT,PRODUCTION"
 		  }
 		},
 	   
 		"environments": {
-			"NA": { "NA": "000.000.000.000" },
-	      	"DEV": { "DEV": "000.000.000.000" },
+			"NA": [
+				{ "NA": "000.000.000.000" },
+				{ "pwd": "NA" }
+			],
+			"DEV": [
+				{ "DEV": "000.000.000.000" },
+				{ "pwd": "NA" }
+			],
 			"QA": [ 
 				{
 					"XS": "10.126.69.140", 
@@ -94,7 +96,9 @@
 					"NODM": "10.114.114.50",
 					"VODM": "10.112.242.50",
 					"ZUDM": "10.9.192.53",
-					"OSDM": "10.9.156.53"
+					"OSDM": "10.9.156.53",
+					"AMDM": "10.127.216.155",
+                  	"LG-VOD": "10.126.140.54"
 				},
 				{	"pwd": "bm90NGRldiEK"}
 			]

@@ -57,7 +57,7 @@ def execute_ssh_command(ip, name, port, username, serverPassword, command):
 		ssh.load_system_host_keys()
 		ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-		ssh.connect(ip, port, username, serverPassword,banner_timeout=500,timeout=500)
+		ssh.connect(ip, port, username, serverPassword,banner_timeout=1000,timeout=1000)
 		stdin, stdout, stderr = ssh.exec_command(command)
 
 
@@ -110,33 +110,12 @@ def write_to_file(data,nfname):
 	finally:
 		f.close()
 
-print ('Starting')
-
-jenkinsconfig_path = workspace + "/jenkinsconfig.json"
-
-with open(jenkinsconfig_path) as file1:
-	r = json.load(file1)
-	ipaddr_json = ast.literal_eval(json.dumps(r))
-
-	ip_dict = ipaddr_json["jenkins"]["environments"]["PRODUCTION"][0]
-
-	username = "root"
-	password = ipaddr_json["jenkins"]["environments"]["PRODUCTION"][1]["pwd"]
-	port = 22
-	command = "/root/bin/health_check.sh"
-
-	base64_bytes = password.encode('ascii')
-	message_bytes = base64.b64decode(base64_bytes)
-	serverPassword = str(message_bytes.decode('ascii'))
-	serverPassword = serverPassword.replace("\n", "")
-	serverPassword = serverPassword.replace(" ", "")
-
-	print(serverPassword)
+def run_command(ip_dict):
 
 	for name,ip in ip_dict.items():
 		name = name.replace("'", "")
 		ip = ip.replace("'", "")
-		if name == "NA":
+		if name in ["NA","LG-VOD","AMDM"]:
 			continue
 		print('Connecting to ',name,',IP -',ip)
 		(stdoutstring, stderrstring) = execute_ssh_command(ip, name, port, username, serverPassword, command)
@@ -145,6 +124,9 @@ with open(jenkinsconfig_path) as file1:
 			fn = get_file_name(name)
 			print('Writing to file ',fn)
 			write_to_file(stdoutstring,fn)
+
+			if name in list1:
+				list1.remove(name)
 
 		if stderrstring:
 			for e in stderrstring:
@@ -156,6 +138,39 @@ with open(jenkinsconfig_path) as file1:
 			if "Could not connect" in stderrstring:
 				print( stderrstring )
 				list1.append(name)
+
+print ('Starting')
+
+jenkinsconfig_path = workspace + "/jenkinsconfig.json"
+
+error_ip_dict = {}
+
+with open(jenkinsconfig_path) as file1:
+	r = json.load(file1)
+	ipaddr_json = ast.literal_eval(json.dumps(r))
+
+	ip_dict = ipaddr_json["jenkins"]["environments"]["PRODUCTION"][0]
+
+	username = "root"
+	password = ipaddr_json["jenkins"]["environments"]["PRODUCTION"][1]["pwd"]
+	port = 22
+	command = "/root/bin/health_check.sh -a"
+
+	base64_bytes = password.encode('ascii')
+	message_bytes = base64.b64decode(base64_bytes)
+	serverPassword = str(message_bytes.decode('ascii'))
+	serverPassword = serverPassword.replace("\n", "")
+	serverPassword = serverPassword.replace(" ", "")
+
+	run_command(ip_dict)
+
+	for shipName in list1:
+		ipaddr = ip_dict[shipName]
+		error_ip_dict.update({shipName:ipaddr})
+
+	run_command(error_ip_dict)
+
+	
 
 f.write('{}'.format(list1))
 f.close()

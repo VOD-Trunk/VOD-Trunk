@@ -25,16 +25,20 @@ promotingFrom = sys.argv[14]
 userAccessEnv = sys.argv[15]
 userAllowedOperation = sys.argv[16]
 task = sys.argv[17]
+pageNameConfig = sys.argv[18]
 
-log_path = 'logs'
-path = os.path.join(workspace,log_path)
+path = os.path.join(workspace,'logs')
 if os.path.isdir(path) != True:
     os.makedirs(path)
 else:
-    filename = task + 'Stage.log'
-    file_path = os.path.join(path, filename)
-    if os.path.isfile(file_path):
-        os.unlink(file_path)
+    directory = workspace + '/logs/'
+    for the_file in os.listdir(directory):
+        file_path = os.path.join(directory, the_file)
+        try:
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+        except Exception as e:
+            print(e)
 
 
 logfile_path = workspace + '/logs/' + task + 'Stage.log'
@@ -161,14 +165,28 @@ with open(logfile_path, 'w+') as logfile:
         elif pageType == "MW":
 
             if len(firstRowColumnNames) != 5:    #count of columns headers on MW page should be 5 fixed.
-                log("ERROR : The table structure on MW confluence page is not correct. There should be exactly five column headers and in this order : Ship-Name, Release Path, Release-Version, Date, Status")
+                log("ERROR : The table structure on MW confluence page is not correct. There should be exactly five column headers and in this order : Ship-Name, Release Path, Release-Version, Date, Action")
                 exit(1)
 
-            tableHeaders=["Ship-Name","Release Path","Release-Version","Date","Status"]
+            tableHeaders=["Ship-Name","Release Path","Release-Version","Date","Action"]
             #The column headers should only be the ones present in tableHeaders list and in that specific order.
             for i in range(5):
                 if firstRowColumnNames[i] != tableHeaders[i]:
-                    log("ERROR : The table structure on MW confluence page is not correct. The five column headers should have names and order as : Ship-Name, Release Path, Release-Version, Date, Status")
+                    log("ERROR : The table structure on MW confluence page is not correct. The five column headers should have names and order as : Ship-Name, Release Path, Release-Version, Date, Action")
+                    exit(1)
+                else:
+                    continue
+        elif pageType == "Config":
+
+            if len(firstRowColumnNames) != 4:    #count of columns headers on MW page should be 5 fixed.
+                log("ERROR : The table structure on MW confluence page is not correct. There should be exactly four column headers and in this order : Release-Version, Ship-Name, Server, File-name")
+                exit(1)
+
+            tableHeaders=["Release-Version", "Ship-Name", "Server", "File-name"]
+            #The column headers should only be the ones present in tableHeaders list and in that specific order.
+            for i in range(4):
+                if firstRowColumnNames[i] != tableHeaders[i]:
+                    log("ERROR : The table structure on MW confluence page is not correct. The four column headers should have names and order as : Release-Version, Ship-Name, Server, File-name")
                     exit(1)
                 else:
                     continue
@@ -229,7 +247,7 @@ with open(logfile_path, 'w+') as logfile:
             elif recordCount%7== 4:
                 artifactoryUrl.append(columnValue)
             elif recordCount%7== 5:
-                confluence_md5sum.append(columnValue)
+                confluence_md5sum.append(columnValue[:32])
             elif recordCount%7== 6:
                 yesNo.append(columnValue)
 
@@ -264,7 +282,7 @@ with open(logfile_path, 'w+') as logfile:
         releasePage=[]
         releaseVersion=[]
         deploymentDate=[]
-        deploymentStatus=[]
+        transferAction=[]
 
         TAG_RE = re.compile(r'<[^>]+>')
         for x in subTable:
@@ -284,13 +302,73 @@ with open(logfile_path, 'w+') as logfile:
             elif recordCount%5== 3:
                 deploymentDate.append(columnValue)
             elif recordCount%5== 4:
-                deploymentStatus.append(columnValue)
+                transferAction.append(columnValue)
 
 
             recordCount= recordCount + 1
-        return (shipName,releasePage,releaseVersion,deploymentDate,deploymentStatus)
+        return (shipName,releasePage,releaseVersion,deploymentDate,transferAction)
 
     # end of function //GetScheduleContentInformation
+
+
+    def GetConfigChanges(ContentId,headers,shipNamesScheduled,releaseVersionScheduled):
+
+        url = "https://carnival.atlassian.net/wiki/rest/api/content/" +str(ContentId) + "?expand=body.storage"
+
+        response = requests.request(
+           "GET",
+           url,
+           headers=headers
+        )
+
+        if response.status_code == 200:
+            log ("Query successful:Confluence page exists")
+        else:
+            log(response)
+            log ("ERROR : Confluence page does not exist or other error::" + url)
+            exit(1)
+
+        searchString = response.text
+        subTable = re.findall(r'<td>(.+?)</td>',searchString)
+        recordCount=0
+        columnCount=0
+        configReleaseVersions = []
+        configShipNames = []      
+        configServerNames=[]
+        configFileNames=[]
+        serverNames = []
+        fileNames = []
+        releaseVersions = []
+
+        TAG_RE = re.compile(r'<[^>]+>')
+        for x in subTable:
+
+            columnValue=TAG_RE.sub('', x)
+            columnValue = columnValue.strip()
+
+            if recordCount < 4:
+                recordCount= recordCount + 1
+                continue
+            if recordCount%4 == 0:  
+                configReleaseVersions.append(columnValue)
+            elif recordCount%4== 1:
+                configShipNames.append(columnValue)
+            elif recordCount%4== 2:
+                configServerNames.append(columnValue)
+            elif recordCount%4== 3:
+                configFileNames.append(columnValue)
+
+            recordCount= recordCount + 1
+                
+        for i, configShipName in enumerate(configShipNames):
+            if (configShipName in shipNamesScheduled) and (configReleaseVersions[i] in releaseVersionScheduled):
+                serverNames.append(configServerNames[i])
+                fileNames.append(configFileNames[i])
+                releaseVersions.append(configReleaseVersions[i])
+
+        return (releaseVersions,serverNames,fileNames)
+
+    # end of function //GetConfigChanges
 
     #Main script
     log("Starting...\n")
@@ -332,12 +410,15 @@ with open(logfile_path, 'w+') as logfile:
             shipNamesScheduled=[]
             releasePageScheduled=[]
             releaseVersionScheduled=[]
+            serverNames = []
+            fileNames = []
+            
             if contentID == 0:
                 log(errorValue)
             else:
                 verificationResult= verifyConfluencePage(contentID,headers,"MW")
                 log(verificationResult)
-                shipNames,releasePage,releaseVersion,deploymentDate,deploymentStatus =GetScheduleContentInformation(contentID,headers)
+                shipNames,releasePage,releaseVersion,deploymentDate,transferAction =GetScheduleContentInformation(contentID,headers)
                 
                 for rls in releaseVersion:
 
@@ -356,6 +437,10 @@ with open(logfile_path, 'w+') as logfile:
                     url_file_hist = workspace + "/tmp/" + rls + "/urls.txt"
                     if os.path.exists(url_file_hist):
                         with open(url_file_hist, 'w') as f:
+                            f.truncate()
+                    config_files_hist = workspace + "/tmp/" + rls + "/config_path_mapping.txt"
+                    if os.path.exists(config_files_hist):
+                        with open(config_files_hist, 'w') as f:
                             f.truncate()
 
                 for i, shipName in enumerate(shipNames):
@@ -382,11 +467,20 @@ with open(logfile_path, 'w+') as logfile:
                                     else:
                                         ipaddr = ipaddr_json["jenkins"]["environments"]["PRODUCTION"][0][shipName]
                                     log("\nShip " + shipName + " is ready for release deployment. Initiating transfer of artifacts to " + ipaddr)
-
                                 with open(scheduled_ships_path, 'a+') as f:
-                                    f.write(shipName + ":" + ipaddr + ":" +  releaseVersion[i]+"\n")
-                            else:
-                                log("\nShip " +shipName +" is not ready for release Deployment.")
+                                    f.write(shipName + ":" + ipaddr + ":" +  releaseVersion[i]+ ":" + transferAction[i] + "\n")
+                
+                if len(shipNamesScheduled) != 0:               
+                    confContentID,confErrorValue = CheckConfluencePage(pageNameConfig)
+                    confVerificationResult = verifyConfluencePage(confContentID,headers,"Config")
+                    log(confVerificationResult)
+                    releaseVersions, serverNames, fileNames = GetConfigChanges(confContentID,headers,shipNamesScheduled,releaseVersionScheduled)                      
+                    
+                    for i, release in enumerate(releaseVersions):
+                        config_files_path = workspace + "/tmp/" + release + "/config_path_mapping.txt"
+                        with open(config_files_path, 'a+') as f:
+                            f.write(serverNames[i] + ":" + fileNames[i] + "\n")                  
+
 
         scheduledReleaseDict={}
         if action == "ScheduleDeploy":
@@ -544,7 +638,7 @@ with open(logfile_path, 'w+') as logfile:
                             else:
                                 log("Couldn't reach the provided url with response : "+ str(response.status_code) + "\n")
                                 continue
-
+                        
                         with open(builds_file_path, 'a+') as f:
                             f.write(component + " : " + str(component_build_mapping[componentConfluence]) + " : " + str(component_md5sum_mapping[componentConfluence]) + "\n")
         else:
