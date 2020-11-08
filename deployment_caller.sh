@@ -67,7 +67,8 @@ then
             ship_name=`echo $ship | cut -d: -f1`
             relName=`echo $ship | cut -d: -f3`
             transferAction=`echo $ship | cut -d: -f4`
-            serverPassword=`echo $ship | cut -d: -f5`
+            pwd=`echo $ship | cut -d: -f5`
+            serverPassword=`echo "$pwd" | base64 -d`
             if [ "$transferAction" != "Force" ]
             then
                 log "Checking if transfer of artifacts is done already for $ship_name"
