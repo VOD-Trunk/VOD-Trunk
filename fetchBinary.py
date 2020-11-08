@@ -462,13 +462,16 @@ with open(logfile_path, 'w+') as logfile:
                                     ipaddr_json = ast.literal_eval(json.dumps(r))
                                     if shipName == "XS" or shipName == "HSC_Test":
                                         ipaddr = ipaddr_json["jenkins"]["environments"]["QA"][0][shipName]
+                                        serverPass = ipaddr_json["jenkins"]["environments"]["QA"][1]["pwd"]
                                     elif shipName == "SUPPORT":
                                         ipaddr = ipaddr_json["jenkins"]["environments"]["SUPPORT"][0][shipName]
+                                        serverPass = ipaddr_json["jenkins"]["environments"]["SUPPORT"][1]["pwd"]
                                     else:
                                         ipaddr = ipaddr_json["jenkins"]["environments"]["PRODUCTION"][0][shipName]
+                                        serverPass = ipaddr_json["jenkins"]["environments"]["PRODUCTION"][1]["pwd"]
                                     log("\nShip " + shipName + " is ready for release deployment. Initiating transfer of artifacts to " + ipaddr)
                                 with open(scheduled_ships_path, 'a+') as f:
-                                    f.write(shipName + ":" + ipaddr + ":" +  releaseVersion[i]+ ":" + transferAction[i] + "\n")
+                                    f.write(shipName + ":" + ipaddr + ":" +  releaseVersion[i]+ ":" + transferAction[i] + ":" + serverPass + "\n")
                 
                 if len(shipNamesScheduled) != 0:               
                     confContentID,confErrorValue = CheckConfluencePage(pageNameConfig)
