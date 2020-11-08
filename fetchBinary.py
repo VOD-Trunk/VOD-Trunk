@@ -478,6 +478,7 @@ with open(logfile_path, 'w+') as logfile:
                     
                     for i, release in enumerate(releaseVersions):
                         config_files_path = workspace + "/tmp/" + release + "/config_path_mapping.txt"
+                        log("Writing into config_path_mapping.txt")
                         with open(config_files_path, 'a+') as f:
                             f.write(serverNames[i] + ":" + fileNames[i] + "\n")                  
 
