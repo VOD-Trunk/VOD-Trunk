@@ -461,11 +461,13 @@ with open(logfile_path, 'w+') as logfile:
                                     r = json.load(f)
                                     ipaddr_json = ast.literal_eval(json.dumps(r))
                                     if shipName == "XS" or shipName == "HSC_Test":
-                                        ipaddr = ipaddr_json["jenkins"]["environments"]["QA"][0][shipName]
+                                        #ipaddr = ipaddr_json["jenkins"]["environments"]["QA"][0][shipName]
+                                        continue
                                     elif shipName == "SUPPORT":
                                         ipaddr = ipaddr_json["jenkins"]["environments"]["SUPPORT"][0][shipName]
                                     else:
-                                        ipaddr = ipaddr_json["jenkins"]["environments"]["PRODUCTION"][0][shipName]
+                                        #ipaddr = ipaddr_json["jenkins"]["environments"]["PRODUCTION"][0][shipName]
+                                        continue
                                     log("\nShip " + shipName + " is ready for release deployment. Initiating transfer of artifacts to " + ipaddr)
                                 with open(scheduled_ships_path, 'a+') as f:
                                     f.write(shipName + ":" + ipaddr + ":" +  releaseVersion[i]+ ":" + transferAction[i] + "\n")
