@@ -124,7 +124,7 @@ then
                 log "Transferring config files to the target server ( $ship_name : $ipaddr )"
                 log
                 sshpass -p $serverPassword ssh  -o "StrictHostKeyChecking=no"  root@$ipaddr 'if [ ! -d /root/Releases/Config_Files ]; then mkdir -p /root/Releases/Config_Files; else rm -rf /root/Releases/Config_Files/*'
-                sshpass -p $serverPassword scp -o "StrictHostKeyChecking=no" -r $workspace/Ship_Configuration_Files/$ship_name root@$ipaddr:/root/Releases/Config_Files
+                sshpass -p $serverPassword scp -o "StrictHostKeyChecking=no" -r $workspace/Ship_Configuration_Files/$ship_name/* root@$ipaddr:/root/Releases/Config_Files
             fi
 
             if [ -f $workspace/logs/"${logfile}" ]
