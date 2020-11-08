@@ -459,16 +459,16 @@ with open(logfile_path, 'w+') as logfile:
                                 jenkinsconfig_path = workspace + "/jenkinsconfig.json"
                                 with open(jenkinsconfig_path) as f:
                                     r = json.load(f)
-                                    ipaddr_json = ast.literal_eval(json.dumps(r))
+                                    config_json = ast.literal_eval(json.dumps(r))
                                     if shipName == "XS" or shipName == "HSC_Test":
-                                        ipaddr = ipaddr_json["jenkins"]["environments"]["QA"][0][shipName]
-                                        serverPass = ipaddr_json["jenkins"]["environments"]["QA"][1]["pwd"]
+                                        ipaddr = config_json["jenkins"]["environments"]["QA"][0][shipName]
+                                        serverPass = config_json["jenkins"]["environments"]["QA"][1]["pwd"]
                                     elif shipName == "SUPPORT":
-                                        ipaddr = ipaddr_json["jenkins"]["environments"]["SUPPORT"][0][shipName]
-                                        serverPass = ipaddr_json["jenkins"]["environments"]["SUPPORT"][1]["pwd"]
+                                        ipaddr = config_json["jenkins"]["environments"]["SUPPORT"][0][shipName]
+                                        serverPass = config_json["jenkins"]["environments"]["SUPPORT"][1]["pwd"]
                                     else:
-                                        ipaddr = ipaddr_json["jenkins"]["environments"]["PRODUCTION"][0][shipName]
-                                        serverPass = ipaddr_json["jenkins"]["environments"]["PRODUCTION"][1]["pwd"]
+                                        ipaddr = config_json["jenkins"]["environments"]["PRODUCTION"][0][shipName]
+                                        serverPass = config_json["jenkins"]["environments"]["PRODUCTION"][1]["pwd"]
                                     log("\nShip " + shipName + " is ready for release deployment. Initiating transfer of artifacts to " + ipaddr)
                                 with open(scheduled_ships_path, 'a+') as f:
                                     f.write(shipName + ":" + ipaddr + ":" +  releaseVersion[i]+ ":" + transferAction[i] + ":" + serverPass + "\n")
@@ -481,9 +481,10 @@ with open(logfile_path, 'w+') as logfile:
                     log("releaseVersions :" + str(releaseVersions) + "\nserverNames :" + str(serverNames) + "\nfileNames :" + str(fileNames))
                     for i, release in enumerate(releaseVersions):
                         config_files_path = workspace + "/tmp/" + release + "/config_path_mapping.txt"
+                        server_file_path = config_json["jenkins"]["configurations"][serverNames[i]][fileNames[i]]
                         log("Writing into config_path_mapping.txt")
                         with open(config_files_path, 'a+') as f:
-                            f.write(serverNames[i] + ":" + fileNames[i] + "\n")                  
+                            f.write(serverNames[i] + ":" + fileNames[i] + ":" + server_file_path + "\n")                  
 
 
         scheduledReleaseDict={}

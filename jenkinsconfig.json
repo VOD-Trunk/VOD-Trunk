@@ -102,6 +102,12 @@
 				},
 				{	"pwd": "bm90NGRldiEK"}
 			]
+		},
+
+		"configurations" : {
+			"app" : {
+				"1.txt": "/root/1.txt"
+			}
 		}
 	}
 }

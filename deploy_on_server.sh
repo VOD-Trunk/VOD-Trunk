@@ -14,6 +14,9 @@ declare -A statusArray
 if [ "$component_choice" == "All" ]
 then
 	partial_flag=2
+elif [ "$component_choice" == "None" ]
+then
+	partial_flag=3
 else
 	partial_flag=1
 	IFS=',' read -r -a choice_list <<< "$component_choice"
@@ -1097,6 +1100,32 @@ if [[ $# -eq 0 ]]; then
 			exit 1
 fi
 
+if [ -f /root/Releases/tmp/config_path_mapping.txt ]
+then
+	log "Starting config changes..."
+
+	if [ ! -d /root/Config_backup ]
+	then
+		mkdir -p /root/Config_backup
+	fi
+
+	configs=`cat /root/Releases/tmp/config_path_mapping.txt`
+	IFS=$'\n'
+	for config in $configs
+	do
+		configServer=`echo $config | cut -d: -f1`
+		configFile=`echo $config | cut -d: -f2`
+		configFilePath=`echo $config | cut -d: -f3`        
+		server_check=`echo $server | grep $configServer | wc -l`
+		if [ $server_check -eq 1 ]
+		then
+			mv $configFilePath /root/Config_backup
+			cp /root/Releases/$new_release/Config_files/$configFile $configFilePath
+		fi
+
+	done
+fi
+
 if [ "$server" == "app01" ] && [ "$action" == "-d" ]
 then
 	isDbUpgradeReqd=`grep "exm-db-upgrade" /root/Releases/tmp/component_build_mapping.txt | wc -l`
@@ -1127,25 +1156,22 @@ fi
 
 case "${1}" in
 	-d|--deploy)
-	  if [ "$server" == "app01" ] && [ "$transfer_flag" == "true" ]
-	  then
-	  	  rows=`cat /root/Releases/tmp/component_build_mapping.txt`
-	      IFS=$'\n'
-	      for row in $rows
-	      do
-	        component=`echo $row | cut -d ':' -f 1 | awk '{$1=$1};1'`
-	        confluence_md5sum=`echo $row | cut -d ':' -f 3 | awk '{$1=$1};1'`
-	        comp_md5sum=`cd /root/Releases/$new_release/$component && find -type f -exec md5sum "{}" + | cut -d' ' -f1`
+		rows=`cat /root/Releases/tmp/component_build_mapping.txt`
+		IFS=$'\n'
+		for row in $rows
+		do
+		component=`echo $row | cut -d ':' -f 1 | awk '{$1=$1};1'`
+		confluence_md5sum=`echo $row | cut -d ':' -f 3 | awk '{$1=$1};1'`
+		comp_md5sum=`cd /root/Releases/$new_release/$component && find -type f -exec md5sum "{}" + | cut -d' ' -f1`
 
-	        if [ "$confluence_md5sum" == "$comp_md5sum" ]
-	        then
-	          	log "md5sum is same on confluence and server. $component has been transferred to app01 successfully."
-	        else
-	        	log "ERROR : $component could not be transferred successfully. md5sum is not matching between confluence and server. Aborting Build !!"
-	            exit 1
-	        fi
-	      done
-	  fi
+		if [ "$confluence_md5sum" == "$comp_md5sum" ]
+		then
+			log "md5sum is same on confluence and server. $component has been transferred to app01 successfully."
+		else
+			log "ERROR : $component could not be transferred successfully. md5sum is not matching between confluence and server. Aborting Build !!"
+			exit 1
+		fi
+		done
 
 	  if [ $partial_flag == 2 ]
 	  then
@@ -1171,6 +1197,9 @@ case "${1}" in
 			iter=$((iter+1))
 		  done
 		  log "===============FINAL DEPLOYMENT STATUS( $server )==============="
+	  elif [ $partial_flag == 3 ]
+	  then
+	  	  log "No component is scheduled to be deployed."
 	  else
 	  	  log "Checking if components are present..."
           for component in "${choice_list[@]}"
@@ -1240,6 +1269,9 @@ case "${1}" in
 		  else
 		  	log "===============FINAL ROLLBACK STATUS( $server )==============="
 		  fi
+	  elif [ $partial_flag == 3 ]
+	  then
+	  	  log "No component is scheduled to be rolled back."
 	  else
 	  	  iter=1
 	  	  for component in "${choice_list[@]}"
@@ -1300,12 +1332,18 @@ case "${1}" in
 
 		      log "Transferring artifacts to app02 and media servers..."
 		      { #try
-		      	ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
-		      	ssh media01 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
-				ssh media02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
-				scp -r /root/Releases/$new_release /root/Releases/tmp  app02:/root/Releases
-				scp -r /root/Releases/$new_release /root/Releases/tmp media01:/root/Releases
-				scp -r /root/Releases/$new_release /root/Releases/tmp media02:/root/Releases
+		      	servers="app02 media01 media02 lb01 lb02"
+				for targetServer in servers
+				do
+					ssh $targetServer 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
+				
+					# ssh media01 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
+					# ssh media02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
+					
+					scp -r /root/Releases/$new_release /root/Releases/tmp  $targetServer:/root/Releases
+					# scp -r /root/Releases/$new_release /root/Releases/tmp media01:/root/Releases
+					# scp -r /root/Releases/$new_release /root/Releases/tmp media02:/root/Releases
+				done
 			  } || { # catch
 					    log "Could not connect to app02 server."
 			  }
@@ -1337,13 +1375,19 @@ if [ "$server" == "app01" ] && [ "$transfer_flag" == "true" ] && [ "$action" == 
 then
 	log "Transferring artifacts to app02 and media servers..."
 	{ #try
-	ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
-	ssh media01 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
-	ssh media02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
+
+	servers="app02 media01 media02 lb01 lb02"
+	for targetServer in servers
+	do
+		ssh $targetServer 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
+	
+		# ssh media01 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
+		# ssh media02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
 		
-	scp -r /root/Releases/$new_release /root/Releases/tmp  app02:/root/Releases
-	scp -r /root/Releases/$new_release /root/Releases/tmp media01:/root/Releases
-	scp -r /root/Releases/$new_release /root/Releases/tmp media02:/root/Releases
+		scp -r /root/Releases/$new_release /root/Releases/tmp  $targetServer:/root/Releases
+		# scp -r /root/Releases/$new_release /root/Releases/tmp media01:/root/Releases
+		# scp -r /root/Releases/$new_release /root/Releases/tmp media02:/root/Releases
+	done
 	} || { # catch
 		    log "Could not connect to app02 server."
 	}
@@ -1352,12 +1396,16 @@ elif [ "$server" == "app01" ] && [ "$transfer_flag" == "false" ] && [ "$action" 
 then
 	log "Transferring tmp folder to app02 and media servers..."
 	{ #try
-	ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else mv /root/Releases/tmp /root/Releases/tmp_`date +%Y_%m_%d__%H_%M_%S`; fi'
-	ssh media01 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else mv /root/Releases/tmp /root/Releases/tmp_`date +%Y_%m_%d__%H_%M_%S`; fi'
-	ssh media02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else mv /root/Releases/tmp /root/Releases/tmp_`date +%Y_%m_%d__%H_%M_%S`; fi'
-	scp -r /root/Releases/tmp  app02:/root/Releases/
-	scp -r /root/Releases/tmp  media01:/root/Releases/
-	scp -r /root/Releases/tmp  media02:/root/Releases/
+	servers="app02 media01 media02 lb01 lb02"
+	for targetServer in servers
+	do
+		ssh $targetServer 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else mv /root/Releases/tmp /root/Releases/tmp_`date +%Y_%m_%d__%H_%M_%S`; fi'
+		# ssh media01 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else mv /root/Releases/tmp /root/Releases/tmp_`date +%Y_%m_%d__%H_%M_%S`; fi'
+		# ssh media02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else mv /root/Releases/tmp /root/Releases/tmp_`date +%Y_%m_%d__%H_%M_%S`; fi'
+		scp -r /root/Releases/tmp  $targetServer:/root/Releases/
+		# scp -r /root/Releases/tmp  media01:/root/Releases/
+		# scp -r /root/Releases/tmp  media02:/root/Releases/
+	done
 	} || { # catch
 		log "Could not connect to app02 server."
 	}
