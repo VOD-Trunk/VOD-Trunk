@@ -86,8 +86,9 @@ then
                 IFS=$'\n'
                 for config in $configs
                 do
-                    file_name=`echo $config | cut -d: -f1`                    
-                    echo Ship_Configuration_Files/$ship_name/$file_name >> .git/info/sparse-checkout
+                    server_name=`echo $config | cut -d: -f1`
+                    file_name=`echo $config | cut -d: -f2`                    
+                    echo Ship_Configuration_Files/$ship_name/$server_name/$file_name >> .git/info/sparse-checkout
                 done
                 git pull origin master
             fi
