@@ -1333,7 +1333,7 @@ case "${1}" in
 		      log "Transferring artifacts to app02 and media servers..."
 		      { #try
 		      	servers="app02 media01 media02 lb01 lb02"
-				for targetServer in servers
+				for targetServer in $servers
 				do
 					log "Abhishek : Copying to $targetServer"
 					ssh $targetServer 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
