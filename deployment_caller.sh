@@ -79,17 +79,17 @@ then
             if [ -f $workspace/tmp/$relName/config_path_mapping.txt ]
             then
                 git init
-                git remote add origin "http://ach5776@bitbucket.tools.ocean.com/scm/mgln/exm-pfm-configs.git"
-                git checkout -b 'config-management'
+                git remote add origin "https://github.com/VOD-Trunk/VOD-Trunk.git"
+                git checkout -b 'master'
                 git config core.sparsecheckout true
                 configs=`cat $workspace/tmp/$relName/config_path_mapping.txt`
                 IFS=$'\n'
                 for config in $configs
                 do
                     file_name=`echo $config | cut -d: -f1`                    
-                    echo Config_Files/$ship_name/$file_name >> .git/info/sparse-checkout
+                    echo Ship_Configuration_Files/$ship_name/$file_name >> .git/info/sparse-checkout
                 done
-                git pull origin config-management
+                git pull origin master
             fi
 
             log
@@ -119,7 +119,8 @@ then
                 then
                     log "Property setting not required as artifacts were not transferred properly."
                 else
-                    $workspace/checkArtifactProperty.sh "NA" "ScheduleDeploy" "$relName" "$ArtifactoryUser" "$ArtifactoryPassword" "$ship_name" "$workspace" "NA"
+                    #$workspace/checkArtifactProperty.sh "NA" "ScheduleDeploy" "$relName" "$ArtifactoryUser" "$ArtifactoryPassword" "$ship_name" "$workspace" "NA"
+                    log "Property setting not required on support setup.
 
                     if [ -f $workspace/logs/checkArtifactPropertyStage.log ]
                     then
