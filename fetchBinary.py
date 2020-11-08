@@ -475,7 +475,7 @@ with open(logfile_path, 'w+') as logfile:
                     confVerificationResult = verifyConfluencePage(confContentID,headers,"Config")
                     log(confVerificationResult)
                     releaseVersions, serverNames, fileNames = GetConfigChanges(confContentID,headers,shipNamesScheduled,releaseVersionScheduled)                      
-                    log("releaseVersions :" + releaseVersions + "\nserverNames :" + serverNames + "\nfileNames :" + fileNames)
+                    log("releaseVersions :" + str(releaseVersions) + "\nserverNames :" + str(serverNames) + "\nfileNames :" + str(fileNames))
                     for i, release in enumerate(releaseVersions):
                         config_files_path = workspace + "/tmp/" + release + "/config_path_mapping.txt"
                         log("Writing into config_path_mapping.txt")
