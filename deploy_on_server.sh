@@ -1333,6 +1333,7 @@ case "${1}" in
 		      log "Transferring artifacts to app02 and media servers..."
 		      { #try
 		      	servers="app02 media01 media02 lb01 lb02"
+				IFS=$' '
 				for targetServer in $servers
 				do
 					log "Abhishek : Copying to $targetServer"
