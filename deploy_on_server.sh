@@ -1120,7 +1120,7 @@ then
 		if [ $server_check -eq 1 ]
 		then
 			mv $configFilePath /root/Config_backup
-			cp /root/Releases/$new_release/Config_files/$configFile $configFilePath
+			cp /root/Releases/Config_files/$configFile $configFilePath
 		fi
 
 	done
