@@ -121,7 +121,7 @@ then
                     log "Property setting not required as artifacts were not transferred properly."
                 else
                     #$workspace/checkArtifactProperty.sh "NA" "ScheduleDeploy" "$relName" "$ArtifactoryUser" "$ArtifactoryPassword" "$ship_name" "$workspace" "NA"
-                    log "Property setting not required on support setup.
+                    log "Property setting not required on support setup."
 
                     if [ -f $workspace/logs/checkArtifactPropertyStage.log ]
                     then
