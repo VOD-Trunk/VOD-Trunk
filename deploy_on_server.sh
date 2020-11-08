@@ -1116,7 +1116,7 @@ then
 		configServer=`echo $config | cut -d: -f1`
 		configFile=`echo $config | cut -d: -f2`
 		configFilePath=`echo $config | cut -d: -f3`        
-		server_check=`echo $server | grep $configServer | wc -l`
+		server_check=`echo $configServer | grep $server | wc -l`
 		if [ $server_check -eq 1 ]
 		then
 			mv $configFilePath /root/Config_backup
