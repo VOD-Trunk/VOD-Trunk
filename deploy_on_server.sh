@@ -1100,7 +1100,7 @@ if [[ $# -eq 0 ]]; then
 			exit 1
 fi
 
-if [ -f /root/Releases/tmp/config_path_mapping.txt ]
+if [ -f /root/Releases/tmp/config_path_mapping.txt ] && [ "$action" == "-d" ]
 then
 	log "Starting config changes..."
 
@@ -1117,6 +1117,7 @@ then
 		configFile=`echo $config | cut -d: -f2`
 		configFilePath=`echo $config | cut -d: -f3`        
 		server_check=`echo $server | grep $configServer | wc -l`
+		log "server_check = $server_check"
 		if [ $server_check -eq 1 ]
 		then
 			mv $configFilePath /root/Config_backup
