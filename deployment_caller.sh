@@ -175,24 +175,25 @@ fi
 
 if [ -f $workspace/logs/${logfile} ] && ([ "$action" == "Deploy" ] || [ "$action" == "Rollback" ])
 then
-    sed -n '/STATUS( app01 )/,/Checking if components/p' $workspace/logs/${logfile} >> $workspace/logs/email_body.txt
+    sed -n '/STATUS( app01 )/,/UTC/p' $workspace/logs/${logfile} >> $workspace/logs/email_body.txt
     echo >> $workspace/logs/email_body.txt
 
     mediaCount=`grep "STATUS( media01 )" $workspace/logs/${logfile} | wc -l`
     if [ $mediaCount -eq 1 ]
     then
-        sed -n '/STATUS( app02 )/,/Checking if components/p' $workspace/logs/${logfile} >> $workspace/logs/email_body.txt
+        sed -n '/STATUS( app02 )/,/UTC/p' $workspace/logs/${logfile} >> $workspace/logs/email_body.txt
         echo >> $workspace/logs/email_body.txt
-        sed -n '/STATUS( media01 )/,/Checking if components/p' $workspace/logs/${logfile} >> $workspace/logs/email_body.txt
+        sed -n '/STATUS( media01 )/,/UTC/p' $workspace/logs/${logfile} >> $workspace/logs/email_body.txt
         echo >> $workspace/logs/email_body.txt
-        sed -n '/STATUS( media02 )/,$p' $workspace/logs/${logfile} >> $workspace/logs/email_body.txt
+        sed -n '/STATUS( media02 )/,/UTC/p' $workspace/logs/${logfile} >> $workspace/logs/email_body.txt
     else
-        sed -n '/STATUS( app02 )/,$p' $workspace/logs/${logfile} >> $workspace/logs/email_body.txt
+        sed -n '/STATUS( app02 )/,/UTC/p' $workspace/logs/${logfile} >> $workspace/logs/email_body.txt
     fi
-    sed -i '/Transferring artifacts to app02/d' $workspace/logs/email_body.txt
-    sed -i '/Transferring tmp folder to app02 and media servers.../d' $workspace/logs/email_body.txt
-    sed -i '/UTC 20/d' $workspace/logs/email_body.txt
-    sed -i '/Checking if components are present/d' $workspace/logs/email_body.txt
+    # sed -i '/Transferring artifacts to app/d' $workspace/logs/email_body.txt
+    # sed -i '/Transferring tmp folder to app/d' $workspace/logs/email_body.txt
+    # sed -i '/Transferring tmp folder to app/d' $workspace/logs/email_body.txt
+    # sed -i '/UTC 20/d' $workspace/logs/email_body.txt
+    # sed -i '/Checking if components are present/d' $workspace/logs/email_body.txt
 fi
 
 if [ -f $workspace/logs/${logfile} ]

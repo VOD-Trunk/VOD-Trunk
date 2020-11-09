@@ -1268,9 +1268,10 @@ then
 	
 elif [ "$server" == "app01" ] && [ "$transfer_flag" == "false" ] && [ "$action" == "-d" ]
 then
-	log "Transferring tmp folder to app02 and media servers..."
+	log "Transferring tmp folder to app, media and lb servers..."
 	{ #try
 	servers="app02 media01 media02 lb01 lb02"
+	IFS=$' '
 	for targetServer in servers
 	do
 		ssh $targetServer 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else mv /root/Releases/tmp /root/Releases/tmp_`date +%Y_%m_%d__%H_%M_%S`; fi'
