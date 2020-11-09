@@ -39,26 +39,20 @@ then
     sshpass -p $serverPassword scp -o "StrictHostKeyChecking=no" -r $workspace/tmp/$release root@$env:/root/Releases/tmp
     sshpass -p $serverPassword ssh -o "StrictHostKeyChecking=no" root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app01" "$transfer_flag" >> $workspace/logs/"${logfile}"
     sshpass -p $serverPassword ssh -o "StrictHostKeyChecking=no" root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/"${logfile}"
-    if [ `grep "UIEWowzaLib" $workspace/tmp/$release/component_build_mapping.txt | wc -l` -eq 1 ]
-    then
-        sshpass -p $serverPassword ssh -o "StrictHostKeyChecking=no" root@$env 'ssh media01' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "UIEWowzaLib" "$abort_on_fail" "media01" "$transfer_flag" >> $workspace/logs/"${logfile}"
-        sshpass -p $serverPassword ssh -o "StrictHostKeyChecking=no" root@$env 'ssh media02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "UIEWowzaLib" "$abort_on_fail" "media02" "$transfer_flag" >> $workspace/logs/"${logfile}"
-    fi
-    sshpass -p $serverPassword ssh -o "StrictHostKeyChecking=no" root@$env 'ssh media01' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "None" "$abort_on_fail" "lb01" "$transfer_flag" >> $workspace/logs/"${logfile}"
-    sshpass -p $serverPassword ssh -o "StrictHostKeyChecking=no" root@$env 'ssh media01' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "None" "$abort_on_fail" "lb02" "$transfer_flag" >> $workspace/logs/"${logfile}"
+    sshpass -p $serverPassword ssh -o "StrictHostKeyChecking=no" root@$env 'ssh media01' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "media01" "$transfer_flag" >> $workspace/logs/"${logfile}"
+    sshpass -p $serverPassword ssh -o "StrictHostKeyChecking=no" root@$env 'ssh media02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "media02" "$transfer_flag" >> $workspace/logs/"${logfile}"
+    sshpass -p $serverPassword ssh -o "StrictHostKeyChecking=no" root@$env 'ssh lb01' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "lb01" "$transfer_flag" >> $workspace/logs/"${logfile}"
+    sshpass -p $serverPassword ssh -o "StrictHostKeyChecking=no" root@$env 'ssh lb02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "lb02" "$transfer_flag" >> $workspace/logs/"${logfile}"
 elif [ "$action" == "Deploy" ] && [ "$transfer_flag" == "false" ]
 then
     sshpass -p $serverPassword ssh -o "StrictHostKeyChecking=no"  root@$env 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else mv /root/Releases/tmp /root/Releases/tmp_`date +%Y_%m_%d__%H_%M_%S`; fi'
     sshpass -p $serverPassword scp -o "StrictHostKeyChecking=no" -r $workspace/tmp/$release root@$env:/root/Releases/tmp
     sshpass -p $serverPassword ssh -o "StrictHostKeyChecking=no" root@$env "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app01" "$transfer_flag" >> $workspace/logs/"${logfile}"
     sshpass -p $serverPassword ssh -o "StrictHostKeyChecking=no" root@$env 'ssh app02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "app02" "$transfer_flag" >> $workspace/logs/"${logfile}"
-    if [ `grep "UIEWowzaLib" $workspace/tmp/$release/component_build_mapping.txt | wc -l` -eq 1 ]
-    then
-        sshpass -p $serverPassword ssh -o "StrictHostKeyChecking=no" root@$env 'ssh media01' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "UIEWowzaLib" "$abort_on_fail" "media01" "$transfer_flag" >> $workspace/logs/"${logfile}"
-        sshpass -p $serverPassword ssh -o "StrictHostKeyChecking=no" root@$env 'ssh media02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "UIEWowzaLib" "$abort_on_fail" "media02" "$transfer_flag" >> $workspace/logs/"${logfile}"
-    fi
-    sshpass -p $serverPassword ssh -o "StrictHostKeyChecking=no" root@$env 'ssh media01' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "None" "$abort_on_fail" "lb01" "$transfer_flag" >> $workspace/logs/"${logfile}"
-    sshpass -p $serverPassword ssh -o "StrictHostKeyChecking=no" root@$env 'ssh media01' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "None" "$abort_on_fail" "lb02" "$transfer_flag" >> $workspace/logs/"${logfile}"
+    sshpass -p $serverPassword ssh -o "StrictHostKeyChecking=no" root@$env 'ssh media01' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "media01" "$transfer_flag" >> $workspace/logs/"${logfile}"
+    sshpass -p $serverPassword ssh -o "StrictHostKeyChecking=no" root@$env 'ssh media02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "media02" "$transfer_flag" >> $workspace/logs/"${logfile}"
+    sshpass -p $serverPassword ssh -o "StrictHostKeyChecking=no" root@$env 'ssh lb01' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "lb01" "$transfer_flag" >> $workspace/logs/"${logfile}"
+    sshpass -p $serverPassword ssh -o "StrictHostKeyChecking=no" root@$env 'ssh lb02' "bash -s" -- < $workspace/deploy_on_server.sh -d "$release" "$component" "$abort_on_fail" "lb02" "$transfer_flag" >> $workspace/logs/"${logfile}"
 elif [ "$action" == "ScheduleDeploy" ]
 then
     if [ -f $workspace/tmp/scheduled_ships.txt ]

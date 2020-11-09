@@ -104,6 +104,26 @@
 			]
 		},
 
+		"components" : {
+			"v2" : "app",
+			"exm-client-leftnav2" : "app",
+			"exm-admin-tool" : "app",
+			"exm-client-cruise" : "app",
+			"exm-client-lite" : "app",
+			"exm-client-startup" : "app",
+			"nacos" : "app",
+			"exm-client-leftnav2-signage" : "app",
+			"location" : "app",
+			"mutedaemon" : "app",
+			"exm-diagnostic-app" : "app",
+			"diagnostics" : "app",
+			"notification-service" : "app",
+			"mute" : "app",
+			"exm-db-upgrade" : "app",
+			"exm-v2-plugin-excursions" : "app",
+			"UIEWowzaLib" : "media"
+		},
+
 		"configurations" : {
 			"app" : {
 				"ha.cf": "/etc/ha.d/ha.cf"
