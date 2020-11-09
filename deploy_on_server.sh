@@ -1256,7 +1256,7 @@ then
 
 	servers="app02 media01 media02 lb01 lb02"
 	IFS=$' '
-	for targetServer in servers
+	for targetServer in $servers
 	do
 		ssh $targetServer 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
 		ssh $targetServer 'if [ ! -d /root/Releases/Config_Files ]; then mkdir -p /root/Releases/Config_Files; else rm -rf /root/Releases/Config_Files/*; fi'
@@ -1272,7 +1272,7 @@ then
 	{ #try
 	servers="app02 media01 media02 lb01 lb02"
 	IFS=$' '
-	for targetServer in servers
+	for targetServer in $servers
 	do
 		ssh $targetServer 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else mv /root/Releases/tmp /root/Releases/tmp_`date +%Y_%m_%d__%H_%M_%S`; fi'
 		scp -r /root/Releases/tmp  $targetServer:/root/Releases/
