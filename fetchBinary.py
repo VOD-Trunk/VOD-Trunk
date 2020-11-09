@@ -455,6 +455,7 @@ with open(logfile_path, 'w+') as logfile:
                             date_obj = datetime.datetime.strptime(deploymentDate[i], '%m/%d/%Y').strftime('%Y-%m-%d')
                             if date_obj == now.strftime('%Y-%m-%d'):
                                 shipNamesScheduled.append(shipName)
+                                releaseVersionScheduled.append(releaseVersion[i])
                         elif action == "ScheduleDeploy":
                             date_time_obj = datetime.datetime.strptime(deploymentDate[i], '%m/%d/%Y')
                             if date_time_obj >= now:
