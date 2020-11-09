@@ -192,7 +192,7 @@ then
     # sed -i '/Transferring artifacts to app/d' $workspace/logs/email_body.txt
     # sed -i '/Transferring tmp folder to app/d' $workspace/logs/email_body.txt
     # sed -i '/Transferring tmp folder to app/d' $workspace/logs/email_body.txt
-    # sed -i '/UTC 20/d' $workspace/logs/email_body.txt
+    sed -i '/UTC 20/d' $workspace/logs/email_body.txt
     # sed -i '/Checking if components are present/d' $workspace/logs/email_body.txt
 fi
 
