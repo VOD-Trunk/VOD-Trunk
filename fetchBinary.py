@@ -484,10 +484,12 @@ with open(logfile_path, 'w+') as logfile:
                     log("releaseVersions :" + str(releaseVersions) + "\nserverNames :" + str(serverNames) + "\nfileNames :" + str(fileNames))
                     for i, release in enumerate(releaseVersions):
                         config_files_path = workspace + "/tmp/" + release + "/config_path_mapping.txt"
-                        server_file_path = config_json["jenkins"]["configurations"][str(serverNames[i])][str(fileNames[i])]
-                        log("Writing into config_path_mapping.txt")
-                        with open(config_files_path, 'a+') as f:
-                            f.write(serverNames[i] + ":" + fileNames[i] + ":" + server_file_path + "\n")                  
+                        file_list = fileNames[i].split(",")
+                        for fileName in file_list:
+                            server_file_path = config_json["jenkins"]["configurations"][str(serverNames[i])][str(fileName)]
+                            log("Writing into config_path_mapping.txt")
+                            with open(config_files_path, 'a+') as f:
+                                f.write(serverNames[i] + ":" + fileName + ":" + server_file_path + "\n")                  
 
 
         scheduledReleaseDict={}
