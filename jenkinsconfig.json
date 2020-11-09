@@ -107,6 +107,12 @@
 		"configurations" : {
 			"app" : {
 				"ha.cf": "/etc/ha.d/ha.cf"
+			},
+			"media" : {
+				"httpd.conf" : "/etc/httpd/conf/httpd.conf"
+			},
+			"lb" : {
+				"haproxy.cfg" : "/etc/haproxy/haproxy.cfg"
 			}
 		}
 	}
