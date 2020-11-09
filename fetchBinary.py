@@ -643,8 +643,10 @@ with open(logfile_path, 'w+') as logfile:
                             else:
                                 log("Couldn't reach the provided url with response : "+ str(response.status_code) + "\n")
                                 continue
-
-                        compServer = config_json["jenkins"]["components"][component]
+                        with open(jenkinsconfig_path) as f:
+                            r = json.load(f)
+                            config_json = ast.literal_eval(json.dumps(r))
+                            compServer = config_json["jenkins"]["components"][component]
                         with open(builds_file_path, 'a+') as f:
                             f.write(component + " : " + str(component_build_mapping[componentConfluence]) + " : " + str(component_md5sum_mapping[componentConfluence]) + ":" + str(compServer) + "\n")
         else:
