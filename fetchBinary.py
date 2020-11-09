@@ -396,6 +396,11 @@ with open(logfile_path, 'w+') as logfile:
         if os.path.exists(scheduled_ships_path):
             with open(scheduled_ships_path, 'w') as f:
                 f.truncate()
+        
+        jenkinsconfig_path = workspace + "/jenkinsconfig.json"
+        with open(jenkinsconfig_path) as f:
+            r = json.load(f)
+            config_json = ast.literal_eval(json.dumps(r))
 
         if action == "ScheduleDeploy" or action == "Deploy":
             #Page ID to get the page details
@@ -456,20 +461,17 @@ with open(logfile_path, 'w+') as logfile:
                                 shipNamesScheduled.append(shipName)
                                 releasePageScheduled.append(releasePage[i])
                                 releaseVersionScheduled.append(releaseVersion[i])
-                                jenkinsconfig_path = workspace + "/jenkinsconfig.json"
-                                with open(jenkinsconfig_path) as f:
-                                    r = json.load(f)
-                                    config_json = ast.literal_eval(json.dumps(r))
-                                    if shipName == "XS" or shipName == "HSC_Test":
-                                        ipaddr = config_json["jenkins"]["environments"]["QA"][0][shipName]
-                                        serverPass = config_json["jenkins"]["environments"]["QA"][1]["pwd"]
-                                    elif shipName == "SUPPORT":
-                                        ipaddr = config_json["jenkins"]["environments"]["SUPPORT"][0][shipName]
-                                        serverPass = config_json["jenkins"]["environments"]["SUPPORT"][1]["pwd"]
-                                    else:
-                                        ipaddr = config_json["jenkins"]["environments"]["PRODUCTION"][0][shipName]
-                                        serverPass = config_json["jenkins"]["environments"]["PRODUCTION"][1]["pwd"]
-                                    log("\nShip " + shipName + " is ready for release deployment. Initiating transfer of artifacts to " + ipaddr)
+
+                                if shipName == "XS" or shipName == "HSC_Test":
+                                    ipaddr = config_json["jenkins"]["environments"]["QA"][0][shipName]
+                                    serverPass = config_json["jenkins"]["environments"]["QA"][1]["pwd"]
+                                elif shipName == "SUPPORT":
+                                    ipaddr = config_json["jenkins"]["environments"]["SUPPORT"][0][shipName]
+                                    serverPass = config_json["jenkins"]["environments"]["SUPPORT"][1]["pwd"]
+                                else:
+                                    ipaddr = config_json["jenkins"]["environments"]["PRODUCTION"][0][shipName]
+                                    serverPass = config_json["jenkins"]["environments"]["PRODUCTION"][1]["pwd"]
+                                log("\nShip " + shipName + " is ready for release deployment. Initiating transfer of artifacts to " + ipaddr)
                                 with open(scheduled_ships_path, 'a+') as f:
                                     f.write(shipName + ":" + ipaddr + ":" +  releaseVersion[i]+ ":" + transferAction[i] + ":" + serverPass + "\n")
                 
