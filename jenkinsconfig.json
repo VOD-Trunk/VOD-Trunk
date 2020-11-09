@@ -42,7 +42,11 @@
 			"sga9397": {
 				"operations": "Build,Promote,Deploy,Rollback",
 				"env": "QA,SUPPORT,PRODUCTION"
-		  }
+		  },
+		  	"hsctest": {
+				"operations": "Build,Deploy,Promote,Rollback",
+				"env": "SUPPORT,QA,PRODUCTION"
+			  }
 		},
 	   
 		"environments": {
