@@ -11,78 +11,6 @@ transfer_flag=$6
 
 declare -A statusArray
 
-# if [ "$component_choice" == "All" ]
-# then
-# 	partial_flag=2
-# elif [ "$component_choice" == "None" ]
-# then
-# 	partial_flag=3
-# else
-# 	partial_flag=1
-# 	IFS=',' read -r -a choice_list <<< "$component_choice"
-# 	for i in "${!choice_list[@]}"
-# 	do
-# 		choice_list[$i]=`echo ${choice_list[$i]} | sed "s/_/ /g"`
-# 		if [ "${choice_list[$i]}" == "EXM V2" ]
-# 		then
-# 			choice_list[$i]="v2"
-# 		elif [ "${choice_list[$i]}" == "LeftNav" ]
-# 		then
-# 			choice_list[$i]="exm-client-leftnav2"
-# 		elif [ "${choice_list[$i]}" == "Admin Tool" ]
-# 		then
-# 			choice_list[$i]="exm-admin-tool"
-# 		elif [ "${choice_list[$i]}" == "Cruise Client" ]
-# 		then
-# 			choice_list[$i]="exm-client-cruise"
-# 		elif [ "${choice_list[$i]}" == "EXM Lite Client" ]
-# 		then
-# 			choice_list[$i]="exm-client-lite"
-# 		elif [ "${choice_list[$i]}" == "Startup Client" ]
-# 		then
-# 			choice_list[$i]="exm-client-startup"
-# 		elif [ "${choice_list[$i]}" == "Precor Client" ]
-# 		then
-# 			choice_list[$i]="exm-precor-client"
-# 		elif [ "${choice_list[$i]}" == "NACOS Listener" ]
-# 		then
-# 			choice_list[$i]="nacos"
-# 		elif [ "${choice_list[$i]}" == "Mute Daemon" ]
-# 		then
-# 			choice_list[$i]="mutedaemon"
-# 		elif [ "${choice_list[$i]}" == "LeftNav Signage" ]
-# 		then
-# 			choice_list[$i]="exm-client-leftnav2-signage"
-# 		elif [ "${choice_list[$i]}" == "Exm-v2-plugin-location" ]
-# 		then
-# 			choice_list[$i]="location"
-# 		elif [ "${choice_list[$i]}" == "EXM Diagnostic Application" ]
-# 		then
-# 			choice_list[$i]="exm-diagnostic-app"
-# 		elif [ "${choice_list[$i]}" == "EXM Diagnostic plugin" ]
-# 		then
-# 			choice_list[$i]="diagnostics"
-# 		elif [ "${choice_list[$i]}" == "EXM Notification plugin" ]
-# 		then
-# 			choice_list[$i]="notification-service"
-# 		elif [ "${choice_list[$i]}" == "Mute Status Service" ]
-# 		then
-# 			choice_list[$i]="mute"
-# 		elif [ "${choice_list[$i]}" == "exm-db-upgrade" ]
-# 		then
-# 			choice_list[$i]="exm-db-upgrade"
-# 		elif [ "${choice_list[$i]}" == "exm-v2-plugin-excursions" ]
-# 		then
-# 			choice_list[$i]="exm-v2-plugin-excursions"
-# 		fi
-
-# 	done
-# fi
-
-err() {
-    >&2 echo -e "$@"
-}
-
 log(){
     echo "$@" >&1 2>&1
     echo "$@" >> ${logfile}
@@ -1103,7 +1031,7 @@ fi
 
 if [ -f /root/Releases/tmp/config_path_mapping.txt ] && [ "$action" == "-d" ]
 then
-	log "Starting config changes..."
+	log "Starting config changes on $server..."
 
 	if [ ! -d /root/Config_backup ]
 	then
@@ -1118,11 +1046,14 @@ then
 		configFile=`echo $config | cut -d: -f2`
 		configFilePath=`echo $config | cut -d: -f3`        
 		server_check=`echo $server | grep $configServer | wc -l`
-		log "server_check = $server_check"
 		if [ $server_check -eq 1 ]
 		then
+			log "Taking backup of $configFile on $server"
 			mv $configFilePath /root/Config_backup
+			log "Updating $configFile by /root/Releases/Config_Files/$configServer/$configFile"
 			cp /root/Releases/Config_Files/$configServer/$configFile $configFilePath
+		else
+			continue
 		fi
 
 	done
