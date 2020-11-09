@@ -130,7 +130,8 @@
 
 		"configurations" : {
 			"app" : {
-				"ha.cf": "/etc/ha.d/ha.cf"
+				"ha.cf": "/etc/ha.d/ha.cf",
+				"my.cnf": "/etc/my.cnf"
 			},
 			"media" : {
 				"httpd.conf" : "/etc/httpd/conf/httpd.conf"

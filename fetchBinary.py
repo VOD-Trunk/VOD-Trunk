@@ -486,10 +486,10 @@ with open(logfile_path, 'w+') as logfile:
                         config_files_path = workspace + "/tmp/" + release + "/config_path_mapping.txt"
                         file_list = fileNames[i].split(",")
                         for fileName in file_list:
-                            server_file_path = config_json["jenkins"]["configurations"][str(serverNames[i])][str(fileName)]
+                            server_file_path = config_json["jenkins"]["configurations"][str(serverNames[i])][str(fileName.strip())]
                             log("Writing into config_path_mapping.txt")
                             with open(config_files_path, 'a+') as f:
-                                f.write(serverNames[i] + ":" + fileName + ":" + server_file_path + "\n")                  
+                                f.write(serverNames[i] + ":" + fileName.strip() + ":" + server_file_path + "\n")                  
 
 
         scheduledReleaseDict={}
