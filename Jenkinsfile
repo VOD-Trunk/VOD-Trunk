@@ -54,7 +54,7 @@ node {
 
                         sh """
                             #!/bin/bash
-                            python ${env.WORKSPACE}/fetchBinary.py "$Confluence_Page" $Release_Version $Activity "${env.WORKSPACE}" "$Components" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "${Transfer_Of_Artifacts}" "XICMS MW-Schedule" $Deployment_Environment "${Ship_Name}" "${LoginUser}" "${AllowedUsers}" "${Promoting_From}" "${UserAccessEnv}" "${UserAllowedOperation}" "checkUserAccessRights" "XICMS Config Changes"
+                            python ${env.WORKSPACE}/fetchBinary.py "$Confluence_Page" $Release_Version $Activity "${env.WORKSPACE}" "$Components" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "${Transfer_Of_Artifacts}" "XICMS MW-Schedule for testing" $Deployment_Environment "${Ship_Name}" "${LoginUser}" "${AllowedUsers}" "${Promoting_From}" "${UserAccessEnv}" "${UserAllowedOperation}" "checkUserAccessRights" "XICMS Config Changes"
                                 
                         """
 
@@ -69,7 +69,7 @@ node {
                     
                             sh """
                                 #!/bin/bash -e
-                                python ${env.WORKSPACE}/fetchBinary.py "$Confluence_Page" $Release_Version $Activity "${env.WORKSPACE}" "$Components" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "${Transfer_Of_Artifacts}" "XICMS MW-Schedule" $Deployment_Environment "${Ship_Name}" "${LoginUser}" "${AllowedUsers}" "${Promoting_From}" "${UserAccessEnv}" "${UserAllowedOperation}" "fetchBinary" "XICMS Config Changes"
+                                python ${env.WORKSPACE}/fetchBinary.py "$Confluence_Page" $Release_Version $Activity "${env.WORKSPACE}" "$Components" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "${Transfer_Of_Artifacts}" "XICMS MW-Schedule for testing" $Deployment_Environment "${Ship_Name}" "${LoginUser}" "${AllowedUsers}" "${Promoting_From}" "${UserAccessEnv}" "${UserAllowedOperation}" "fetchBinary" "XICMS Config Changes"
                                 
                             """
                         }
@@ -110,7 +110,7 @@ node {
                             sh """
                                 #!/bin/bash -e
 
-                                python ${env.WORKSPACE}/fetchBinary.py "$Confluence_Page" $Release_Version $Activity "${env.WORKSPACE}" "$Components" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "${Transfer_Of_Artifacts}" "XICMS MW-Schedule" $Deployment_Environment "${Ship_Name}" "${LoginUser}" "${AllowedUsers}" "${Promoting_From}" "${UserAccessEnv}" "${UserAllowedOperation}" "fetchBinary" "XICMS Config Changes"
+                                python ${env.WORKSPACE}/fetchBinary.py "$Confluence_Page" $Release_Version $Activity "${env.WORKSPACE}" "$Components" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "${Transfer_Of_Artifacts}" "XICMS MW-Schedule for testing" $Deployment_Environment "${Ship_Name}" "${LoginUser}" "${AllowedUsers}" "${Promoting_From}" "${UserAccessEnv}" "${UserAllowedOperation}" "fetchBinary" "XICMS Config Changes"
 
                                 ${env.WORKSPACE}/checkArtifactProperty.sh "${Deployment_Environment}" "${Activity}" "${Release_Version}" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}"  "${Promoting_From}" "${env.WORKSPACE}" "$LoginUser" "${Ship_Name}"
 
