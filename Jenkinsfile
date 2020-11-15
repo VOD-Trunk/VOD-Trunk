@@ -44,8 +44,6 @@ node {
                     def Confluence_Page = Jconf.jenkins.Release."${Release_Version}"
                     def IpDict = Jconf.jenkins.environments."${Deployment_Environment}"[0]
                     IpDict.each { group, ships ->
-                        echo "${ships}"
-                        echo "${group}"
 
                         ships.each{ ship, ip -> 
                             if ( "${ship}" == "${Ship_Name}" )
