@@ -591,9 +591,9 @@ with open(logfile_path, 'w+') as logfile:
                     log("Following are the artifacts in: " + releaseName)
                     for key, value in finalArtifactoryUrl.items():
 
-                        if targetShipName in ["KODM","NADM","EUDM","WEDM","NSDM","NODM","VODM","ZUDM","OSDM","Ovation","Encore","Odyssey"] and key == "EXM Notification plugin":
+                        if targetShipName in config_json["jenkins"]["environments"]["PRODUCTION"][0]["HAL"] and key == "EXM Notification plugin":
                             continue
-                        elif targetShipName not in ["KODM","NADM","EUDM","WEDM","NSDM","NODM","VODM","ZUDM","OSDM","Ovation","Encore","Odyssey"] and key == "exm-v2-plugin-excursions":
+                        elif targetShipName in config_json["jenkins"]["environments"]["PRODUCTION"][0]["PCL"] and key == "exm-v2-plugin-excursions":
                             continue
                             
                         componentConfluence = str(key)
