@@ -44,10 +44,12 @@ node {
                     def Confluence_Page = Jconf.jenkins.Release."${Release_Version}"
                     def IpDict = Jconf.jenkins.environments."${Deployment_Environment}"[0]
                     IpDict.each { group, ships -> 
-                        if ( ${group}.containsKey("${Ship_Name}") )
-                        {
-                            IpAddr = $group."${Ship_Name}"
-                            break;
+                        ships.each{ ship, ip -> 
+                            if ( $ship == "${Ship_Name}" )
+                            {
+                                IpAddr = ip
+                                break;
+                            }
                         }
                     }
                     
