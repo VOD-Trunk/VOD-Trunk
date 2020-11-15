@@ -381,7 +381,7 @@ with open(logfile_path, 'w+') as logfile:
         for environment in env_dict.keys():
             for group in env_dict[environment][0].keys():
                 if shipName in env_dict[environment][0][group].keys():
-                    ipaddr = env_dict[environment][group][shipName]
+                    ipaddr = env_dict[environment][0][group][shipName]
                     serverPass = env_dict[environment][1]["pwd"]
                     return (ipaddr, serverPass)
                 else:
