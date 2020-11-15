@@ -47,7 +47,7 @@ node {
                         echo "${ships}"
                         echo "${group}"
 
-                        ${ships}.each{ ship, ip -> 
+                        ships.each{ ship, ip -> 
                             if ( "${ship}" == "${Ship_Name}" )
                             {
                                 IpAddr = "${ip}"
