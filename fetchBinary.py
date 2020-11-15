@@ -179,14 +179,14 @@ with open(logfile_path, 'w+') as logfile:
         elif pageType == "Config":
 
             if len(firstRowColumnNames) != 4:    #count of columns headers on MW page should be 5 fixed.
-                log("ERROR : The table structure on MW confluence page is not correct. There should be exactly four column headers and in this order : Release-Version, Ship-Name, Server, File-name")
+                log("ERROR : The table structure on Config Changes confluence page is not correct. There should be exactly four column headers and in this order : File-Name, File-Path, Server, Release-Version, Group")
                 exit(1)
 
-            tableHeaders=["Release-Version", "Ship-Name", "Server", "File-name"]
+            tableHeaders=["File-Name", "File-Path", "Server", "Release-Version", "Group"]
             #The column headers should only be the ones present in tableHeaders list and in that specific order.
-            for i in range(4):
+            for i in range(5):
                 if firstRowColumnNames[i] != tableHeaders[i]:
-                    log("ERROR : The table structure on MW confluence page is not correct. The four column headers should have names and order as : Release-Version, Ship-Name, Server, File-name")
+                    log("ERROR : The table structure on Config Changes confluence page is not correct. The four column headers should have names and order as : File-Name, File-Path, Server, Release-Version, Group")
                     exit(1)
                 else:
                     continue
