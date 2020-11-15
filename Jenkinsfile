@@ -42,7 +42,16 @@ node {
 
                     def Jconf = readJSON file: "${env.WORKSPACE}/jenkinsconfig.json"
                     def Confluence_Page = Jconf.jenkins.Release."${Release_Version}"
-                    def IpAddr = Jconf.jenkins.environments."${Deployment_Environment}"[0]."${Ship_Name}"
+                    def IpDict = Jconf.jenkins.environments."${Deployment_Environment}"[0]
+                    for ( group in IpDict )
+                    {
+                        if ( $group.containsKey("${Ship_Name}"))
+                        {
+                            IpAddr = $group."${Ship_Name}"
+                            break;
+                        }
+                    }
+                    
                     def ship_pwd = Jconf.jenkins.environments."${Deployment_Environment}"[1].pwd
                     def AllowedUsers = Jconf.jenkins.user_access.keySet()
                     UserAllowedOperation = Jconf.jenkins.user_access."${LoginUser}".operations
