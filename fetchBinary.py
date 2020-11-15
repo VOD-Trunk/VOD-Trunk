@@ -379,8 +379,8 @@ with open(logfile_path, 'w+') as logfile:
 
     def findIpAddress(env_dict, shipName):
         for environment in env_dict.keys():
-            for group in env_dict[environment].keys():
-                if shipName in env_dict[environment][group].keys():
+            for group in env_dict[environment][0].keys():
+                if shipName in env_dict[environment][0][group].keys():
                     ipaddr = env_dict[environment][group][shipName]
                     serverPass = env_dict[environment][1]["pwd"]
                     return (ipaddr, serverPass)
