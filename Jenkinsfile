@@ -43,11 +43,10 @@ node {
                     def Jconf = readJSON file: "${env.WORKSPACE}/jenkinsconfig.json"
                     def Confluence_Page = Jconf.jenkins.Release."${Release_Version}"
                     def IpDict = Jconf.jenkins.environments."${Deployment_Environment}"[0]
-                    for ( group in IpDict )
-                    {
-                        if ( "$group".containsKey("${Ship_Name}"))
+                    IpDict.each { group, ships -> 
+                        if ( ${group}.containsKey("${Ship_Name}") )
                         {
-                            IpAddr = "$group"."${Ship_Name}"
+                            IpAddr = $group."${Ship_Name}"
                             break;
                         }
                     }
