@@ -660,7 +660,13 @@ with open(logfile_path, 'w+') as logfile:
                             else:
                                 log("Couldn't reach the provided url with response : "+ str(response.status_code) + "\n")
                                 continue
-                        compServer = config_json["jenkins"]["components"][component]
+                        compServer_dict = config_json["jenkins"]["components"]
+                        for i, server in compServer_dict.items():
+                            if component in compServer_dict[server]:
+                                compServer = server
+                                break
+                            else:
+                                continue
                         with open(builds_file_path, 'a+') as f:
                             f.write(component + " : " + str(component_build_mapping[componentConfluence]) + " : " + str(component_md5sum_mapping[componentConfluence]) + ":" + str(compServer) + "\n")
         else:
