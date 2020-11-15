@@ -45,9 +45,9 @@ node {
                     def IpDict = Jconf.jenkins.environments."${Deployment_Environment}"[0]
                     for ( group in IpDict )
                     {
-                        if ( $group.containsKey("${Ship_Name}"))
+                        if ( "$group".containsKey("${Ship_Name}"))
                         {
-                            IpAddr = $group."${Ship_Name}"
+                            IpAddr = "$group"."${Ship_Name}"
                             break;
                         }
                     }
