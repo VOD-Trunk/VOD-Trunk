@@ -661,8 +661,8 @@ with open(logfile_path, 'w+') as logfile:
                                 log("Couldn't reach the provided url with response : "+ str(response.status_code) + "\n")
                                 continue
                         compServer_dict = config_json["jenkins"]["components"]
-                        for i, server in compServer_dict.items():
-                            if component in compServer_dict[server]:
+                        for server, compList in compServer_dict.items():
+                            if component in compList:
                                 compServer = server
                                 break
                             else:
