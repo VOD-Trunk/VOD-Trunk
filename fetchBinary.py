@@ -375,19 +375,35 @@ with open(logfile_path, 'w+') as logfile:
 
         return (releaseVersions,serverNames,fileNames,filePaths)
 
-    # end of function //GetConfigChanges
+    # end of function GetConfigChanges()
+
+    # def findIpAddress(env_dict, shipName):
+    #     for environment in env_dict.keys():
+    #         for group in env_dict[environment][0].keys():
+    #             if shipName in env_dict[environment][0][group].keys():
+    #                 ipaddr = env_dict[environment][0][group][shipName]
+    #                 serverPass = env_dict[environment][1]["pwd"]
+    #                 return (ipaddr, serverPass)
+    #             else:
+    #                 continue
+    #     return ("None","None")
+
+    # # end of function findIpAddress()
 
     def findIpAddress(env_dict, shipName):
-        for environment in env_dict.keys():
-            for group in env_dict[environment][0].keys():
-                if shipName in env_dict[environment][0][group].keys():
-                    ipaddr = env_dict[environment][0][group][shipName]
-                    serverPass = env_dict[environment][1]["pwd"]
+        for environment, groupList in env_dict.items():
+            for group, ships in groupList[0].items():
+                if shipName in ships.keys():
+                    ipaddr = ships[shipName]
+                    serverPass = groupList[1]["pwd"]
                     return (ipaddr, serverPass)
                 else:
                     continue
         return ("None","None")
 
+    # end of function findIpAddress()
+
+    
     #Main script
     log("Starting...\n")
 

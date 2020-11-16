@@ -208,7 +208,19 @@ restart_services() {
 			echo "tomcat7 started successfully."
 		else
 			echo "tomcat7 failed to start"
-		fi	
+		fi
+		
+		log "Starting httpd service"
+		service httpd restart
+
+		httpd_status=`service httpd status | grep running | wc -l`
+		
+		if [ $httpd_status == 1 ]
+		then
+			echo "httpd started successfully."
+		else
+			echo "httpd failed to start"
+		fi
 
 		log "================================================================================================================"	
 	fi
@@ -811,7 +823,7 @@ verify() {
 		then
 			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep -w "$component " | cut -d ":" -f 2 | sed 's/ //g'`
 		else
-			release_build=`cat cat /root/War_Backup/$component/$component/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
+			release_build=`cat /root/War_Backup/$component/$component/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
 		fi
 	fi
 
@@ -1033,9 +1045,9 @@ if [ -f /root/Releases/tmp/config_path_mapping.txt ] && [ "$action" == "-d" ]
 then
 	log "Starting config changes on $server..."
 
-	if [ ! -d /root/Config_backup ]
+	if [ ! -d /root/config/$new_release/Config_backup ]
 	then
-		mkdir -p /root/Config_backup
+		mkdir -p /root/config/$new_release/Config_backup
 	fi
 
 	configs=`cat /root/Releases/tmp/config_path_mapping.txt`
@@ -1049,9 +1061,24 @@ then
 		if [ $server_check -eq 1 ]
 		then
 			log "Taking backup of $configFile on $server"
-			mv $configFilePath /root/Config_backup
+			mv $configFilePath /root/config/$new_release/Config_backup
 			log "Updating $configFile by /root/Releases/Config_Files/$configServer/$configFile"
 			cp /root/Releases/Config_Files/$configServer/$configFile $configFilePath
+			
+			if [ "$configServer" == "media" ]
+			then
+				service httpd restart
+				service nginx restart
+			fi
+
+			if [ "$configServer" == "lb" ]
+			then
+				vip_check=`ifconfig | grep $(grep haproxy /etc/ha.d/haresources | cut -d ':' -f3 | cut -d ' ' -f1) | wc -l`
+				if [ $vip_check -eq 1 ]
+				then
+					service haproxy restart
+				fi
+			fi
 		else
 			continue
 		fi
