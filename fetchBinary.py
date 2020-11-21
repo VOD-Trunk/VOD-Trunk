@@ -188,6 +188,19 @@ with open(logfile_path, 'w+') as logfile:
                 if firstRowColumnNames[i] != tableHeaders[i]:
                     log("ERROR : The table structure on Config Changes confluence page is not correct. The five column headers should have names and order as : File-Name, File-Path, Server, Release-Version, Group")
                     exit(1)
+                  else:
+                    continue
+        elif pageType == "Config_Deployment_Schedule":
+            if len(firstRowColumnNames) != 3:    #count of columns headers on Config Changes page should be 5 fixed.
+                log("ERROR : The table structure on Config Changes confluence page is not correct. There should be exactly five column headers and in this order : File-Name, File-Path, Server, Release-Version, Group")
+                exit(1)
+
+            tableHeaders=["Ship-Name", "Date(MM/DD/YYYY)", "Comment"]
+            #The column headers should only be the ones present in tableHeaders list and in that specific order.
+            for i in range(3):
+                if firstRowColumnNames[i] != tableHeaders[i]:
+                    log("ERROR : The table structure on Config Changes confluence page is not correct. The five column headers should have names and order as : File-Name, File-Path, Server, Release-Version, Group")
+                    exit(1)
                 else:
                     continue
         else:
@@ -196,8 +209,6 @@ with open(logfile_path, 'w+') as logfile:
         return("Confluence page validated successfully.")
 
     # end of function //verifyConfluencePage
-
-
 
     def GetContentInformation(ContentId,headers):
         '''This function is used to scrap through the confluence page and fetch different columns from the HTML table in that confluence page'''
@@ -377,6 +388,52 @@ with open(logfile_path, 'w+') as logfile:
 
     # end of function GetConfigChanges()
 
+    def GetConfigChanges(ContentId,headers,releaseVersionScheduled):
+
+        url = "https://carnival.atlassian.net/wiki/rest/api/content/" +str(ContentId) + "?expand=body.storage"
+
+        response = requests.request(
+        "GET",
+        url,
+        headers=headers
+        )
+
+        if response.status_code == 200:
+            log ("Query successful:Confluence page exists")
+        else:
+            log(response)
+            log ("ERROR : Confluence page does not exist or other error::" + url)
+            exit(1)
+
+        searchString = response.text
+        subTable = re.findall(r'<td>(.+?)</td>',searchString)
+        recordCount=0
+        columnCount=0
+        ship-name=[]
+        Date=[]
+        comment=[]
+
+        TAG_RE = re.compile(r'<[^>]+>')
+        for x in subTable:
+
+            columnValue=TAG_RE.sub('', x)
+            columnValue = columnValue.strip()
+
+            if recordCount < 3:
+                recordCount= recordCount + 1
+                continue
+            if recordCount%3 == 0:  
+                ship-name.append(columnValue)
+            elif recordCount%3== 1:
+                Date.append(columnValue)
+            elif recordCount%3== 2:
+                comment.append(columnValue)
+
+            recordCount= recordCount + 1
+     return (ship-name,Date,comment)
+
+           # end of function //GetScheduleContentInformation
+    
     # def findIpAddress(env_dict, shipName):
     #     for environment in env_dict.keys():
     #         for group in env_dict[environment][0].keys():
