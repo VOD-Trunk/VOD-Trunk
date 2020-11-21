@@ -190,7 +190,9 @@ with open(logfile_path, 'w+') as logfile:
                     exit(1)
                   else:
                     continue
+                    
         elif pageType == "Config_Deployment_Schedule":
+            
             if len(firstRowColumnNames) != 3:    #count of columns headers on Config Changes page should be 5 fixed.
                 log("ERROR : The table structure on Config Changes confluence page is not correct. There should be exactly five column headers and in this order : File-Name, File-Path, Server, Release-Version, Group")
                 exit(1)
@@ -203,6 +205,7 @@ with open(logfile_path, 'w+') as logfile:
                     exit(1)
                 else:
                     continue
+                    
         else:
             log("ERROR : Wrong input for pageType.")
 
@@ -388,7 +391,7 @@ with open(logfile_path, 'w+') as logfile:
 
     # end of function GetConfigChanges()
 
-    def GetConfigChanges(ContentId,headers,releaseVersionScheduled):
+    def GetConfigSchedule(ContentId,headers,releaseVersionScheduled):
 
         url = "https://carnival.atlassian.net/wiki/rest/api/content/" +str(ContentId) + "?expand=body.storage"
 
@@ -508,6 +511,8 @@ with open(logfile_path, 'w+') as logfile:
             releaseVersionScheduled=[]
             serverNames = []
             fileNames = []
+            ship-name = []
+            Date = []
             
             if contentID == 0:
                 log(errorValue)
@@ -537,6 +542,10 @@ with open(logfile_path, 'w+') as logfile:
                     config_files_hist = workspace + "/tmp/" + rls + "/config_path_mapping.txt"
                     if os.path.exists(config_files_hist):
                         with open(config_files_hist, 'w') as f:
+                            f.truncate()
+                     config_schedule_hist = workspace + "/tmp/" + rls + "/config_deployment_schedule.txt"
+                    if os.path.exists(config_schedule_hist):
+                        with open(config_schedule_hist, 'w') as f:
                             f.truncate()
 
                 for i, shipName in enumerate(shipNames):
@@ -572,9 +581,13 @@ with open(logfile_path, 'w+') as logfile:
                     log("releaseVersions :" + str(releaseVersions) + "\nserverNames :" + str(serverNames) + "\nfileNames :" + str(fileNames) +"\nfilePaths :" + str(filePaths))
                     for i, release in enumerate(releaseVersions):
                         config_files_path = workspace + "/tmp/" + release + "/config_path_mapping.txt"
+                        config_schedule_hist = workspace + "/tmp/" + release + "/config_deployment_schedule.txt"
                         log("Writing into config_path_mapping.txt")
                         with open(config_files_path, 'a+') as f:
-                            f.write(serverNames[i] + ":" + fileNames[i].strip() + ":" + filePaths[i].strip() + "\n")                  
+                            f.write(serverNames[i] + ":" + fileNames[i].strip() + ":" + filePaths[i].strip() + "\n")
+                        log ("Writing into config_deployment_schedule.txt")
+                        with open(config_schedule_path, 'a+') as f:
+                             f.write(ship-name[i] + ":" + Date[i].strip() + ":" + "\n")
 
 
         scheduledReleaseDict={}
@@ -721,7 +734,7 @@ with open(logfile_path, 'w+') as logfile:
 
                         target_path = releasesPath + releaseName + '/' + component + '/' + url.split("/")[-1]
 
-                        if (action == "Deploy" and transfer_flag == "true") or action == "ScheduleDeploy":
+/                        if (action == "Deploy" and transfer_flag == "true") or action == "ScheduleDeploy":
 
                             log("\nDownloading " + component +" ...\n")
 
