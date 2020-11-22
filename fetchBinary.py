@@ -175,7 +175,7 @@ with open(logfile_path, 'w+') as logfile:
                     log("ERROR : The table structure on MW confluence page is not correct. The five column headers should have names and order as : Ship-Name, Release Path, Release-Version, Date(MM/DD/YYYY), Action")
                     exit(1)
                 else:
-                    continue
+                     continue
         elif pageType == "Config":
 
             if len(firstRowColumnNames) != 5:    #count of columns headers on Config Changes page should be 5 fixed.
@@ -191,18 +191,19 @@ with open(logfile_path, 'w+') as logfile:
                   else:
                        continue
         elif pageType == "Config_Deployment_Schedule":
-            if len(firstRowColumnNames) != 3:    #count of columns headers on Config Changes page should be 5 fixed.
-                log("ERROR : The table structure on Config Changes confluence page is not correct. There should be exactly five column headers and in this order : File-Name, File-Path, Server, Release-Version, Group")
+            
+            if len(firstRowColumnNames) != 3:    #count of columns headers on Config Deployment Schedule page should be 3 fixed.
+                log("ERROR : The table structure on Config Deployment Schedule confluence page is not correct. There should be exactly three column headers and in this order : Ship-Name, Date, Comment")
                 exit(1)
 
             tableHeaders=["Ship-Name", "Date(MM/DD/YYYY)", "Comment"]
             #The column headers should only be the ones present in tableHeaders list and in that specific order.
             for i in range(3):
                 if firstRowColumnNames[i] != tableHeaders[i]:
-                    log("ERROR : The table structure on Config Changes confluence page is not correct. The five column headers should have names and order as : File-Name, File-Path, Server, Release-Version, Group")
+                    log("ERROR : The table structure on Config Changes confluence page is not correct. The five column headers should have names and order as : Ship-Name, Date, Comment")
                     exit(1)
-                else:
-                    continue
+                #else:
+                     #continue
                     
         else:
             log("ERROR : Wrong input for pageType.")
