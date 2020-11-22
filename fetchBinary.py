@@ -526,8 +526,6 @@ with open(logfile_path, 'w+') as logfile:
             releaseVersionScheduled=[]
             serverNames = []
             fileNames = []
-            ship-name = []
-            Date = []
             
             if contentID == 0:
                 log(errorValue)
@@ -596,13 +594,9 @@ with open(logfile_path, 'w+') as logfile:
                     log("releaseVersions :" + str(releaseVersions) + "\nserverNames :" + str(serverNames) + "\nfileNames :" + str(fileNames) +"\nfilePaths :" + str(filePaths))
                     for i, release in enumerate(releaseVersions):
                         config_files_path = workspace + "/tmp/" + release + "/config_path_mapping.txt"
-                        config_schedule_hist = workspace + "/tmp/" + release + "/config_deployment_schedule.txt"
                         log("Writing into config_path_mapping.txt")
                         with open(config_files_path, 'a+') as f:
                             f.write(serverNames[i] + ":" + fileNames[i].strip() + ":" + filePaths[i].strip() + "\n")
-                        log ("Writing into config_deployment_schedule.txt")
-                        with open(config_schedule_path, 'a+') as f:
-                             f.write(ship-name[i] + ":" + date[i].strip() + ":" + "\n")
 
                   if len(shipNamesScheduled) != 0:               
                     confContentID,confErrorValue = CheckConfluencePage(pageNameConfig)
@@ -610,8 +604,7 @@ with open(logfile_path, 'w+') as logfile:
                     log(confVerificationResult)
                     servername, releaseversion, scheduledate = GetConfigChanges(confContentID,headers,releaseVersionScheduled)                      
                     log("releaseVersions :" + str(releaseversions) + "\nserverNames :" + str(servername) + "\nscheduledate :" + str(scheduledate) )
-                    for i, release in enumerate(releaseversions):
-                        
+                    for i, release in enumerate(releaseversions):  
                         config_schedule_hist = workspace + "/tmp/" + release + "/config_deployment_schedule.txt"
                         log ("Writing into config_deployment_schedule.txt")
                         with open(config_schedule_path, 'a+') as f:
