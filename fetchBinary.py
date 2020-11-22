@@ -26,6 +26,7 @@ userAccessEnv = sys.argv[15]
 userAllowedOperation = sys.argv[16]
 task = sys.argv[17]
 pageNameConfig = sys.argv[18]
+pageNameConfig_Deployment_Schedule = sys.argv[19]
 
 path = os.path.join(workspace,'logs')
 if os.path.isdir(path) != True:
