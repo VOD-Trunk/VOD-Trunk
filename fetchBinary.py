@@ -193,17 +193,17 @@ with open(logfile_path, 'w+') as logfile:
         elif pageType == "Config_Deployment_Schedule":
             
             if len(firstRowColumnNames) != 3:    #count of columns headers on Config Deployment Schedule page should be 3 fixed.
-                log("ERROR : The table structure on Config Deployment Schedule confluence page is not correct. There should be exactly three column headers and in this order : Ship-Name, Date, Comment")
+                log("ERROR : The table structure on Config Deployment Schedule confluence page is not correct. There should be exactly four column headers and in this order : Ship-Name, Release-Version, Date, Comment")
                 exit(1)
 
-            tableHeaders=["Ship-Name", "Date(MM/DD/YYYY)", "Comment"]
+            tableHeaders=["Ship-Name", "Release-Version", "Date(MM/DD/YYYY)", "Comment"]
             #The column headers should only be the ones present in tableHeaders list and in that specific order.
             for i in range(3):
                 if firstRowColumnNames[i] != tableHeaders[i]:
-                    log("ERROR : The table structure on Config Changes confluence page is not correct. The five column headers should have names and order as : Ship-Name, Date, Comment")
+                    log("ERROR : The table structure on Config Changes confluence page is not correct. The four column headers should have names and order as : Ship-Name, Release-Version, Date, Comment")
                     exit(1)
-                #else:
-                     #continue
+                else:
+                     continue
                     
         else:
             log("ERROR : Wrong input for pageType.")
@@ -350,8 +350,6 @@ with open(logfile_path, 'w+') as logfile:
         configServerNames=[]
         configReleaseVersions = []
         configGroups = []      
-        
-        
         serverNames = []
         fileNames = []
         releaseVersions = []
@@ -411,9 +409,10 @@ with open(logfile_path, 'w+') as logfile:
         subTable = re.findall(r'<td>(.+?)</td>',searchString)
         recordCount=0
         columnCount=0
-        ship-name=[]
-        Date=[]
-        comment=[]
+        ship-name = []
+        configreleaseversion = []
+        date = []
+        comment = []
 
         TAG_RE = re.compile(r'<[^>]+>')
         for x in subTable:
@@ -427,12 +426,21 @@ with open(logfile_path, 'w+') as logfile:
             if recordCount%3 == 0:  
                 ship-name.append(columnValue)
             elif recordCount%3== 1:
-                Date.append(columnValue)
+                configreleaseversion.append(columnValue)
             elif recordCount%3== 2:
+                date.append(columnValue)
+            elif recordCount%3== 3:
                 comment.append(columnValue)
 
             recordCount= recordCount + 1
-     return (ship-name,Date,comment)
+            
+            for i, configreleaseversion in enumerate(configreleaseversions):
+            if configreleaseversion in releaseVersionScheduled:
+                servername.append(ship-name[i])
+                scheduledate.append(date[i])
+                releaseversion.append(configreleaseversion)
+             
+            return (servername,releaseversion,scheduledate)
 
            # end of function //GetScheduleContentInformation
     
@@ -471,6 +479,14 @@ with open(logfile_path, 'w+') as logfile:
 
     elif task == "fetchBinary":
 
+        headers = {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "Authorization": "Basic ZGVlcGFrLnJvaGlsbGFAaHNjLmNvbTpkMnl0NWJ4TGdmcFA4cG93S3VsOUQyNTE="
+                }
+        
+     elif task == "ConfigSchedule":
+        
         headers = {
                 "Accept": "application/json",
                 "Content-Type": "application/json",
@@ -586,8 +602,21 @@ with open(logfile_path, 'w+') as logfile:
                             f.write(serverNames[i] + ":" + fileNames[i].strip() + ":" + filePaths[i].strip() + "\n")
                         log ("Writing into config_deployment_schedule.txt")
                         with open(config_schedule_path, 'a+') as f:
-                             f.write(ship-name[i] + ":" + Date[i].strip() + ":" + "\n")
+                             f.write(ship-name[i] + ":" + date[i].strip() + ":" + "\n")
 
+                  if len(shipNamesScheduled) != 0:               
+                    confContentID,confErrorValue = CheckConfluencePage(pageNameConfig)
+                    confVerificationResult = verifyConfluencePage(confContentID,headers,"Config_Deployment_Schedule")
+                    log(confVerificationResult)
+                    servername, releaseversion, scheduledate = GetConfigChanges(confContentID,headers,releaseVersionScheduled)                      
+                    log("releaseVersions :" + str(releaseversions) + "\nserverNames :" + str(servername) + "\nscheduledate :" + str(scheduledate) )
+                    for i, release in enumerate(releaseversions):
+                        
+                        config_schedule_hist = workspace + "/tmp/" + release + "/config_deployment_schedule.txt"
+                        log ("Writing into config_deployment_schedule.txt")
+                        with open(config_schedule_path, 'a+') as f:
+                             f.write(servername[i] + ":" + releaseversion[i].strip() + ":" + scheduledate[i].strip() + ":" + "\n")
+                                
 
         scheduledReleaseDict={}
         if action == "ScheduleDeploy":
