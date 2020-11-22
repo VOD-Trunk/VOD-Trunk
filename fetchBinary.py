@@ -189,10 +189,8 @@ with open(logfile_path, 'w+') as logfile:
                     log("ERROR : The table structure on Config Changes confluence page is not correct. The five column headers should have names and order as : File-Name, File-Path, Server, Release-Version, Group")
                     exit(1)
                   else:
-                    continue
-                    
+                       continue
         elif pageType == "Config_Deployment_Schedule":
-            
             if len(firstRowColumnNames) != 3:    #count of columns headers on Config Changes page should be 5 fixed.
                 log("ERROR : The table structure on Config Changes confluence page is not correct. There should be exactly five column headers and in this order : File-Name, File-Path, Server, Release-Version, Group")
                 exit(1)
