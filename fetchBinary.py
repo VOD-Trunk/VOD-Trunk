@@ -189,8 +189,8 @@ with open(logfile_path, 'w+') as logfile:
                 if firstRowColumnNames[i] != tableHeaders[i]:
                     log("ERROR : The table structure on Config Changes confluence page is not correct. The five column headers should have names and order as : File-Name, File-Path, Server, Release-Version, Group")
                     exit(1)
-                  else:
-                       continue
+                else:
+                    continue
         elif pageType == "Config_Deployment_Schedule":
             
             if len(firstRowColumnNames) != 3:    #count of columns headers on Config Deployment Schedule page should be 3 fixed.
