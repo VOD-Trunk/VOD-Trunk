@@ -436,10 +436,10 @@ with open(logfile_path, 'w+') as logfile:
             recordCount= recordCount + 1
             
             for i, configreleaseversion in enumerate(configreleaseversions):
-            if configreleaseversion in releaseVersionScheduled:
-                servername.append(ship-name[i])
-                scheduledate.append(date[i])
-                releaseversion.append(configreleaseversion)
+                if configreleaseversion in releaseVersionScheduled:
+                    servername.append(ship-name[i])
+                    scheduledate.append(date[i])
+                    releaseversion.append(configreleaseversion)
              
             return (servername,releaseversion,scheduledate)
 
