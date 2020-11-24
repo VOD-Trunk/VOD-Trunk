@@ -26,7 +26,7 @@ userAccessEnv = sys.argv[15]
 userAllowedOperation = sys.argv[16]
 task = sys.argv[17]
 pageNameConfig = sys.argv[18]
-pageNameConfig_Deployment_Schedule = sys.argv[19]
+pageNameConfig_Change_Schedule = sys.argv[19]
 
 path = os.path.join(workspace,'logs')
 if os.path.isdir(path) != True:
@@ -191,7 +191,7 @@ with open(logfile_path, 'w+') as logfile:
                     exit(1)
                 else:
                     continue
-        elif pageType == "Config_Deployment_Schedule":
+        elif pageType == "Config_Change_Schedule":
             
             if len(firstRowColumnNames) != 3:    #count of columns headers on Config Deployment Schedule page should be 3 fixed.
                 log("ERROR : The table structure on Config Deployment Schedule confluence page is not correct. There should be exactly four column headers and in this order : Ship-Name, Release-Version, Date, Comment")
