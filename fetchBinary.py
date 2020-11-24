@@ -195,13 +195,13 @@ with open(logfile_path, 'w+') as logfile:
                     continue
         elif pageType == "ConfigChangeSchedule":
             
-            if len(firstRowColumnNames) != 3:    #count of columns headers on Config Deployment Schedule page should be 3 fixed.
+            if len(firstRowColumnNames) != 4:    #count of columns headers on Config Deployment Schedule page should be 3 fixed.
                 log("ERROR : The table structure on Config Deployment Schedule confluence page is not correct. There should be exactly four column headers and in this order : Ship-Name, Release-Version, Date, Comment")
                 exit(1)
 
             tableHeaders=["Ship-Name", "Release-Version", "Date(MM/DD/YYYY)", "Comment"]
             #The column headers should only be the ones present in tableHeaders list and in that specific order.
-            for i in range(3):
+            for i in range(4):
                 if firstRowColumnNames[i] != tableHeaders[i]:
                     log("ERROR : The table structure on Config Changes confluence page is not correct. The four column headers should have names and order as : Ship-Name, Release-Version, Date, Comment")
                     exit(1)
@@ -266,7 +266,6 @@ with open(logfile_path, 'w+') as logfile:
                 confluence_md5sum.append(columnValue[:32])
             elif recordCount%7== 6:
                 yesNo.append(columnValue)
-
 
             recordCount= recordCount + 1
         return (applicationName,applicationVersion,applicationBuild,artifactoryUrl,confluence_md5sum,yesNo)
@@ -559,7 +558,7 @@ with open(logfile_path, 'w+') as logfile:
                     if os.path.exists(config_files_hist):
                         with open(config_files_hist, 'w') as f:
                             f.truncate()
-                    config_schedule_hist = workspace + "/tmp/" + rls + "/config_deployment_schedule.txt"
+                    config_schedule_hist = workspace + "/tmp/" + rls + "/config_update_schedule.txt"
                     if os.path.exists(config_schedule_hist):
                         with open(config_schedule_hist, 'w') as f:
                             f.truncate()
@@ -603,13 +602,13 @@ with open(logfile_path, 'w+') as logfile:
 
                 if len(shipNamesScheduled) != 0:               
                     confContentID,confErrorValue = CheckConfluencePage(pageNameConfig)
-                    confVerificationResult = verifyConfluencePage(confContentID,headers,"Config_Deployment_Schedule")
+                    confVerificationResult = verifyConfluencePage(confContentID,headers,"Config_Update_Schedule")
                     log(confVerificationResult)
-                    servername, releaseversion, scheduledate = GetConfigChanges(confContentID,headers,releaseVersionScheduled)                      
-                    log("releaseVersions :" + str(releaseversions) + "\nserverNames :" + str(servername) + "\nscheduledate :" + str(scheduledate) )
+                    servername, releaseversion, scheduledate = GetConfigSchedule(confContentID,headers,releaseVersionScheduled)                      
+                    log("serverName :" + str(servername) + "\nreleaseVersions :" + str(releaseversion) + "\nscheduledate :" + str(scheduledate) )
                     for i, release in enumerate(releaseversions):  
-                        config_schedule_hist = workspace + "/tmp/" + release + "/config_deployment_schedule.txt"
-                        log ("Writing into config_deployment_schedule.txt")
+                        config_schedule_hist = workspace + "/tmp/" + release + "/config_update_schedule.txt"
+                        log ("Writing into config_update_schedule.txt")
                         with open(config_schedule_path, 'a+') as f:
                              f.write(servername[i] + ":" + releaseversion[i].strip() + ":" + scheduledate[i].strip() + ":" + "\n")
                                 
