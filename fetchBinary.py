@@ -46,7 +46,7 @@ logfile_path = workspace + '/logs/' + task + 'Stage.log'
 with open(logfile_path, 'w+') as logfile:
 
     def log(text):
-        print text
+        print (text)
         logfile.write(text + "\n")
 
     def checkUserAccessRights():
@@ -410,7 +410,7 @@ with open(logfile_path, 'w+') as logfile:
         subTable = re.findall(r'<td>(.+?)</td>',searchString)
         recordCount=0
         columnCount=0
-        ship-name = []
+        shipname = []
         configreleaseversion = []
         date = []
         comment = []
@@ -425,7 +425,7 @@ with open(logfile_path, 'w+') as logfile:
                 recordCount= recordCount + 1
                 continue
             if recordCount%3 == 0:  
-                ship-name.append(columnValue)
+                shipname.append(columnValue)
             elif recordCount%3== 1:
                 configreleaseversion.append(columnValue)
             elif recordCount%3== 2:
@@ -437,7 +437,7 @@ with open(logfile_path, 'w+') as logfile:
             
             for i, configreleaseversion in enumerate(configreleaseversions):
                 if configreleaseversion in releaseVersionScheduled:
-                    servername.append(ship-name[i])
+                    servername.append(shipname[i])
                     scheduledate.append(date[i])
                     releaseversion.append(configreleaseversion)
              
@@ -486,7 +486,7 @@ with open(logfile_path, 'w+') as logfile:
                 "Authorization": "Basic ZGVlcGFrLnJvaGlsbGFAaHNjLmNvbTpkMnl0NWJ4TGdmcFA4cG93S3VsOUQyNTE="
                 }
         
-     elif task == "ConfigSchedule":
+    elif task == "ConfigSchedule":
         
         headers = {
                 "Accept": "application/json",
@@ -557,7 +557,7 @@ with open(logfile_path, 'w+') as logfile:
                     if os.path.exists(config_files_hist):
                         with open(config_files_hist, 'w') as f:
                             f.truncate()
-                     config_schedule_hist = workspace + "/tmp/" + rls + "/config_deployment_schedule.txt"
+                    config_schedule_hist = workspace + "/tmp/" + rls + "/config_deployment_schedule.txt"
                     if os.path.exists(config_schedule_hist):
                         with open(config_schedule_hist, 'w') as f:
                             f.truncate()
@@ -599,7 +599,7 @@ with open(logfile_path, 'w+') as logfile:
                         with open(config_files_path, 'a+') as f:
                             f.write(serverNames[i] + ":" + fileNames[i].strip() + ":" + filePaths[i].strip() + "\n")
 
-                  if len(shipNamesScheduled) != 0:               
+                if len(shipNamesScheduled) != 0:               
                     confContentID,confErrorValue = CheckConfluencePage(pageNameConfig)
                     confVerificationResult = verifyConfluencePage(confContentID,headers,"Config_Deployment_Schedule")
                     log(confVerificationResult)
@@ -756,7 +756,7 @@ with open(logfile_path, 'w+') as logfile:
 
                         target_path = releasesPath + releaseName + '/' + component + '/' + url.split("/")[-1]
 
-/                        if (action == "Deploy" and transfer_flag == "true") or action == "ScheduleDeploy":
+                        if (action == "Deploy" and transfer_flag == "true") or action == "ScheduleDeploy":
 
                             log("\nDownloading " + component +" ...\n")
 
