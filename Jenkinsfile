@@ -21,6 +21,21 @@ node {
                     """
                 }
             }
+            elif( "${env.JOB_NAME}"  == "exm-config-schedule-test")
+            {
+                stage('git checkout') {
+                    checkout scm
+                    sh "chmod 755 ${env.WORKSPACE}/*"
+                }
+
+                stage('Read COnfluence Page'){
+
+                    sh"""
+                        ${env.WORKSPACE}/fetchBinary.py "$Confluence_Page" $Release_Version $Activity "${env.WORKSPACE}" "$Components" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "${Transfer_Of_Artifacts}" "XICMS MW-Schedule for testing" $Deployment_Environment "${Ship_Name}" "${LoginUser}" "${AllowedUsers}" "${Promoting_From}" "${UserAccessEnv}" "${UserAllowedOperation}" "ConfigSchedule" "NA" "XICMS Config_Update_Schedule"
+                }
+            
+
+            }
             else {
 
                 if("$Components" == "")
@@ -64,7 +79,7 @@ node {
 
                         sh """
                             #!/bin/bash
-                            python ${env.WORKSPACE}/fetchBinary.py "$Confluence_Page" $Release_Version $Activity "${env.WORKSPACE}" "$Components" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "${Transfer_Of_Artifacts}" "XICMS MW-Schedule for testing" $Deployment_Environment "${Ship_Name}" "${LoginUser}" "${AllowedUsers}" "${Promoting_From}" "${UserAccessEnv}" "${UserAllowedOperation}" "checkUserAccessRights" "XICMS Config Changes" "ConfigChangeSchedule"
+                            python ${env.WORKSPACE}/fetchBinary.py "$Confluence_Page" $Release_Version $Activity "${env.WORKSPACE}" "$Components" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "${Transfer_Of_Artifacts}" "XICMS MW-Schedule for testing" $Deployment_Environment "${Ship_Name}" "${LoginUser}" "${AllowedUsers}" "${Promoting_From}" "${UserAccessEnv}" "${UserAllowedOperation}" "checkUserAccessRights" "XICMS Config Changes"
                                 
                         """
 
