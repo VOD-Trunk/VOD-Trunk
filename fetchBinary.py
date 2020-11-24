@@ -8,6 +8,7 @@ import shutil
 import datetime
 import ast
 
+
 pageNameRelease = sys.argv[1]
 relName = sys.argv[2]
 action = sys.argv[3]
@@ -139,6 +140,7 @@ with open(logfile_path, 'w+') as logfile:
 
         searchString = response.text
         subTable = re.findall(r'<tr>(.+?)</tr>',searchString)
+        
         
         
         TAG_RE = re.compile(r'<[^>]+>')
