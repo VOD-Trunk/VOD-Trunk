@@ -1,0 +1,2 @@
+The below given table is a tabular representation of the Health of each server. A RED coloured value suggests that there is an issue in that module. An NA in the column means that the ship server was unreachable.
+Pease give feedback wether this is helpful or not. Please give suggestions how we can improve this further. Thanks.
