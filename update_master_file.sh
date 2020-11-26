@@ -7,7 +7,7 @@ WORKSPACE=$1
 #do
 #HOSTNAME=`echo $line | cut -d ',' -f 2`
 USERNAME='root'
-PASS='not4dev!'
+PASS='Carnival@1234'
 HOSTNAME='192.168.248.161'
 ship=SUPPORT
 	
