@@ -1,8 +1,5 @@
-WORKSPACE=$1
-
-
 temp='/home/config_files/temp.txt'
-master='$WORKSPACE/Config_Files_master.txt'
+master='/home/config_files/Config_Files_master.txt'
 rm -f /home/config_files/app01/*
 rm -f /home/config_files/app02/*
 rm -f /home/config_files/media01/*
