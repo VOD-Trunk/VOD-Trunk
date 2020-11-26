@@ -1,5 +1,5 @@
 #!/bin/bash
-$WORKSPACE=$1
+WORKSPACE=$1
 #ip=`grep "ip=" /home/vod/properties/path.txt | cut -d\' -f2`
 #USERNAME=`grep USERNAME /home/vod/properties/ship_credentials.txt | cut -d\' -f2`
 #PASS=`grep PASS /home/vod/properties/ship_credentials.txt | cut -d\' -f2`
