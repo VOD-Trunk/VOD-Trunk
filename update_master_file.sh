@@ -8,7 +8,7 @@ WORKSPACE=$1
 #do
 #HOSTNAME=`echo $line | cut -d ',' -f 2`
 USERNAME='root'
-PASS='Carnival@1234'
+PASS=`echo "Q2Fybml2YWxAMTIzCg==" | base64 -d`
 HOSTNAME='192.168.248.161'
 Ship_NAME=SUPPORT
 log_file='configFetch.log'
