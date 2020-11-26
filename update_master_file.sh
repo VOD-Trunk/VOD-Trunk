@@ -18,5 +18,5 @@ sshpass -p ${PASS} ssh -o "StrictHostKeyChecking=no" ${USERNAME}@${HOSTNAME} 'if
 sshpass -p ${PASS} ssh -o "StrictHostKeyChecking=no" ${USERNAME}@${HOSTNAME} 'if [ ! -f /home/config_files/temp.txt ]; then touch /home/config_files/temp.txt;fi'
 sshpass -p ${PASS} scp -o "StrictHostKeyChecking=no" $WORKSPACE/Config_Files_master.txt ${USERNAME}@${HOSTNAME}:/home/config_files/
 sshpass -p ${PASS} scp -o "StrictHostKeyChecking=no" $WORKSPACE/fetch_files.sh ${USERNAME}@${HOSTNAME}:/home/config_files/
-sshpass -p ${PASS} ssh -o "StrictHostKeyChecking=no" ${USERNAME}@${HOSTNAME} "bash -s" -- < $WORKSPACE/fetch_files.sh >> $workspace/logs/"${log_file}"
+sshpass -p ${PASS} ssh -o "StrictHostKeyChecking=no" ${USERNAME}@${HOSTNAME} "bash -s" -- < $WORKSPACE/fetch_files.sh
 #done
