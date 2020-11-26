@@ -1,5 +1,12 @@
 temp='/home/config_files/temp.txt'
 master='/home/config_files/Config_Files_master.txt'
+if [ ! -d /home/config_files/app01 ] ; then mkdir -p /home/config_files/app01 ; fi
+if [ ! -d /home/config_files/app01 ] ; then mkdir -p /home/config_files/app02 ; fi
+if [ ! -d /home/config_files/app01 ] ; then mkdir -p /home/config_files/media01 ; fi
+if [ ! -d /home/config_files/app01 ] ; then mkdir -p /home/config_files/media02 ; fi
+if [ ! -d /home/config_files/app01 ] ; then mkdir -p /home/config_files/lb01 ; fi
+if [ ! -d /home/config_files/app01 ] ; then mkdir -p /home/config_files/lb02 ; fi 
+
 rm -f /home/config_files/app01/*
 rm -f /home/config_files/app02/*
 rm -f /home/config_files/media01/*
