@@ -11,7 +11,6 @@ node {
 
                     sh"""
                         sh $WORKSPACE/update_master_file.sh $WORKSPACE
-                        sh $WORKSPACE/fetch_files.sh $WORKSPACE
                     """
                 }
     }
