@@ -1,3 +1,4 @@
+$WORKSPACE=$1
 temp='$WORKSPACE/temp.txt'
 master='$WORKSPACE/Config_Files_master.txt'
 rm -f /home/config_files/app01/*
