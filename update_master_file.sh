@@ -11,10 +11,12 @@ USERNAME='root'
 PASS='Carnival@1234'
 HOSTNAME='192.168.248.161'
 Ship_NAME=SUPPORT
+log_file='configFetch.log'
 	
 echo "Copying master file to $Ship_NAME"
 sshpass -p ${PASS} ssh -o "StrictHostKeyChecking=no" ${USERNAME}@${HOSTNAME} 'if [ ! -d /home/config_files ]; then mkdir -p /home/config_files;fi'
 sshpass -p ${PASS} ssh -o "StrictHostKeyChecking=no" ${USERNAME}@${HOSTNAME} 'if [ ! -f /home/config_files/temp.txt ]; then touch /home/config_files/temp.txt;fi'
 sshpass -p ${PASS} scp -o "StrictHostKeyChecking=no" $WORKSPACE/Config_Files_master.txt ${USERNAME}@${HOSTNAME}:/home/config_files/
 sshpass -p ${PASS} scp -o "StrictHostKeyChecking=no" $WORKSPACE/fetch_files.sh ${USERNAME}@${HOSTNAME}:/home/config_files/
+sshpass -p ${PASS} ssh -o "StrictHostKeyChecking=no" ${USERNAME}@${HOSTNAME} "bash -s" -- < $WORKSPACE/fetch_files.sh >> $workspace/logs/"${log_file}"
 #done
