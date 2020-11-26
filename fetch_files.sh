@@ -1,5 +1,11 @@
 WORKSPACE=$1
-temp='$WORKSPACE/temp.txt'
+
+if [ ! -f /home/config_files/temp.txt ]
+then 
+touch /home/config_files/temp.txt
+fi
+
+temp='/home/config_files/temp.txt'
 master='$WORKSPACE/Config_Files_master.txt'
 rm -f /home/config_files/app01/*
 rm -f /home/config_files/app02/*
