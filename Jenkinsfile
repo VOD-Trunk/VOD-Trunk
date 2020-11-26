@@ -3,12 +3,11 @@ node {
     try {
 
         stage('Git Checkout') {
-                    //last_started = env.STAGE_NAME
                     checkout scm
                     sh "chmod 755 ${env.WORKSPACE}/*"
                 }
 
-        stage('Read COnfluence Page'){
+        stage('Updating Master File and Collecting Configs from All Servers'){
 
                     sh"""
                         sh $WORKSPACE/update_master_file.sh $WORKSPACE
