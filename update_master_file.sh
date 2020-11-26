@@ -12,6 +12,6 @@ HOSTNAME='192.168.248.161'
 ship=SUPPORT
 	
 echo "Copying master file to $ship"
-sshpass -p ${PASS} scp $WORKSPACE/Config_Files_master.txt ${USERNAME}@${HOSTNAME}:/home/config_files/
-sshpass -p ${PASS} scp $WORKSPACE/fetch_files.sh ${USERNAME}@${HOSTNAME}:/home/config_files/
+sshpass -p ${PASS} scp -o "StrictHostKeyChecking=no" $WORKSPACE/Config_Files_master.txt ${USERNAME}@${HOSTNAME}:/home/config_files/
+sshpass -p ${PASS} scp -o "StrictHostKeyChecking=no" $WORKSPACE/fetch_files.sh ${USERNAME}@${HOSTNAME}:/home/config_files/
 #done
