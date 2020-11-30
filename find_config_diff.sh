@@ -36,6 +36,7 @@ cd ${git_path}/Ship_Current_Files/${Ship_NAME} && tar -xzf config_files.tar.gz &
 
 #Push All config files to git
 cd ${git_path}
+git init
 git checkout develop
 git pull origin develop
 git add .
@@ -44,8 +45,3 @@ git push origin develop
 
 echo "======================================================================================================================="
 echo  "GIT Changes Pushed"
-
-
-
-
-
