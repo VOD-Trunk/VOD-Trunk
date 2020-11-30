@@ -2,10 +2,16 @@
 
 WORKSPACE=$1
 
+USERNAME='root'
+PASS=`echo Q2Fybml2YWxAMTIzNAo= | base64 -d`
+HOSTNAME='192.168.248.161'
+Ship_NAME=SUPPORT
+log_file='configFetch.lo
+
 git_path=$WORKSPACE/Config_Files/VOD-Trunk
 
 #Run the script fetch_files.sh on respective servers and move to next hostname if ssh takes more than 20 seconds.
-sshpass -p ${PASS} ssh -o ConnectTimeout=20 ${USERNAME}@${HOSTNAME} 'cd /home/config_files/ && rm -f config_files.tar.gz && ./fetch_files.sh && tar -czf config_files.tar.gz app01 app02 media01 media02 lb01 lb02' 2>/dev/null
+sshpass -p ${PASS} ssh -o "StrictHostKeyChecking=no" ${USERNAME}@${HOSTNAME} 'cd /home/config_files/ && rm -f config_files.tar.gz && ./fetch_files.sh && tar -czf config_files.tar.gz app01 app02 media01 media02 lb01 lb02' 2>/dev/null
 	T=$?
 	if [ "$T" != "0" ]
 	then
