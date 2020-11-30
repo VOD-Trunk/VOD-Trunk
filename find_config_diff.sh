@@ -1,5 +1,6 @@
 #!/bin/bash
 
+WORKSPACE=$1
 
 git_path=$WORKSPACE/Config_Files/VOD-Trunk
 
