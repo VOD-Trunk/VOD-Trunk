@@ -17,8 +17,8 @@ node {
                     sh"""
                         sh $WORKPACE/find_config_diff.sh $WORKSPACE
                     """
-        }
-    }
+               }
+       }
     catch(error) {
 
      echo "An exception has occured in stage . This build has FAILED !! ${error}"
