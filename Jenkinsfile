@@ -4,7 +4,7 @@ node {
 
         stage('Git Checkout') {
                     checkout scm
-                    sh "chmod 755 ${env.WORKSPACE}/*"
+                    sh "chmod 755 ${WORKSPACE}/*"
                 }
 
         stage('Updating Master File and Collecting Configs from All Servers'){
