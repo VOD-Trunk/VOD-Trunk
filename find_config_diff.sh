@@ -6,7 +6,7 @@ USERNAME='root'
 PASS=`echo Q2Fybml2YWxAMTIzNAo= | base64 -d`
 HOSTNAME='192.168.248.161'
 Ship_NAME=SUPPORT
-log_file='configFetch.lo
+log_file='config.log'
 
 git_path=$WORKSPACE/Config_Files/VOD-Trunk
 
