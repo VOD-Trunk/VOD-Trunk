@@ -15,7 +15,7 @@ node {
                 }
         stage('Update Config Files'){
                     sh"""
-                        sh $WORKPACE/find_config_diff.sh $WORKSPACE
+                        sh $WORKSPACE/find_config_diff.sh $WORKSPACE
                     """
                }
        }
