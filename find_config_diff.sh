@@ -8,9 +8,9 @@ HOSTNAME='192.168.248.161'
 Ship_NAME=SUPPORT
 log_file='config.log'
 
-if [ ! -d $WORKSPACE/Config_Files/VOD-Trunk/$Ship_NAME ]
+if [ ! -d $WORKSPACE/Config_Files/VOD-Trunk/Ship_Current_Files/$Ship_NAME ]
 then
-mkdir -p $WORKSPACE/Config_Files/VOD-Trunk/$Ship_NAME
+mkdir -p $WORKSPACE/Config_Files/VOD-Trunk/Ship_Current_Files/$Ship_NAME
 fi
 
 git_path=$WORKSPACE/Config_Files/VOD-Trunk
