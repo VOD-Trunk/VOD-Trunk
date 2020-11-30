@@ -8,6 +8,11 @@ HOSTNAME='192.168.248.161'
 Ship_NAME=SUPPORT
 log_file='config.log'
 
+if [ ! -d $WORKSPACE/Config_Files/VOD-Trunk ]
+then
+mkdir -p $WORKSPACE/Config_Files/VOD-Trunk
+fi
+
 git_path=$WORKSPACE/Config_Files/VOD-Trunk
 
 #Run the script fetch_files.sh on respective servers and move to next hostname if ssh takes more than 20 seconds.
