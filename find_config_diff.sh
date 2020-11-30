@@ -37,6 +37,7 @@ cd ${git_path}/Ship_Current_Files/${Ship_NAME} && tar -xzf config_files.tar.gz &
 #Push All config files to git
 cd ${git_path}
 git init
+git remote add https://github.com/VOD-Trunk/VOD-Trunk.git
 git checkout develop
 git pull origin develop
 git add .
