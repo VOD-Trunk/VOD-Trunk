@@ -1,0 +1,15 @@
+<Context>
+	<Environment name="com.uievolution.exm.plugin.excursions.capabilities.Guest.Enabled" value="true" type="java.lang.Boolean" override="false" />
+	<Environment name="com.uievolution.exm.plugin.excursions.capabilities.Excursion.Enabled" value="true" type="java.lang.Boolean" override="false" />
+	<Environment name="com.uievolution.exm.plugin.excursions.capabilities.ExcursionOrder.Enabled" value="true" type="java.lang.Boolean" override="false" />
+	<Environment name="com.uievolution.exm.plugin.excursions.services.hal.HalInterface.RestUrl" value="http://tedmqamobile.hq.halw.com:12180/hal-ds-ship-server/rest/" type="java.lang.String" override="false" />
+	<Environment name="com.uievolution.exm.plugin.excursions.services.hal.HalInterface.RestUrlCertValidation" value="true" type="java.lang.Boolean" override="false" />
+	<Environment name="com.uievolution.exm.plugin.excursions.services.hal.HalInterface.ImageUrl" value="http://haldevpol01.hq.halw.com/hal/onboard-experience/shorex/catalog/" type="java.lang.String" override="false" />
+	<Environment name="com.uievolution.exm.plugin.excursions.services.hal.HalInterface.ImageUrlCertValidation" value="true" type="java.lang.Boolean" override="false" />
+	<Environment name="com.uievolution.exm.plugin.excursions.services.hal.HalInterface.ExmUrl" value="https://192.168.121.182:8000/v2/" type="java.lang.String" override="false" />
+	<Environment name="com.uievolution.exm.plugin.excursions.services.hal.HalInterface.TimeUrl" value="http://tedmqamobile.hq.halw.com:12180/hal-ds-ship-server/rest/shipinfo/v1.0.0/shipDateTime" type="java.lang.String" override="false" />
+    <Environment name="com.uievolution.exm.plugin.excursions.services.hal.HalInterface.EmailPath" value="/nfs/uploads/v2/hal_emails/" type="java.lang.String" override="false" />
+	<Environment name="EmailAllowGet" value="false" type="java.lang.Boolean" override="false" />
+	<Environment name="EmailAllowDelete" value="false" type="java.lang.Boolean" override="false" />
+	<Environment name="EmailEncryptionKey" value="PleaseGenerateNiceLongSecretSauceForAES256Encryption" type="java.lang.String" override="false" />
+</Context>

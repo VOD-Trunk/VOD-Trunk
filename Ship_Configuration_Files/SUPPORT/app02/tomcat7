@@ -1,0 +1,11 @@
+/var/log/tomcat7/catalina.out {
+    weekly
+    dateext
+    rotate 8
+    compress
+    missingok
+    notifempty
+    copytruncate
+
+    create 0644 tomcat tomcat
+}

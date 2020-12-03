@@ -1,0 +1,4 @@
+check process WowzaStreamingEngine with pidfile /var/run/WowzaStreamingEngine.pid
+#start program = "/etc/init.d/WowzaStreamingEngine start" with timeout 60 seconds
+stop program = "/etc/init.d/WowzaStreamingEngine stop"
+mode active

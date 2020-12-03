@@ -1,0 +1,9 @@
+/var/log/ha.log {
+    daily
+    rotate 30
+    dateext
+    compress
+    missingok
+    notifempty
+    copytruncate
+}

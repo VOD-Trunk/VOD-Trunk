@@ -1,0 +1,73 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+
+#app01
+#192.168.121.172 master cachepeer
+#192.168.121.171 slave cachehost
+
+#app02
+#192.168.121.171 master cachepeer
+#192.168.121.172 slave cachehost
+
+
+
+10.25.231.254      core.hsspt.ocean.com core
+
+192.168.150.111       app01.hsspt.ocean.com app01
+192.168.150.112       app02.hsspt.ocean.com app02
+
+192.168.150.118       media01.hsspt.ocean.com media01
+192.168.150.119       media02.hsspt.ocean.com media02
+
+192.168.150.115      lb01.hsspt.ocean.com lb01
+192.168.150.117      lb02.hsspt.ocean.com lb02
+
+192.168.150.114      client.hsspt.ocean.com client
+192.168.150.114      app.hsspt.ocean.com app
+192.168.150.114      api.hsspt.ocean.com api
+192.168.248.161      admin.hsspt.ocean.com admin
+192.168.150.114      lb.hsspt.ocean.com lb
+192.168.248.167       media.hsspt.ocean.com media
+192.168.248.168       media.hsspt.ocean.com media
+192.168.150.120       dbvip.hsspt.ocean.com dbvip
+#10.25.228.22          mute.hsspt.ocean.com mute
+
+
+# as procentric.local is already registered for media01(QA Setup) in hsc network, so commenting below line.
+#192.168.248.1410       procentric.local
+
+10.25.238.10   media01-nfs
+10.25.238.11   media02-nfs
+10.25.238.20   app01-nfs
+10.25.238.21   app02-nfs
+
+10.25.237.20	app01-private
+10.25.237.21	app02-private
+192.168.121.171 pool.ntp.org
+192.168.121.172 pool.ntp.org
+
+10.25.231.30 barix01.hsspt.ocean.com barix01
+10.25.231.31 barix02.hsspt.ocean.com barix02
+10.25.231.32 barix03.hsspt.ocean.com barix03
+10.25.231.33 barix04.hsspt.ocean.com barix04
+10.25.231.34 barix05.hsspt.ocean.com barix05
+10.25.231.35 barix06.hsspt.ocean.com barix06
+10.25.231.36 barix07.hsspt.ocean.com barix07
+10.25.231.37 barix08.hsspt.ocean.com barix08
+
+
+127.0.0.1 ns11.whois.co.kr
+127.0.0.1 www.samsung.com
+127.0.0.1 dpu.samsungelectronics.com
+127.0.0.1 cdn.samsungcloudsolution.com
+127.0.0.1 time.samsungcloudsolution.com
+127.0.0.1 www.worldtimeserver.com
+127.0.0.1 www.bing.com
+127.0.0.1 multiscreen.samsung.com
+# New entries to block for the new Samsungs
+127.0.0.1 srv.giraffic.com
+127.0.0.1 ntp.ubuntu.com
+127.0.0.1 www.worldtime.com
+127.0.0.1 www.samsungrm.net
+
