@@ -45,10 +45,11 @@ cd ${push_path}
 git init
 git remote add VOD-Trunk https://VOD-Trunk@github.com/VOD-Trunk/VOD-Trunk.git
 git clone https://VOD-Trunk@github.com/VOD-Trunk/VOD-Trunk.git
-git checkout -b develop
-git pull develop
+#git checkout -b develop
+#git pull develop
 cp -r ${git_path}/Ship_Current_Files/${Ship_NAME} $WORKSPACE/Config_Files/VOD-Trunk/Ship_Configuration_Files/
-git add .
+cd ${push_path}/VOD-Trunk
+git add --all
 git commit -m "Updating $Ship_NAME GIT files with updated values on $Ship_NAME config"
 git push --all
 
