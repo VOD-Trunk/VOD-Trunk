@@ -36,7 +36,7 @@ echo "Copying files from app01 of $Ship_NAME to local GIT path."
 
 
 #Copy the consolidated config files from server to local git path.
-sshpass -p ${PASS} scp ${USERNAME}@${HOSTNAME}:/home/config_files/config_files.tar.gz ${git_path}/Ship_Current_File/${Ship_NAME}
+sshpass -p ${PASS} scp -o "StrictHostKeyChecking=no" ${USERNAME}@${HOSTNAME}:/home/config_files/config_files.tar.gz ${git_path}/Ship_Current_File/${Ship_NAME}
 cd ${git_path}/Ship_Current_Files/${Ship_NAME} && tar -xzf config_files.tar.gz && rm -f config_files.tar.gz
 
 
