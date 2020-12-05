@@ -1,3 +1,6 @@
+test
+
+
 udpport 694
 use_logd no
 logfile /var/log/ha.log
