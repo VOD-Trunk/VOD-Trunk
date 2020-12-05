@@ -49,9 +49,9 @@ git clone https://github.com/VOD-Trunk/VOD-Trunk.git
 #git pull develop
 cp -r ${git_path}/Ship_Current_Files/${Ship_NAME} $WORKSPACE/Config_Files/VOD-Trunk/Ship_Configuration_Files/
 cd ${push_path}/VOD-Trunk
-git add --all
-git commit -m "Updating $Ship_NAME GIT files with updated values on $Ship_NAME config"
-git push --all
+sudo git add --all
+sudo git commit -m "Updating $Ship_NAME GIT files with updated values on $Ship_NAME config"
+sudo git push --all
 
 echo "======================================================================================================================="
 echo  "GIT Changes Pushed"
