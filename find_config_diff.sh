@@ -54,9 +54,10 @@ sudo git commit -m "Updating $Ship_NAME GIT files with updated values on $Ship_N
 sudo git push --all
 
 S=$?
-	if [ "$S" != "0" ]
+	if [ "$S" = "0" ]
 	then
 		echo "======================================================================================================================="
 		echo  "GIT Changes Pushed"
-		continue
+	else 
+		echo "GIT Changes Not Pushed"
 	fi
