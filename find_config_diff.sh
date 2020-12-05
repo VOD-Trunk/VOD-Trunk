@@ -53,5 +53,10 @@ sudo git add --all
 sudo git commit -m "Updating $Ship_NAME GIT files with updated values on $Ship_NAME config"
 sudo git push --all
 
-echo "======================================================================================================================="
-echo  "GIT Changes Pushed"
+S=$?
+	if [ "$S" != "0" ]
+	then
+		echo "======================================================================================================================="
+		echo  "GIT Changes Pushed"
+		continue
+	fi
