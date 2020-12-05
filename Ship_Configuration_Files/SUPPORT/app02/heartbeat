@@ -11,3 +11,5 @@
         /sbin/service heartbeat reload 2>&1 > /dev/null || true
     endscript
 }
+
+test deepam
