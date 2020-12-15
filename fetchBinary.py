@@ -175,7 +175,7 @@ with open(logfile_path, 'w+') as logfile:
                     log("ERROR : The table structure on MW confluence page is not correct. The five column headers should have names and order as : Ship-Name, Release Path, Release-Version, Date(MM/DD/YYYY), Action")
                     exit(1)
                 else:
-                     continue
+                    continue
         elif pageType == "Config":
 
             if len(firstRowColumnNames) != 5:    #count of columns headers on Config Changes page should be 5 fixed.
@@ -189,14 +189,15 @@ with open(logfile_path, 'w+') as logfile:
                     log("ERROR : The table structure on Config Changes confluence page is not correct. The five column headers should have names and order as : File-Name, File-Path, Server, Release-Version, Group")
                     exit(1)
                 else:
-                     continue
-                    
+                    continue
         else:
             log("ERROR : Wrong input for pageType.")
 
         return("Confluence page validated successfully.")
 
     # end of function //verifyConfluencePage
+
+
 
     def GetContentInformation(ContentId,headers):
         '''This function is used to scrap through the confluence page and fetch different columns from the HTML table in that confluence page'''
@@ -336,6 +337,8 @@ with open(logfile_path, 'w+') as logfile:
         configServerNames=[]
         configReleaseVersions = []
         configGroups = []      
+        
+        
         serverNames = []
         fileNames = []
         releaseVersions = []
@@ -374,8 +377,6 @@ with open(logfile_path, 'w+') as logfile:
 
     # end of function GetConfigChanges()
 
-           # end of function //GetScheduleContentInformation
-    
     # def findIpAddress(env_dict, shipName):
     #     for environment in env_dict.keys():
     #         for group in env_dict[environment][0].keys():
@@ -411,14 +412,6 @@ with open(logfile_path, 'w+') as logfile:
 
     elif task == "fetchBinary":
 
-        headers = {
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization": "Basic ZGVlcGFrLnJvaGlsbGFAaHNjLmNvbTpkMnl0NWJ4TGdmcFA4cG93S3VsOUQyNTE="
-                }
-        
-     elif task == "ConfigSchedule":
-        
         headers = {
                 "Accept": "application/json",
                 "Content-Type": "application/json",
@@ -488,10 +481,6 @@ with open(logfile_path, 'w+') as logfile:
                     if os.path.exists(config_files_hist):
                         with open(config_files_hist, 'w') as f:
                             f.truncate()
-                     config_schedule_hist = workspace + "/tmp/" + rls + "/config_deployment_schedule.txt"
-                    if os.path.exists(config_schedule_hist):
-                        with open(config_schedule_hist, 'w') as f:
-                            f.truncate()
 
                 for i, shipName in enumerate(shipNames):
 
@@ -528,20 +517,8 @@ with open(logfile_path, 'w+') as logfile:
                         config_files_path = workspace + "/tmp/" + release + "/config_path_mapping.txt"
                         log("Writing into config_path_mapping.txt")
                         with open(config_files_path, 'a+') as f:
-                            f.write(serverNames[i] + ":" + fileNames[i].strip() + ":" + filePaths[i].strip() + "\n")
+                            f.write(serverNames[i] + ":" + fileNames[i].strip() + ":" + filePaths[i].strip() + "\n")                  
 
-                  if len(shipNamesScheduled) != 0:               
-                    confContentID,confErrorValue = CheckConfluencePage(pageNameConfig)
-                    confVerificationResult = verifyConfluencePage(confContentID,headers,"Config_Deployment_Schedule")
-                    log(confVerificationResult)
-                    servername, releaseversion, scheduledate = GetConfigChanges(confContentID,headers,releaseVersionScheduled)                      
-                    log("releaseVersions :" + str(releaseversions) + "\nserverNames :" + str(servername) + "\nscheduledate :" + str(scheduledate) )
-                    for i, release in enumerate(releaseversions):  
-                        config_schedule_hist = workspace + "/tmp/" + release + "/config_deployment_schedule.txt"
-                        log ("Writing into config_deployment_schedule.txt")
-                        with open(config_schedule_path, 'a+') as f:
-                             f.write(servername[i] + ":" + releaseversion[i].strip() + ":" + scheduledate[i].strip() + ":" + "\n")
-                                
 
         scheduledReleaseDict={}
         if action == "ScheduleDeploy":
@@ -687,7 +664,7 @@ with open(logfile_path, 'w+') as logfile:
 
                         target_path = releasesPath + releaseName + '/' + component + '/' + url.split("/")[-1]
 
-/                        if (action == "Deploy" and transfer_flag == "true") or action == "ScheduleDeploy":
+                        if (action == "Deploy" and transfer_flag == "true") or action == "ScheduleDeploy":
 
                             log("\nDownloading " + component +" ...\n")
 
