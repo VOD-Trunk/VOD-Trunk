@@ -26,7 +26,6 @@ userAccessEnv = sys.argv[15]
 userAllowedOperation = sys.argv[16]
 task = sys.argv[17]
 pageNameConfig = sys.argv[18]
-pageNameConfig_Deployment_Schedule = sys.argv[19]
 
 path = os.path.join(workspace,'logs')
 if os.path.isdir(path) != True:
@@ -188,20 +187,6 @@ with open(logfile_path, 'w+') as logfile:
             for i in range(5):
                 if firstRowColumnNames[i] != tableHeaders[i]:
                     log("ERROR : The table structure on Config Changes confluence page is not correct. The five column headers should have names and order as : File-Name, File-Path, Server, Release-Version, Group")
-                    exit(1)
-                else:
-                    continue
-        elif pageType == "Config_Deployment_Schedule":
-            
-            if len(firstRowColumnNames) != 3:    #count of columns headers on Config Deployment Schedule page should be 3 fixed.
-                log("ERROR : The table structure on Config Deployment Schedule confluence page is not correct. There should be exactly four column headers and in this order : Ship-Name, Release-Version, Date, Comment")
-                exit(1)
-
-            tableHeaders=["Ship-Name", "Release-Version", "Date(MM/DD/YYYY)", "Comment"]
-            #The column headers should only be the ones present in tableHeaders list and in that specific order.
-            for i in range(3):
-                if firstRowColumnNames[i] != tableHeaders[i]:
-                    log("ERROR : The table structure on Config Changes confluence page is not correct. The four column headers should have names and order as : Ship-Name, Release-Version, Date, Comment")
                     exit(1)
                 else:
                      continue
@@ -388,60 +373,6 @@ with open(logfile_path, 'w+') as logfile:
         return (releaseVersions,serverNames,fileNames,filePaths)
 
     # end of function GetConfigChanges()
-
-    def GetConfigSchedule(ContentId,headers,releaseVersionScheduled):
-
-        url = "https://carnival.atlassian.net/wiki/rest/api/content/" +str(ContentId) + "?expand=body.storage"
-
-        response = requests.request(
-        "GET",
-        url,
-        headers=headers
-        )
-
-        if response.status_code == 200:
-            log ("Query successful:Confluence page exists")
-        else:
-            log(response)
-            log ("ERROR : Confluence page does not exist or other error::" + url)
-            exit(1)
-
-        searchString = response.text
-        subTable = re.findall(r'<td>(.+?)</td>',searchString)
-        recordCount=0
-        columnCount=0
-        ship-name = []
-        configreleaseversion = []
-        date = []
-        comment = []
-
-        TAG_RE = re.compile(r'<[^>]+>')
-        for x in subTable:
-
-            columnValue=TAG_RE.sub('', x)
-            columnValue = columnValue.strip()
-
-            if recordCount < 3:
-                recordCount= recordCount + 1
-                continue
-            if recordCount%3 == 0:  
-                ship-name.append(columnValue)
-            elif recordCount%3== 1:
-                configreleaseversion.append(columnValue)
-            elif recordCount%3== 2:
-                date.append(columnValue)
-            elif recordCount%3== 3:
-                comment.append(columnValue)
-
-            recordCount= recordCount + 1
-            
-            for i, configreleaseversion in enumerate(configreleaseversions):
-                if configreleaseversion in releaseVersionScheduled:
-                    servername.append(ship-name[i])
-                    scheduledate.append(date[i])
-                    releaseversion.append(configreleaseversion)
-             
-            return (servername,releaseversion,scheduledate)
 
            # end of function //GetScheduleContentInformation
     
