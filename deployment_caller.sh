@@ -20,10 +20,10 @@ log(){
     echo "$@" >> $workspace/logs/"${logfile}"
 }
 
-if [ -d $workspace/Ship_Configuration_Files ]
-then
-    rm -rf $workspace/Ship_Configuration_Files
-fi
+#if [ -d $workspace/Ship_Configuration_Files ]
+#then
+ #   rm -rf $workspace/Ship_Configuration_Files
+#fi
 
 if [ -d $workspace/.git ]
 then
