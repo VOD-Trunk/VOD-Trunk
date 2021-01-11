@@ -168,7 +168,7 @@ with open(logfile_path, 'w+') as logfile:
             #The column headers should only be the ones present in tableHeaders list and in that specific order.
             for i in range(5):
                 if firstRowColumnNames[i] != tableHeaders[i]:
-                    log("ERROR : The table structure on MW confluence page is not correct. The five column headers should have names and order as : Ship-Name, Release Path, Release-Version, Date, Status")
+                    log("ERROR : The table structure on MW confluence page is not correct. The five column headers should have names and order as : Ship-Name , Release Path, Release-Version, Date(MM/DD/YYYY), Action")
                     exit(1)
                 else:
                     continue
