@@ -86,22 +86,22 @@ then
                 fi
             fi
 
-            if [ -f $workspace/tmp/$relName/config_path_mapping.txt ]
-            then
-                git init
-                git remote add origin "https://github.com/VOD-Trunk/VOD-Trunk.git"
-                git checkout -b 'master'
-                git config core.sparsecheckout true
-                configs=`cat $workspace/tmp/$relName/config_path_mapping.txt`
-                IFS=$'\n'
-                for config in $configs
-                do
-                    server_name=`echo $config | cut -d: -f1`
-                    file_name=`echo $config | cut -d: -f2`                    
-                    echo Ship_Configuration_Files/$ship_name/$server_name/$file_name >> .git/info/sparse-checkout
-                done
-                git pull origin master
-            fi
+            #if [ -f $workspace/tmp/$relName/config_path_mapping.txt ]
+            #then
+             #   git init
+             #  git remote add origin "https://github.com/VOD-Trunk/VOD-Trunk.git"
+             #   git checkout -b 'master'
+             #   git config core.sparsecheckout true
+             #   configs=`cat $workspace/tmp/$relName/config_path_mapping.txt`
+             #   IFS=$'\n'
+             #   for config in $configs
+             #   do
+             #       server_name=`echo $config | cut -d: -f1`
+              #      file_name=`echo $config | cut -d: -f2`                    
+               #     echo Ship_Configuration_Files/$ship_name/$server_name/$file_name >> .git/info/sparse-checkout
+               # done
+               # git pull origin master
+           # fi
 
             log
             log "Transferring artifacts to the target server ( $ship_name : $ipaddr )"
@@ -112,14 +112,14 @@ then
             sshpass -p $serverPassword scp -o "StrictHostKeyChecking=no" -r $workspace/tmp/$relName root@$ipaddr:/root/Releases/tmp
             sshpass -p $serverPassword ssh -o "StrictHostKeyChecking=no" root@$ipaddr "bash -s" -- < $workspace/deploy_on_server.sh -t "$relName" "$component" "$abort_on_fail" "app01" "$transfer_flag" >> $workspace/logs/"${logfile}"
             
-            if [ -f $workspace/tmp/$relName/config_path_mapping.txt ]
-            then
-                log
-                log "Transferring config files to the target server ( $ship_name : $ipaddr )"
-                log
-                sshpass -p $serverPassword ssh  -o "StrictHostKeyChecking=no"  root@$ipaddr 'if [ ! -d /root/Releases/Config_Files ]; then mkdir -p /root/Releases/Config_Files; else rm -rf /root/Releases/Config_Files/*; fi'
-                sshpass -p $serverPassword scp -o "StrictHostKeyChecking=no" -r $workspace/Ship_Configuration_Files/$ship_name/* root@$ipaddr:/root/Releases/Config_Files
-            fi
+           # if [ -f $workspace/tmp/$relName/config_path_mapping.txt ]
+           # then
+           #     log
+           #     log "Transferring config files to the target server ( $ship_name : $ipaddr )"
+           #     log
+           #     sshpass -p $serverPassword ssh  -o "StrictHostKeyChecking=no"  root@$ipaddr 'if [ ! -d /root/Releases/Config_Files ]; then mkdir -p /root/Releases/Config_Files; else rm -rf /root/Releases/Config_Files/*; fi'
+           #     sshpass -p $serverPassword scp -o "StrictHostKeyChecking=no" -r $workspace/Ship_Configuration_Files/$ship_name/* root@$ipaddr:/root/Releases/Config_Files
+           # fi
 
             if [ -f $workspace/logs/"${logfile}" ]
             then
