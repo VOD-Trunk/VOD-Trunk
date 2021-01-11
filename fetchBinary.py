@@ -507,17 +507,17 @@ with open(logfile_path, 'w+') as logfile:
                                 with open(scheduled_ships_path, 'a+') as f:
                                     f.write(shipName + ":" + ipaddr + ":" +  releaseVersion[i]+ ":" + transferAction[i] + ":" + serverPass + "\n")
                 
-                if len(shipNamesScheduled) != 0:               
-                    confContentID,confErrorValue = CheckConfluencePage(pageNameConfig)
-                    confVerificationResult = verifyConfluencePage(confContentID,headers,"Config")
-                    log(confVerificationResult)
-                    releaseVersions, serverNames, fileNames, filePaths = GetConfigChanges(confContentID,headers,releaseVersionScheduled)                      
-                    log("releaseVersions :" + str(releaseVersions) + "\nserverNames :" + str(serverNames) + "\nfileNames :" + str(fileNames) +"\nfilePaths :" + str(filePaths))
-                    for i, release in enumerate(releaseVersions):
-                        config_files_path = workspace + "/tmp/" + release + "/config_path_mapping.txt"
-                        log("Writing into config_path_mapping.txt")
-                        with open(config_files_path, 'a+') as f:
-                            f.write(serverNames[i] + ":" + fileNames[i].strip() + ":" + filePaths[i].strip() + "\n")                  
+             #   if len(shipNamesScheduled) != 0:               
+              #      confContentID,confErrorValue = CheckConfluencePage(pageNameConfig)
+              #      confVerificationResult = verifyConfluencePage(confContentID,headers,"Config")
+              #      log(confVerificationResult)
+              #      releaseVersions, serverNames, fileNames, filePaths = GetConfigChanges(confContentID,headers,releaseVersionScheduled)                      
+              #      log("releaseVersions :" + str(releaseVersions) + "\nserverNames :" + str(serverNames) + "\nfileNames :" + str(fileNames) +"\nfilePaths :" + str(filePaths))
+              #      for i, release in enumerate(releaseVersions):
+              #          config_files_path = workspace + "/tmp/" + release + "/config_path_mapping.txt"
+              #          log("Writing into config_path_mapping.txt")
+              #          with open(config_files_path, 'a+') as f:
+              #              f.write(serverNames[i] + ":" + fileNames[i].strip() + ":" + filePaths[i].strip() + "\n")                  
 
 
         scheduledReleaseDict={}
