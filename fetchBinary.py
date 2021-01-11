@@ -311,69 +311,69 @@ with open(logfile_path, 'w+') as logfile:
     # end of function //GetScheduleContentInformation
 
 
-    def GetConfigChanges(ContentId,headers,releaseVersionScheduled):
+    #def GetConfigChanges(ContentId,headers,releaseVersionScheduled):
 
-        url = "https://carnival.atlassian.net/wiki/rest/api/content/" +str(ContentId) + "?expand=body.storage"
+     #   url = "https://carnival.atlassian.net/wiki/rest/api/content/" +str(ContentId) + "?expand=body.storage"
 
-        response = requests.request(
-        "GET",
-        url,
-        headers=headers
-        )
+      #  response = requests.request(
+      #  "GET",
+      #  url,
+      #  headers=headers
+      #  )
 
-        if response.status_code == 200:
-            log ("Query successful:Confluence page exists")
-        else:
-            log(response)
-            log ("ERROR : Confluence page does not exist or other error::" + url)
-            exit(1)
+       # if response.status_code == 200:
+       #     log ("Query successful:Confluence page exists")
+       # else:
+         #   log(response)
+        #    log ("ERROR : Confluence page does not exist or other error::" + url)
+         #   exit(1)
 
-        searchString = response.text
-        subTable = re.findall(r'<td>(.+?)</td>',searchString)
-        recordCount=0
-        columnCount=0
-        configFileNames=[]
-        configFilePaths=[]
-        configServerNames=[]
-        configReleaseVersions = []
-        configGroups = []      
+      #  searchString = response.text
+      #  subTable = re.findall(r'<td>(.+?)</td>',searchString)
+      #  recordCount=0
+      #  columnCount=0
+      #  configFileNames=[]
+      #  configFilePaths=[]
+      #  configServerNames=[]
+      #  configReleaseVersions = []
+      #  configGroups = []      
         
         
-        serverNames = []
-        fileNames = []
-        releaseVersions = []
-        filePaths = []
+      #  serverNames = []
+      #  fileNames = []
+      #  releaseVersions = []
+      #  filePaths = []
 
-        TAG_RE = re.compile(r'<[^>]+>')
-        for x in subTable:
+      #  TAG_RE = re.compile(r'<[^>]+>')
+      #  for x in subTable:
 
-            columnValue=TAG_RE.sub('', x)
-            columnValue = columnValue.strip()
+       #     columnValue=TAG_RE.sub('', x)
+       #     columnValue = columnValue.strip()
 
-            if recordCount < 5:
-                recordCount= recordCount + 1
-                continue
-            if recordCount%5 == 0:  
-                configFileNames.append(columnValue)
-            elif recordCount%5== 1:
-                configFilePaths.append(columnValue)
-            elif recordCount%5== 2:
-                configServerNames.append(columnValue)
-            elif recordCount%5== 3:
-                configReleaseVersions.append(columnValue)
-            elif recordCount%5== 4:
-                configGroups.append(columnValue)
+        #    if recordCount < 5:
+        #        recordCount= recordCount + 1
+       #         continue
+       #     if recordCount%5 == 0:  
+       #         configFileNames.append(columnValue)
+       #     elif recordCount%5== 1:
+       #         configFilePaths.append(columnValue)
+       #     elif recordCount%5== 2:
+       #         configServerNames.append(columnValue)
+       #     elif recordCount%5== 3:
+       #         configReleaseVersions.append(columnValue)
+       #     elif recordCount%5== 4:
+       #         configGroups.append(columnValue)
 
-            recordCount= recordCount + 1
+#            recordCount= recordCount + 1
                 
-        for i, configReleaseVersion in enumerate(configReleaseVersions):
-            if configReleaseVersion in releaseVersionScheduled:
-                serverNames.append(configServerNames[i])
-                fileNames.append(configFileNames[i])
-                releaseVersions.append(configReleaseVersion)
-                filePaths.append(configFilePaths[i])
+ #       for i, configReleaseVersion in enumerate(configReleaseVersions):
+     #       if configReleaseVersion in releaseVersionScheduled:
+  #              serverNames.append(configServerNames[i])
+   #             fileNames.append(configFileNames[i])
+   #             releaseVersions.append(configReleaseVersion)
+    #            filePaths.append(configFilePaths[i])
 
-        return (releaseVersions,serverNames,fileNames,filePaths)
+      #  return (releaseVersions,serverNames,fileNames,filePaths)
 
     # end of function GetConfigChanges()
 
@@ -477,10 +477,10 @@ with open(logfile_path, 'w+') as logfile:
                     if os.path.exists(url_file_hist):
                         with open(url_file_hist, 'w') as f:
                             f.truncate()
-                    config_files_hist = workspace + "/tmp/" + rls + "/config_path_mapping.txt"
-                    if os.path.exists(config_files_hist):
-                        with open(config_files_hist, 'w') as f:
-                            f.truncate()
+                  #  config_files_hist = workspace + "/tmp/" + rls + "/config_path_mapping.txt"
+                  #  if os.path.exists(config_files_hist):
+                  #      with open(config_files_hist, 'w') as f:
+                   #         f.truncate()
 
                 for i, shipName in enumerate(shipNames):
 
