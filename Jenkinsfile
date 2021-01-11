@@ -79,7 +79,7 @@ node {
                     
                             sh """
                                 #!/bin/bash -e
-                                python ${env.WORKSPACE}/fetchBinary.py "$Confluence_Page" $Release_Version $Activity "${env.WORKSPACE}" "$Components" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "${Transfer_Of_Artifacts}" "XICMS MW-Schedule for testing" $Deployment_Environment "${Ship_Name}" "${LoginUser}" "${AllowedUsers}" "${Promoting_From}" "${UserAccessEnv}" "${UserAllowedOperation}" "fetchBinary" "XICMS Config Changes"
+                                python ${env.WORKSPACE}/fetchBinary.py "$Confluence_Page" $Release_Version $Activity "${env.WORKSPACE}" "$Components" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "${Transfer_Of_Artifacts}" "XICMS MW-Schedule for testing" $Deployment_Environment "${Ship_Name}" "${LoginUser}" "${AllowedUsers}" "${Promoting_From}" "${UserAccessEnv}" "${UserAllowedOperation}" "fetchBinary"
                                 
                             """
                         }
