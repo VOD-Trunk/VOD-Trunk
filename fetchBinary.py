@@ -26,18 +26,15 @@ userAccessEnv = sys.argv[15]
 userAllowedOperation = sys.argv[16]
 task = sys.argv[17]
 
-path = os.path.join(workspace,'logs')
+log_path = 'logs'
+path = os.path.join(workspace,log_path)
 if os.path.isdir(path) != True:
     os.makedirs(path)
 else:
-    directory = workspace + '/logs/'
-    for the_file in os.listdir(directory):
-        file_path = os.path.join(directory, the_file)
-        try:
-            if os.path.isfile(file_path):
-                os.unlink(file_path)
-        except Exception as e:
-            print(e)
+    filename = task + 'Stage.log'
+    file_path = os.path.join(path, filename)
+    if os.path.isfile(file_path):
+        os.unlink(file_path)
 
 
 logfile_path = workspace + '/logs/' + task + 'Stage.log'
@@ -164,14 +161,14 @@ with open(logfile_path, 'w+') as logfile:
         elif pageType == "MW":
 
             if len(firstRowColumnNames) != 5:    #count of columns headers on MW page should be 5 fixed.
-                log("ERROR : The table structure on MW confluence page is not correct. There should be exactly five column headers and in this order : Ship-Name, Release Path, Release-Version, Date(MM/DD/YYYY), Action")
+                log("ERROR : The table structure on MW confluence page is not correct. There should be exactly five column headers and in this order : Ship-Name, Release Path, Release-Version, Date, Status")
                 exit(1)
 
-            tableHeaders=["Ship-Name","Release Path","Release-Version","Date(MM/DD/YYYY)","Action"]
+            tableHeaders=["Ship-Name","Release Path","Release-Version","Date","Status"]
             #The column headers should only be the ones present in tableHeaders list and in that specific order.
             for i in range(5):
                 if firstRowColumnNames[i] != tableHeaders[i]:
-                    log("ERROR : The table structure on MW confluence page is not correct. The five column headers should have names and order as : Ship-Name, Release Path, Release-Version, Date(MM/DD/YYYY), Action")
+                    log("ERROR : The table structure on MW confluence page is not correct. The five column headers should have names and order as : Ship-Name, Release Path, Release-Version, Date, Status")
                     exit(1)
                 else:
                     continue
@@ -232,7 +229,7 @@ with open(logfile_path, 'w+') as logfile:
             elif recordCount%7== 4:
                 artifactoryUrl.append(columnValue)
             elif recordCount%7== 5:
-                confluence_md5sum.append(columnValue[:32])
+                confluence_md5sum.append(columnValue)
             elif recordCount%7== 6:
                 yesNo.append(columnValue)
 
@@ -267,7 +264,7 @@ with open(logfile_path, 'w+') as logfile:
         releasePage=[]
         releaseVersion=[]
         deploymentDate=[]
-        transferAction=[]
+        deploymentStatus=[]
 
         TAG_RE = re.compile(r'<[^>]+>')
         for x in subTable:
@@ -287,11 +284,11 @@ with open(logfile_path, 'w+') as logfile:
             elif recordCount%5== 3:
                 deploymentDate.append(columnValue)
             elif recordCount%5== 4:
-                transferAction.append(columnValue)
+                deploymentStatus.append(columnValue)
 
 
             recordCount= recordCount + 1
-        return (shipName,releasePage,releaseVersion,deploymentDate,transferAction)
+        return (shipName,releasePage,releaseVersion,deploymentDate,deploymentStatus)
 
     # end of function //GetScheduleContentInformation
 
@@ -340,7 +337,7 @@ with open(logfile_path, 'w+') as logfile:
             else:
                 verificationResult= verifyConfluencePage(contentID,headers,"MW")
                 log(verificationResult)
-                shipNames,releasePage,releaseVersion,deploymentDate,transferAction =GetScheduleContentInformation(contentID,headers)
+                shipNames,releasePage,releaseVersion,deploymentDate,deploymentStatus =GetScheduleContentInformation(contentID,headers)
                 
                 for rls in releaseVersion:
 
@@ -385,8 +382,11 @@ with open(logfile_path, 'w+') as logfile:
                                     else:
                                         ipaddr = ipaddr_json["jenkins"]["environments"]["PRODUCTION"][0][shipName]
                                     log("\nShip " + shipName + " is ready for release deployment. Initiating transfer of artifacts to " + ipaddr)
+
                                 with open(scheduled_ships_path, 'a+') as f:
-                                    f.write(shipName + ":" + ipaddr + ":" +  releaseVersion[i]+ ":" + transferAction[i] + "\n")
+                                    f.write(shipName + ":" + ipaddr + ":" +  releaseVersion[i]+"\n")
+                            else:
+                                log("\nShip " +shipName +" is not ready for release Deployment.")
 
         scheduledReleaseDict={}
         if action == "ScheduleDeploy":
@@ -398,7 +398,7 @@ with open(logfile_path, 'w+') as logfile:
         if action == "Deploy" or action == "Promote" or action == "Rollback" or (action == "ScheduleDeploy" and len(shipNamesScheduled) != 0):
 
             if action == "Deploy" and deploymentEnv == "PRODUCTION" and targetShipName not in shipNamesScheduled:
-                log("ERROR : The MW for deployment of " + relName + " on " + targetShipName + " is not scheduled for today. \n Please check the below given MW confluence page link and try again :\n https://carnival.atlassian.net/wiki/spaces/MGLN/pages/1282114805/XICMS+MW-Schedule" )
+                log("ERROR : The MW for deployment of " + relName + " on " + targetShipName + " is not scheduled for today.")
                 exit(1)
             else:
                 #Page ID to get the page details
@@ -475,7 +475,9 @@ with open(logfile_path, 'w+') as logfile:
                     log("Following are the artifacts in: " + releaseName)
                     for key, value in finalArtifactoryUrl.items():
 
-                        if targetShipName in ["KODM","NADM","EUDM","WEDM","NSDM","NODM","VODM","ZUDM","OSDM","RTDM","Ovation","Encore","Odyssey"] and (key == "EXM Notification plugin" or key == "exm-v2-plugin-excursions"):
+                        if targetShipName in ["KODM","NADM","EUDM","WEDM","NSDM","NODM","VODM","ZUDM","OSDM","Ovation","Encore","Odyssey"] and key == "EXM Notification plugin":
+                            continue
+                        elif targetShipName not in ["KODM","NADM","EUDM","WEDM","NSDM","NODM","VODM","ZUDM","OSDM","Ovation","Encore","Odyssey"] and key == "exm-v2-plugin-excursions":
                             continue
                             
                         componentConfluence = str(key)
@@ -542,7 +544,7 @@ with open(logfile_path, 'w+') as logfile:
                             else:
                                 log("Couldn't reach the provided url with response : "+ str(response.status_code) + "\n")
                                 continue
-                        
+
                         with open(builds_file_path, 'a+') as f:
                             f.write(component + " : " + str(component_build_mapping[componentConfluence]) + " : " + str(component_md5sum_mapping[componentConfluence]) + "\n")
         else:
