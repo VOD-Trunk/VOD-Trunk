@@ -713,7 +713,7 @@ deploy_new_build() {
 		
 		log "Stopping WowzaStreamingEngine service..."
 		monit stop WowzaStreamingEngine
-		sleep 10
+		sleep 30
 		
 		log "Taking backup of existing UIEWowzaLib.jar to /root/Wowza_backup and replacing with new jar..."
 		
@@ -722,8 +722,8 @@ deploy_new_build() {
 			mkdir -p /root/Wowza_backup
 		fi
 		
-		mv /usr/local/WowzaStreamingEngine/lib/UIEWowzaLib.jar /root/Wowza_backup
-		cp /root/Releases/$new_release/UIEWowzaLib/*.jar /usr/local/WowzaStreamingEngine/lib/UIEWowzaLib.jar
+		mv /usr/local/WowzaStreamingEngine/lib/UIEWowzaLib*.jar /root/Wowza_backup
+		cp /root/Releases/$new_release/UIEWowzaLib/*.jar /usr/local/WowzaStreamingEngine/lib/
 
 		log "Unzipping $component jar file..."
 
@@ -908,7 +908,14 @@ verify() {
 		fi
 	fi
 
-	if [ "$component" == "UIEWowzaLib" ]
+	if ([ "$server" == "app01" ] || [ "$server" == "app02" ]) && [ "$component" == "UIEWowzaLib" ]
+	then
+		timestamp_status=1
+        services_status=1
+        timestamp_build=1
+        release_build=1
+        
+    elif [ "$component" == "UIEWowzaLib" ]
 	then
 		timestamp_build=`cat /root/Releases/$new_release/$component/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
 		release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep -w "$component " | cut -d ":" -f 2 | sed 's/ //g'`
@@ -1318,11 +1325,11 @@ if [ ${#statusArray[@]} == 0 ]
 then
 	:
 else
-	log "================================================================"
+	#log "================================================================"
 	for key in ${!statusArray[@]};
 	do
 		log "${key} : ${statusArray[${key}]}"
-		log "================================================================"
+		#log "================================================================"
 	done
 fi
 
@@ -1340,6 +1347,7 @@ then
 	} || { # catch
 		    log "Could not connect to app02 server."
 	}
+	
 elif [ "$server" == "app01" ] && [ "$transfer_flag" == "false" ] && [ "$action" == "-d" ]
 then
 	log "Transferring tmp folder to app02 and media servers..."
@@ -1353,4 +1361,4 @@ then
 	} || { # catch
 		log "Could not connect to app02 server."
 	}
-fi
+fi	
