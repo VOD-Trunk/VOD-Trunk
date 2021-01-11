@@ -1308,25 +1308,3 @@ then
 		log "Could not connect to app02 server."
 	}
 fi
-
-#Reomving_Junk_Files
-
-#exm_db_upgrade
-cd /root/Releases/$new_release/exm-db-upgrade/
-/bin/rm -rv !(exm-db-upgrade-*.gz)
-
-#Admin_Tool
-cd /root/Releases/$new_release/exm-admin-tool
-/bin/rm -rv !(EXM-V2-AdminTool-xicms-release_*.gz)
-
-#Leftnav
-cd /root/Releases/$new_release/exm-client-leftnav2
-/bin/rm -rv !(EXM-V2-XM_Client_LeftNav-origin*.tar.gz)
-
-#Diagnostic_App
-cd /root/Releases/$new_release/exm-diagnostic-app
-/bin/rm -rv !(EXM-V2-DiagnosticApp-xicms-release_*.gz)
-
-#Signage
-cd /root/Releases/$new_release/exm-client-leftnav2-signage
-/bin/rm -rv !(EXM-V2-XM_Client_LeftNav-origin*.tar.gz)
