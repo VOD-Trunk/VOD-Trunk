@@ -176,20 +176,20 @@ with open(logfile_path, 'w+') as logfile:
                     exit(1)
                 else:
                     continue
-        elif pageType == "Config":
+       # elif pageType == "Config":
 
-            if len(firstRowColumnNames) != 5:    #count of columns headers on Config Changes page should be 5 fixed.
-                log("ERROR : The table structure on Config Changes confluence page is not correct. There should be exactly five column headers and in this order : File-Name, File-Path, Server, Release-Version, Group")
-                exit(1)
+        #    if len(firstRowColumnNames) != 5:    #count of columns headers on Config Changes page should be 5 fixed.
+         #       log("ERROR : The table structure on Config Changes confluence page is not correct. There should be exactly five column headers and in this order : File-Name, File-Path, Server, Release-Version, Group")
+         #       exit(1)
 
-            tableHeaders=["File-Name", "File-Path", "Server", "Release-Version", "Group"]
+          #  tableHeaders=["File-Name", "File-Path", "Server", "Release-Version", "Group"]
             #The column headers should only be the ones present in tableHeaders list and in that specific order.
-            for i in range(5):
-                if firstRowColumnNames[i] != tableHeaders[i]:
-                    log("ERROR : The table structure on Config Changes confluence page is not correct. The five column headers should have names and order as : File-Name, File-Path, Server, Release-Version, Group")
-                    exit(1)
-                else:
-                    continue
+          #  for i in range(5):
+           #     if firstRowColumnNames[i] != tableHeaders[i]:
+           #         log("ERROR : The table structure on Config Changes confluence page is not correct. The five column headers should have names and order as : File-Name, File-Path, Server, Release-Version, Group")
+           #         exit(1)
+           #     else:
+           #         continue
         else:
             log("ERROR : Wrong input for pageType.")
 
