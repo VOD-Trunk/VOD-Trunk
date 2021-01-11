@@ -25,7 +25,7 @@ promotingFrom = sys.argv[14]
 userAccessEnv = sys.argv[15]
 userAllowedOperation = sys.argv[16]
 task = sys.argv[17]
-pageNameConfig = sys.argv[18]
+#pageNameConfig = sys.argv[18]
 
 path = os.path.join(workspace,'logs')
 if os.path.isdir(path) != True:
