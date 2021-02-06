@@ -11,75 +11,6 @@ transfer_flag=$6
 
 declare -A statusArray
 
-if [ "$component_choice" == "All" ]
-then
-	partial_flag=2
-else
-	partial_flag=1
-	IFS=',' read -r -a choice_list <<< "$component_choice"
-	for i in "${!choice_list[@]}"
-	do
-		choice_list[$i]=`echo ${choice_list[$i]} | sed "s/_/ /g"`
-		if [ "${choice_list[$i]}" == "EXM V2" ]
-		then
-			choice_list[$i]="v2"
-		elif [ "${choice_list[$i]}" == "LeftNav" ]
-		then
-			choice_list[$i]="exm-client-leftnav2"
-		elif [ "${choice_list[$i]}" == "Admin Tool" ]
-		then
-			choice_list[$i]="exm-admin-tool"
-		elif [ "${choice_list[$i]}" == "Cruise Client" ]
-		then
-			choice_list[$i]="exm-client-cruise"
-		elif [ "${choice_list[$i]}" == "EXM Lite Client" ]
-		then
-			choice_list[$i]="exm-client-lite"
-		elif [ "${choice_list[$i]}" == "Startup Client" ]
-		then
-			choice_list[$i]="exm-client-startup"
-		elif [ "${choice_list[$i]}" == "Precor Client" ]
-		then
-			choice_list[$i]="exm-precor-client"
-		elif [ "${choice_list[$i]}" == "NACOS Listener" ]
-		then
-			choice_list[$i]="nacos"
-		elif [ "${choice_list[$i]}" == "Mute Daemon" ]
-		then
-			choice_list[$i]="mutedaemon"
-		elif [ "${choice_list[$i]}" == "LeftNav Signage" ]
-		then
-			choice_list[$i]="exm-client-leftnav2-signage"
-		elif [ "${choice_list[$i]}" == "Exm-v2-plugin-location" ]
-		then
-			choice_list[$i]="location"
-		elif [ "${choice_list[$i]}" == "EXM Diagnostic Application" ]
-		then
-			choice_list[$i]="exm-diagnostic-app"
-		elif [ "${choice_list[$i]}" == "EXM Diagnostic plugin" ]
-		then
-			choice_list[$i]="diagnostics"
-		elif [ "${choice_list[$i]}" == "EXM Notification plugin" ]
-		then
-			choice_list[$i]="notification-service"
-		elif [ "${choice_list[$i]}" == "Mute Status Service" ]
-		then
-			choice_list[$i]="mute"
-		elif [ "${choice_list[$i]}" == "exm-db-upgrade" ]
-		then
-			choice_list[$i]="exm-db-upgrade"
-		elif [ "${choice_list[$i]}" == "exm-v2-plugin-excursions" ]
-		then
-			choice_list[$i]="exm-v2-plugin-excursions"
-		fi
-
-	done
-fi
-
-err() {
-    >&2 echo -e "$@"
-}
-
 log(){
     echo "$@" >&1 2>&1
     echo "$@" >> ${logfile}
@@ -277,7 +208,19 @@ restart_services() {
 			echo "tomcat7 started successfully."
 		else
 			echo "tomcat7 failed to start"
-		fi	
+		fi
+		
+		log "Starting httpd service"
+		service httpd restart
+
+		httpd_status=`service httpd status | grep running | wc -l`
+		
+		if [ $httpd_status == 1 ]
+		then
+			echo "httpd started successfully."
+		else
+			echo "httpd failed to start"
+		fi
 
 		log "================================================================================================================"	
 	fi
@@ -880,7 +823,7 @@ verify() {
 		then
 			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep -w "$component " | cut -d ":" -f 2 | sed 's/ //g'`
 		else
-			release_build=`cat cat /root/War_Backup/$component/$component/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
+			release_build=`cat /root/War_Backup/$component/$component/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
 		fi
 	fi
 
@@ -1093,8 +1036,54 @@ if [[ $# -eq 0 ]]; then
 	err "Usage: ${0} {option}"
 	err "\t--deploy|-d"
 	err "\t--rollback|-r"
+	err "\t--transfer|-t"
 	err
 			exit 1
+fi
+
+if [ -f /root/Releases/tmp/config_path_mapping.txt ] && [ "$action" == "-d" ]
+then
+	log "Starting config changes on $server..."
+
+	if [ ! -d /root/config/$new_release/Config_backup ]
+	then
+		mkdir -p /root/config/$new_release/Config_backup
+	fi
+
+	configs=`cat /root/Releases/tmp/config_path_mapping.txt`
+	IFS=$'\n'
+	for config in $configs
+	do
+		configServer=`echo $config | cut -d: -f1`
+		configFile=`echo $config | cut -d: -f2`
+		configFilePath=`echo $config | cut -d: -f3`        
+		server_check=`echo $server | grep $configServer | wc -l`
+		if [ $server_check -eq 1 ]
+		then
+			log "Taking backup of $configFile on $server"
+			mv $configFilePath /root/config/$new_release/Config_backup
+			log "Updating $configFile by /root/Releases/Config_Files/$configServer/$configFile"
+			cp /root/Releases/Config_Files/$configServer/$configFile $configFilePath
+			
+			if [ "$configServer" == "media" ]
+			then
+				service httpd restart
+				service nginx restart
+			fi
+
+			if [ "$configServer" == "lb" ]
+			then
+				vip_check=`ifconfig | grep $(grep haproxy /etc/ha.d/haresources | cut -d ':' -f3 | cut -d ' ' -f1) | wc -l`
+				if [ $vip_check -eq 1 ]
+				then
+					service haproxy restart
+				fi
+			fi
+		else
+			continue
+		fi
+
+	done
 fi
 
 if [ "$server" == "app01" ] && [ "$action" == "-d" ]
@@ -1127,194 +1116,148 @@ fi
 
 case "${1}" in
 	-d|--deploy)
-	  if [ "$server" == "app01" ] && [ "$transfer_flag" == "true" ]
-	  then
-	  	  rows=`cat /root/Releases/tmp/component_build_mapping.txt`
-	      IFS=$'\n'
-	      for row in $rows
-	      do
-	        component=`echo $row | cut -d ':' -f 1 | awk '{$1=$1};1'`
-	        confluence_md5sum=`echo $row | cut -d ':' -f 3 | awk '{$1=$1};1'`
-	        comp_md5sum=`cd /root/Releases/$new_release/$component && find -type f -exec md5sum "{}" + | cut -d' ' -f1`
+		rows=`cat /root/Releases/tmp/component_build_mapping.txt`
+		IFS=$'\n'
+		for row in $rows
+		do
+			component=`echo $row | cut -d ':' -f 1 | awk '{$1=$1};1'`
+			confluence_md5sum=`echo $row | cut -d ':' -f 3 | awk '{$1=$1};1'`
+			compServer=`echo $row | cut -d ':' -f 4`
 
-	        if [ "$confluence_md5sum" == "$comp_md5sum" ]
-	        then
-	          	log "md5sum is same on confluence and server. $component has been transferred to app01 successfully."
-	        else
-	        	log "ERROR : $component could not be transferred successfully. md5sum is not matching between confluence and server. Aborting Build !!"
-	            exit 1
-	        fi
-	      done
-	  fi
-
-	  if [ $partial_flag == 2 ]
-	  then
-		  log "Checking if components are present..."
-	  	  iter=1
-          components=`cat /root/Releases/tmp/component_build_mapping.txt`
-          IFS=$'\n'
-          for row in $components
-		  do
-          	component=`echo $row | cut -d' ' -f1`
-          	checkComponent $component
-          done
-
-	  	  for row in $components
-		  do
-          	component=`echo $row | cut -d' ' -f1`
-		  	if [ $iter == 1 ]
+			if [ `echo $server | grep $compServer | wc -l` -eq 1 ]
 			then
-			log "================================================================================================================"
-			log "Starting deployment of $new_release all components"
+				comp_md5sum=`cd /root/Releases/$new_release/$component && find -type f -exec md5sum "{}" + | cut -d' ' -f1`
+
+				if [ "$confluence_md5sum" == "$comp_md5sum" ]
+				then
+					log "md5sum is same on confluence and server. $component has been transferred to app01 successfully."
+				else
+					log "ERROR : $component could not be transferred successfully. md5sum is not matching between confluence and server. Aborting Build !!"
+					exit 1
+				fi
+			else
+				continue
 			fi
-		  	deploy_master $component $abort_on_fail deploy
-			iter=$((iter+1))
-		  done
-		  log "===============FINAL DEPLOYMENT STATUS( $server )==============="
-	  else
-	  	  log "Checking if components are present..."
-          for component in "${choice_list[@]}"
-	  	  do
-          	if [ "$component" == "All" ]
-            then
-            	continue
-            fi
-          	checkComponent $component
-          done
-	  	  iter=1
-	  	  for component in "${choice_list[@]}"
-		  do
-			if [ $iter == 1 ]
+		done
+
+		log "Checking if components are present..."
+		iter=1
+		components=`cat /root/Releases/tmp/component_build_mapping.txt`
+		IFS=$'\n'
+		for row in $components
+		do
+			component=`echo $row | cut -d' ' -f1`
+			compServer=`echo $row | cut -d ':' -f 4`
+
+			if [ `echo $server | grep $compServer | wc -l` -eq 1 ]
 			then
-            if [ "$component" == "All" ]
-            then
-            	continue
-            fi
-			log "================================================================================================================"
-			log "Starting deployment of $new_release selected components"
+				checkComponent $component
+			else
+				continue
 			fi
-			deploy_master $component $abort_on_fail deploy
-			iter=$((iter+1))
-		  done
-		  if [ ${#statusArray[@]} == 0 ]
-		  then
-		  	:
-		  else
-		  	log "===============FINAL DEPLOYMENT STATUS( $server )==============="
-		  fi
-	  fi
-	  ;;
-	-r|--rollback)
-	  if [ $partial_flag == 2 ]
-	  then
-	  	  log "Checking which components to rollback..."
-	  	  iter=1
-          components=`cat /root/Releases/tmp/component_build_mapping.txt`
-          IFS=$'\n'
-          for row in $components
-		  do
-		  	 if [ $iter == 1 ]
+		done
+
+		for row in $components
+		do
+			component=`echo $row | cut -d' ' -f1`
+			compServer=`echo $row | cut -d ':' -f 4`
+			if [ `echo $server | grep $compServer | wc -l` -eq 1 ]
+			then
+				if [ $iter == 1 ]
 				then
 					log "================================================================================================================"
-					log "Starting rollback of $new_release : All components"
+					log "Starting deployment of $new_release all components"
 				fi
-          	 component=`echo $row | cut -d' ' -f1`
-          	 verify $component
-			  
-			 comp_status=`grep 'Successful' "${statusArray[${component}]}" | wc -l`
-			 
-			 if [ "$comp_status" == "1" ]
-			 then
-				
-				deploy_master $component $abort_on_fail rollback
-			 else
-			 	log "$component does not need to be rolled back."
-				 continue
-			 fi
-			 iter=$((iter+1))
-			 
-		  done
-		  if [ ${#statusArray[@]} == 0 ]
-		  then
-		  	:
-		  else
-		  	log "===============FINAL ROLLBACK STATUS( $server )==============="
-		  fi
-	  else
-	  	  iter=1
-	  	  for component in "${choice_list[@]}"
-	  	  do
-	  	  	  if [ $iter == 1 ]
-			  then
-              	if [ "$component" == "All" ]
-                then
-                    continue
-                fi
-				log "================================================================================================================"
-				log "Starting rollback of $new_release : Selected components"
-			  fi
-			  
-			  verify $component
-			  
-			  comp_status=`grep 'Successful' "${statusArray[${component}]}" | wc -l`
-			 
-			  if [ "$comp_status" == "1" ]
-			  then
-			    deploy_master $component $abort_on_fail rollback
-			  else
-			 	log "$component does not need to be rolled back."
+				deploy_master $component $abort_on_fail deploy
+				iter=$((iter+1))
+			else
 				continue
-			  fi
-			  iter=$((iter+1))
-		  done
-		  if [ ${#statusArray[@]} == 0 ]
-		  then
-		  	:
-		  else
-		  	log "===============FINAL ROLLBACK STATUS( $server )==============="
-		  fi
-	  fi
+			fi
+		done
+		if [ ${#statusArray[@]} == 0 ]
+		then
+			:
+		else
+			log "===============FINAL DEPLOYMENT STATUS( $server )==============="
+		fi
+	  ;;
+	-r|--rollback)
+		log "Checking which components to rollback..."
+		iter=1
+		components=`cat /root/Releases/tmp/component_build_mapping.txt`
+		IFS=$'\n'
+		for row in $components
+		do
+			if [ $iter == 1 ]
+			then
+				log "================================================================================================================"
+				log "Starting rollback of $new_release : All components"
+			fi
+			component=`echo $row | cut -d' ' -f1`
+			verify $component
+			
+			comp_status=`grep 'Successful' "${statusArray[${component}]}" | wc -l`
+			
+			if [ "$comp_status" == "1" ]
+			then
+			
+			deploy_master $component $abort_on_fail rollback
+			else
+			log "$component does not need to be rolled back."
+				continue
+			fi
+			iter=$((iter+1))
+			
+		done
+		if [ ${#statusArray[@]} == 0 ]
+		then
+		:
+		else
+		log "===============FINAL ROLLBACK STATUS( $server )==============="
+		fi
 	  ;;
 	-t|--transfer)
-	  if [ "$server" == "app01" ] && [ "$transfer_flag" == "true" ]
-	  then
-	  	  if [ -f /root/Releases/tmp/component_build_mapping.txt ]
-	  	  then
-			  rows=`cat /root/Releases/tmp/component_build_mapping.txt`
-		      IFS=$'\n'
-		      for row in $rows
-		      do
-		        component=`echo $row | cut -d ':' -f 1 | awk '{$1=$1};1'`
-		        confluence_md5sum=`echo $row | cut -d ':' -f 3 | awk '{$1=$1};1'`
-		        comp_md5sum=`cd /root/Releases/$new_release/$component && find -type f -exec md5sum "{}" + | cut -d' ' -f1`
+		if [ "$server" == "app01" ] && [ "$transfer_flag" == "true" ]
+		then
+			if [ -f /root/Releases/tmp/component_build_mapping.txt ]
+			then
+				rows=`cat /root/Releases/tmp/component_build_mapping.txt`
+				IFS=$'\n'
+				for row in $rows
+				do
+				component=`echo $row | cut -d ':' -f 1 | awk '{$1=$1};1'`
+				confluence_md5sum=`echo $row | cut -d ':' -f 3 | awk '{$1=$1};1'`
+				comp_md5sum=`cd /root/Releases/$new_release/$component && find -type f -exec md5sum "{}" + | cut -d' ' -f1`
 
-		        if [ "$confluence_md5sum" == "$comp_md5sum" ]
-		        then
-		          	log "md5sum is same on confluence and server. $component has been transferred to app01 successfully."
-		          	
-			    else
-		        	log "ERROR : $component could not be transferred properly. md5sum is not matching between confluence and server. Aborting Build !!"
-		            exit 1
-		        fi
-		      done
+				if [ "$confluence_md5sum" == "$comp_md5sum" ]
+				then
+					log "md5sum is same on confluence and server. $component has been transferred to app01 successfully."
+					
+				else
+					log "ERROR : $component could not be transferred properly. md5sum is not matching between confluence and server. Aborting Build !!"
+					exit 1
+				fi
+				done
 
-		      log "Transferring artifacts to app02 and media servers..."
-		      { #try
-		      	ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
-		      	ssh media01 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
-				ssh media02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
-				scp -r /root/Releases/$new_release /root/Releases/tmp  app02:/root/Releases
-				scp -r /root/Releases/$new_release /root/Releases/tmp media01:/root/Releases
-				scp -r /root/Releases/$new_release /root/Releases/tmp media02:/root/Releases
-			  } || { # catch
-					    log "Could not connect to app02 server."
-			  }
-		  else
-		  	  log "ERROR : Aborting build. Files have not been transferred."
-		  	  exit 1
-		  fi	
-	  	  
-	  fi
+				log "Transferring artifacts to app, media and lb servers..."
+				{ #try
+				servers="app02 media01 media02 lb01 lb02"
+				IFS=$' '
+				for targetServer in $servers
+				do
+					ssh $targetServer 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
+					ssh $targetServer 'if [ ! -d /root/Releases/Config_Files ]; then mkdir -p /root/Releases/Config_Files; else rm -rf /root/Releases/Config_Files/*; fi'
+					scp -r /root/Releases/$new_release /root/Releases/tmp /root/Releases/Config_Files $targetServer:/root/Releases
+				done
+				} || { # catch
+						log "Could not connect to app02 server."
+				}
+			else
+				log "ERROR : Aborting build. Files have not been transferred."
+				exit 1
+			fi	
+			
+		fi
 	  ;;
 	  *)
 	  echo "ERROR : Unknown option ${1}"
@@ -1335,30 +1278,33 @@ fi
 
 if [ "$server" == "app01" ] && [ "$transfer_flag" == "true" ] && [ "$action" == "-d" ]
 then
-	log "Transferring artifacts to app02 and media servers..."
+	log "Transferring artifacts to app, media and lb servers..."
 	{ #try
-	ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
-	ssh media01 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
-	ssh media02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
-		
-	scp -r /root/Releases/$new_release /root/Releases/tmp  app02:/root/Releases
-	scp -r /root/Releases/$new_release /root/Releases/tmp media01:/root/Releases
-	scp -r /root/Releases/$new_release /root/Releases/tmp media02:/root/Releases
+
+	servers="app02 media01 media02 lb01 lb02"
+	IFS=$' '
+	for targetServer in $servers
+	do
+		ssh $targetServer 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
+		ssh $targetServer 'if [ ! -d /root/Releases/Config_Files ]; then mkdir -p /root/Releases/Config_Files; else rm -rf /root/Releases/Config_Files/*; fi'
+		scp -r /root/Releases/$new_release /root/Releases/tmp /root/Releases/Config_Files  $targetServer:/root/Releases
+	done
 	} || { # catch
 		    log "Could not connect to app02 server."
 	}
 	
 elif [ "$server" == "app01" ] && [ "$transfer_flag" == "false" ] && [ "$action" == "-d" ]
 then
-	log "Transferring tmp folder to app02 and media servers..."
+	log "Transferring tmp folder to app, media and lb servers..."
 	{ #try
-	ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else mv /root/Releases/tmp /root/Releases/tmp_`date +%Y_%m_%d__%H_%M_%S`; fi'
-	ssh media01 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else mv /root/Releases/tmp /root/Releases/tmp_`date +%Y_%m_%d__%H_%M_%S`; fi'
-	ssh media02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else mv /root/Releases/tmp /root/Releases/tmp_`date +%Y_%m_%d__%H_%M_%S`; fi'
-	scp -r /root/Releases/tmp  app02:/root/Releases/
-	scp -r /root/Releases/tmp  media01:/root/Releases/
-	scp -r /root/Releases/tmp  media02:/root/Releases/
+	servers="app02 media01 media02 lb01 lb02"
+	IFS=$' '
+	for targetServer in $servers
+	do
+		ssh $targetServer 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else mv /root/Releases/tmp /root/Releases/tmp_`date +%Y_%m_%d__%H_%M_%S`; fi'
+		scp -r /root/Releases/tmp  $targetServer:/root/Releases/
+	done
 	} || { # catch
 		log "Could not connect to app02 server."
 	}
-fi	
+fi
