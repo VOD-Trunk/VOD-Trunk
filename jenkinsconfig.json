@@ -4,7 +4,8 @@
 			"2.63.0": "xiCMS 2.63.0: Artifacts + Installation Manual",	
             		"2.64.0": "xiCMS 2.64.0 : Artifacts + Installation Manual",
             		"2.65.0": "Support- xiCMS 2.65.0: Artifacts + Installation Manual",
-			"2.66.0": "Support- xiCMS 2.66.0: Artifacts + Installation Manual"
+			"2.66.0": "xiCMS 2.66.0 : Artifacts + Installation Manual",
+			"2.67.0": "xiCMS 2.67.0 : Artifacts + Installation Manual"
 		},
 
 		"user_access": {
@@ -52,97 +53,94 @@
 	   
 		"environments": {
 			"NA": [
-				{
-					"NA": { "NA": "000.000.000.000" }
-				},
+				{ "NA": "000.000.000.000" },
 				{ "pwd": "NA" }
 			],
 			"DEV": [
-				{
-					"DEV": { "DEV": "000.000.000.000" }
-				},
+				{ "DEV": "000.000.000.000" },
 				{ "pwd": "NA" }
 			],
-			"QA": [
+			"QA": [ 
 				{
-					"XS": { "XS": "10.126.69.140" },
-					"HSC_Test": { "HSC_Test": "192.168.248.134" }
+					"XS": "10.126.69.140", 
+					"HSC_Test": "192.168.248.134"
 				},
 				{
 					 "pwd": "Q2Fybml2YWxAMTIzCg=="
 				}
 			],
 			"SUPPORT": [
-				{
-					"SUPPORT": { "SUPPORT" : "192.168.248.161" }
-				},
-				{	"pwd": "Q2Fybml2YWxAMTIzNAo="}
+				{ 	"SUPPORT": "192.168.248.161"},
+				{	"pwd": "Q2Fybml2YWxAMTIzCg=="}
 			],
 			"PRODUCTION": [
-				{ 	"NA":{ "NA": "000.000.000.000"},
-					"PCL":{
-						"Royal": "10.10.68.120",
-						"Sky": "10.125.5.144",
-						"Sapphire": "172.29.196.194",
-						"Majestic": "10.124.178.51",
-						"Ruby": "172.29.134.228",
-						"Grand": "172.29.227.244",
-						"Crown": "172.29.239.244",
-						"Regal": "10.122.197.137",
-						"Caribbean": "10.120.8.140",
-						"Britannia": "172.28.248.20",
-						"Diamond": "172.29.204.194",
-						"Emerald": "172.29.124.233",
-						"Coral": "10.120.69.150",
-						"Enchanted": "10.125.69.144"
-					},
-					"HAL":{
-						"KODM": "10.115.50.52",
-						"NADM": "10.9.200.52",
-						"EUDM": "10.9.196.53",
-						"WEDM": "10.9.184.53",
-						"NSDM": "10.115.114.52",
-						"Ovation": "10.118.50.52",
-						"Encore": "10.117.242.52",
-						"Odyssey": "10.117.50.52",
-						"NODM": "10.114.114.50",
-						"VODM": "10.112.242.50",
-						"ZUDM": "10.9.192.53",
-						"OSDM": "10.9.156.53",
-						"AMDM": "10.127.216.155",
-						"LG-VOD": "10.126.140.54"
-					}
+				{
+					"NA": "000.000.000.000",
+					"Royal": "10.10.68.120",
+					"Sun": "172.29.222.196",
+					"Sky": "10.125.5.144",
+					"Sapphire": "172.29.196.194",
+					"Majestic": "10.124.178.51",
+					"Ruby": "172.29.134.228",
+					"Grand": "172.29.227.244",
+					"Crown": "172.29.239.244",
+					"Regal": "10.122.197.137",
+					"Caribbean": "10.120.8.140",
+					"Britannia": "172.28.248.20",
+					"Diamond": "172.29.204.194",
+					"Emerald": "172.29.124.233",
+					"Coral": "10.120.69.150",
+					"Enchanted": "10.125.69.144",
+					"KODM": "10.115.50.52",
+					"NADM": "10.9.200.52",
+					"EUDM": "10.9.196.53",
+					"WEDM": "10.9.184.53",
+					"NSDM": "10.115.114.52",
+					"Ovation": "10.118.50.52",
+					"Encore": "10.117.242.52",
+					"Odyssey": "10.117.50.52",
+					"NODM": "10.114.114.50",
+					"VODM": "10.112.242.50",
+					"ZUDM": "10.9.192.53",
+					"OSDM": "10.9.156.53",
+					"AMDM": "10.127.216.155",
+                  	"LG-VOD": "10.126.140.54"
 				},
 				{	"pwd": "bm90NGRldiEK"}
 			]
 		},
 
 		"components" : {
-			"app": [
-				"v2",
-				"exm-client-leftnav2",
-				"exm-admin-tool",
-				"exm-client-cruise",
-				"exm-client-lite",
-				"exm-client-startup",
-				"nacos",
-				"exm-client-leftnav2-signage",
-				"location",
-				"mutedaemon",
-				"exm-diagnostic-app",
-				"diagnostics",
-				"notification-service",
-				"mute",
-				"exm-db-upgrade",
-				"exm-v2-plugin-excursions"
-			],
+			"v2" : "app",
+			"exm-client-leftnav2" : "app",
+			"exm-admin-tool" : "app",
+			"exm-client-cruise" : "app",
+			"exm-client-lite" : "app",
+			"exm-client-startup" : "app",
+			"nacos" : "app",
+			"exm-client-leftnav2-signage" : "app",
+			"location" : "app",
+			"mutedaemon" : "app",
+			"exm-diagnostic-app" : "app",
+			"diagnostics" : "app",
+			"notification-service" : "app",
+			"mute" : "app",
+			"exm-db-upgrade" : "app",
+			"exm-v2-plugin-excursions" : "app",
+			"UIEWowzaLib" : "media"
+		},
 
-			"media":[
-				"UIEWowzaLib"
-			],
-
-			"lb":[]
-			
+		"configurations" : {
+			"app" : {
+				"ha.cf": "/etc/ha.d/ha.cf",
+				"my.cnf": "/etc/my.cnf"
+			},
+			"media" : {
+				"httpd.conf" : "/etc/httpd/conf/httpd.conf"
+			},
+			"lb" : {
+				"haproxy.cfg" : "/etc/haproxy/haproxy.cfg"
+			}
 		}
 	}
 }
