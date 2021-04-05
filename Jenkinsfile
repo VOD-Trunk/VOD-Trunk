@@ -42,17 +42,7 @@ node {
 
                     def Jconf = readJSON file: "${env.WORKSPACE}/jenkinsconfig.json"
                     def Confluence_Page = Jconf.jenkins.Release."${Release_Version}"
-                    def IpDict = Jconf.jenkins.environments."${Deployment_Environment}"[0]
-                    IpDict.each { group, ships ->
-                        
-                        ships.each{ ship, ip -> 
-                            if ( "${ship}" == "${Ship_Name}" )
-                            {
-                                IpAddr = "${ip}"
-                            }
-                        }
-                    }
-                    
+                    def IpAddr = Jconf.jenkins.environments."${Deployment_Environment}"[0]."${Ship_Name}"
                     def ship_pwd = Jconf.jenkins.environments."${Deployment_Environment}"[1].pwd
                     def AllowedUsers = Jconf.jenkins.user_access.keySet()
                     UserAllowedOperation = Jconf.jenkins.user_access."${LoginUser}".operations
@@ -64,7 +54,7 @@ node {
 
                         sh """
                             #!/bin/bash
-                            python ${env.WORKSPACE}/fetchBinary.py "$Confluence_Page" $Release_Version $Activity "${env.WORKSPACE}" "$Components" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "${Transfer_Of_Artifacts}" "XICMS MW-Schedule" $Deployment_Environment "${Ship_Name}" "${LoginUser}" "${AllowedUsers}" "${Promoting_From}" "${UserAccessEnv}" "${UserAllowedOperation}" "checkUserAccessRights"
+                            python ${env.WORKSPACE}/fetchBinary.py "$Confluence_Page" $Release_Version $Activity "${env.WORKSPACE}" "$Components" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "${Transfer_Of_Artifacts}" "XICMS MW-Schedule for testing" $Deployment_Environment "${Ship_Name}" "${LoginUser}" "${AllowedUsers}" "${Promoting_From}" "${UserAccessEnv}" "${UserAllowedOperation}" "checkUserAccessRights" "XICMS Config Changes"
                                 
                         """
 
@@ -79,20 +69,22 @@ node {
                     
                             sh """
                                 #!/bin/bash -e
-                                python ${env.WORKSPACE}/fetchBinary.py "$Confluence_Page" $Release_Version $Activity "${env.WORKSPACE}" "$Components" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "${Transfer_Of_Artifacts}" "XICMS MW-Schedule" $Deployment_Environment "${Ship_Name}" "${LoginUser}" "${AllowedUsers}" "${Promoting_From}" "${UserAccessEnv}" "${UserAllowedOperation}" "fetchBinary"
+                                python ${env.WORKSPACE}/fetchBinary.py "$Confluence_Page" $Release_Version $Activity "${env.WORKSPACE}" "$Components" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "${Transfer_Of_Artifacts}" "XICMS MW-Schedule for testing" $Deployment_Environment "${Ship_Name}" "${LoginUser}" "${AllowedUsers}" "${Promoting_From}" "${UserAccessEnv}" "${UserAllowedOperation}" "fetchBinary" "XICMS Config Changes"
                                 
                             """
                         }
 
 
-                        /*stage('Check artifact property') {
+                        // stage('Check artifact property') {
                             
-                            //last_started = env.STAGE_NAME
-                            sh """
-                                #!/bin/bash -e      
-                                ${env.WORKSPACE}/checkArtifactProperty.sh "${Deployment_Environment}" "${Activity}" "${Release_Version}" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "${Promoting_From}" "${env.WORKSPACE}" "$LoginUser" "${Ship_Name}"
-                            """
-                        }*/
+                        //     //last_started = env.STAGE_NAME
+
+                        //     sh """
+                        //         #!/bin/bash -e      
+                        //         ${env.WORKSPACE}/checkArtifactProperty.sh "${Deployment_Environment}" "${Activity}" "${Release_Version}" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "${Promoting_From}" "${env.WORKSPACE}" "$LoginUser" "${Ship_Name}"
+
+                        //     """
+                        // }
 
                     
                     stage('Deploy'){
@@ -116,8 +108,8 @@ node {
 
                             sh """
                                 #!/bin/bash -e
-                                python ${env.WORKSPACE}/fetchBinary.py "$Confluence_Page" $Release_Version $Activity "${env.WORKSPACE}" "$Components" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "${Transfer_Of_Artifacts}" "XICMS MW-Schedule" $Deployment_Environment "${Ship_Name}" "${LoginUser}" "${AllowedUsers}" "${Promoting_From}" "${UserAccessEnv}" "${UserAllowedOperation}" "fetchBinary"
-                                # ${env.WORKSPACE}/checkArtifactProperty.sh "${Deployment_Environment}" "${Activity}" "${Release_Version}" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}"  "${Promoting_From}" "${env.WORKSPACE}" "$LoginUser" "${Ship_Name}"
+                                python ${env.WORKSPACE}/fetchBinary.py "$Confluence_Page" $Release_Version $Activity "${env.WORKSPACE}" "$Components" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}" "${Transfer_Of_Artifacts}" "XICMS MW-Schedule for testing" $Deployment_Environment "${Ship_Name}" "${LoginUser}" "${AllowedUsers}" "${Promoting_From}" "${UserAccessEnv}" "${UserAllowedOperation}" "fetchBinary" "XICMS Config Changes"
+                                ${env.WORKSPACE}/checkArtifactProperty.sh "${Deployment_Environment}" "${Activity}" "${Release_Version}" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}"  "${Promoting_From}" "${env.WORKSPACE}" "$LoginUser" "${Ship_Name}"
                             """
                         }
                     }
@@ -128,7 +120,7 @@ node {
        
     } catch(error) {
 
-      echo "An exception has occured. This build has FAILED !! ${error}"
+      echo "An exception has occured in stage . This build has FAILED !! ${error}"
         currentBuild.result = 'FAILURE'
         throw error
     }
@@ -141,32 +133,44 @@ node {
     //         buildStatus = currentBuild.result
     //         buildStatus = buildStatus ?: 'SUCCESS'
 
+    //         // Success or failure, always send notification
+
+    //         if (buildStatus == 'STARTED') {
+    //         color = 'YELLOW'
+    //         colorCode = '#FFFF00'
+    //         } else if (buildStatus == 'SUCCESS') {
+    //         color = 'GREEN'
+    //         colorCode = '#00FF00'
+    //         } else {
+    //         color = 'RED'
+    //         colorCode = '#FF0000'
+    //         }
+
     //         if( "${env.JOB_NAME}" == "exm-health-check")
     //         { 
     //             def isBodyExists = fileExists 'tmp/body.html'
 
+    //             publishHTML(target:[
+    //             allowMissing: true,
+    //             alwaysLinkToLastBuild: true,
+    //             keepAll: true,
+    //             reportDir: "${WORKSPACE}/tmp",
+    //             reportFiles: 'body.html',
+    //             reportName: 'CI-Build-HTML-Report',
+    //             reportTitles: 'CI-Build-HTML-Report'
+    //             ])
+
     //             if (isBodyExists) {
     //                 email_body = readFile(file: 'tmp/body.html')
-    //                 slack_body = "Job Name : ${env.JOB_NAME}\nBuild# : ${BUILD_NUMBER}  \nBuild Result : ${buildStatus} \nMore info at : ${env.BUILD_URL}"
+    //                 slack_body = "Job Name : ${env.JOB_NAME}\nBuild# : ${BUILD_NUMBER}  \nBuild Result : ${buildStatus} \nMore info at : ${env.BUILD_URL} \n\n Please check the consolidated Health Report at the below link : \n\n Build Report: ${env.BUILD_URL}CI-Build-HTML-Report"
     //             }
 
-    //             slackSend (channel: '#exm-jenkins-tracking', message: slack_body)
+    //             slackSend (color: colorCode, channel: '#xicms-jenkins', message: slack_body)
     //             emailext attachmentsPattern: 'Health_Reports/*', mimeType: 'text/html', body: email_body ,subject: "Build Notification: ${env.JOB_NAME}-Build# ${env.BUILD_NUMBER} ${buildStatus}", to: 'xicms-support-list@hsc.com'
         
     //         }      
 
-    //         else {
-            
-    //             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: '${Artifactory_Credentials}',
-    //                     usernameVariable: 'ArtifactoryUser', passwordVariable: 'ArtifactoryPassword']]) {
-    //             if( buildStatus == 'SUCCESS' && "${Deployment_Environment}" == "PRODUCTION" && "${Activity}" == "Deploy" )
-    //             {
-    //                 sh """
-    //                     #!/bin/bash -e
-    //                     ${env.WORKSPACE}/checkArtifactProperty.sh "${Deployment_Environment}" "Promote" "${Release_Version}" "${env.ArtifactoryUser}" "${env.ArtifactoryPassword}"  "PRODUCTION" "${env.WORKSPACE}" "$LoginUser" "${Ship_Name}"
-                    
-    //                     """
-    //             }
+    //         else if( "${env.JOB_NAME}" == "exm-deployment"){
                 
     //             if( buildStatus == 'FAILURE' ) {
 
@@ -183,22 +187,7 @@ node {
                     
     //             """
     //             }
-                
-    //             }
 
-
-    //             // Success or failure, always send notification
-
-    //             if (buildStatus == 'STARTED') {
-    //             color = 'YELLOW'
-    //             colorCode = '#FFFF00'
-    //             } else if (buildStatus == 'SUCCESS') {
-    //             color = 'GREEN'
-    //             colorCode = '#00FF00'
-    //             } else {
-    //             color = 'RED'
-    //             colorCode = '#FF0000'
-    //             }
 
     //             def isBodyExists = fileExists 'logs/email_body.txt'
     //             def isErrorExists = fileExists 'logs/errors.log'
@@ -225,7 +214,7 @@ node {
     //             }
 
     //             // Send notifications
-    //             slackSend (color: colorCode,channel: '#exm-jenkins-tracking', message: slack_body)
+    //             slackSend (color: colorCode,channel: '#xicms-jenkins', message: slack_body)
     //             emailext attachLog: true, body: email_body, compressLog: true, subject: "Build Notification: ${env.JOB_NAME}-Build# ${env.BUILD_NUMBER} ${buildStatus}", to : 'xicms-support-list@hsc.com'
     //         }
     //     }
