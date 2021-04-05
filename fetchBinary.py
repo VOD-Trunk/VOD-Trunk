@@ -86,10 +86,10 @@ with open(logfile_path, 'w+') as logfile:
         contentID=0;
         errorValue=""
         response = requests.request(
-        "GET",
-        url,
-        params=PARAMS,
-        headers=headers,
+           "GET",
+           url,
+           params=PARAMS,
+           headers=headers,
         )
         log(response.request.url)
 
@@ -124,9 +124,9 @@ with open(logfile_path, 'w+') as logfile:
         url = "https://carnival.atlassian.net/wiki/rest/api/content/" +str(ContentId) + "?expand=body.storage"
 
         response = requests.request(
-        "GET",
-        url,
-        headers=headers
+           "GET",
+           url,
+           headers=headers
         )
 
         if response.status_code == 200:
@@ -178,15 +178,15 @@ with open(logfile_path, 'w+') as logfile:
                     continue
         elif pageType == "Config":
 
-            if len(firstRowColumnNames) != 5:    #count of columns headers on Config Changes page should be 5 fixed.
-                log("ERROR : The table structure on Config Changes confluence page is not correct. There should be exactly five column headers and in this order : File-Name, File-Path, Server, Release-Version, Group")
+            if len(firstRowColumnNames) != 4:    #count of columns headers on MW page should be 5 fixed.
+                log("ERROR : The table structure on MW confluence page is not correct. There should be exactly four column headers and in this order : Release-Version, Ship-Name, Server, File-name")
                 exit(1)
 
-            tableHeaders=["File-Name", "File-Path", "Server", "Release-Version", "Group"]
+            tableHeaders=["Release-Version", "Ship-Name", "Server", "File-name"]
             #The column headers should only be the ones present in tableHeaders list and in that specific order.
-            for i in range(5):
+            for i in range(4):
                 if firstRowColumnNames[i] != tableHeaders[i]:
-                    log("ERROR : The table structure on Config Changes confluence page is not correct. The five column headers should have names and order as : File-Name, File-Path, Server, Release-Version, Group")
+                    log("ERROR : The table structure on MW confluence page is not correct. The four column headers should have names and order as : Release-Version, Ship-Name, Server, File-name")
                     exit(1)
                 else:
                     continue
@@ -205,9 +205,9 @@ with open(logfile_path, 'w+') as logfile:
         url = "https://carnival.atlassian.net/wiki/rest/api/content/" +str(ContentId) + "?expand=body.storage"
 
         response = requests.request(
-        "GET",
-        url,
-        headers=headers
+           "GET",
+           url,
+           headers=headers
         )
 
         if response.status_code == 200:
@@ -262,9 +262,9 @@ with open(logfile_path, 'w+') as logfile:
         url = "https://carnival.atlassian.net/wiki/rest/api/content/" +str(ContentId) + "?expand=body.storage"
 
         response = requests.request(
-        "GET",
-        url,
-        headers=headers
+           "GET",
+           url,
+           headers=headers
         )
 
         if response.status_code == 200:
@@ -311,14 +311,14 @@ with open(logfile_path, 'w+') as logfile:
     # end of function //GetScheduleContentInformation
 
 
-    def GetConfigChanges(ContentId,headers,releaseVersionScheduled):
+    def GetConfigChanges(ContentId,headers,shipNamesScheduled,releaseVersionScheduled):
 
         url = "https://carnival.atlassian.net/wiki/rest/api/content/" +str(ContentId) + "?expand=body.storage"
 
         response = requests.request(
-        "GET",
-        url,
-        headers=headers
+           "GET",
+           url,
+           headers=headers
         )
 
         if response.status_code == 200:
@@ -332,17 +332,13 @@ with open(logfile_path, 'w+') as logfile:
         subTable = re.findall(r'<td>(.+?)</td>',searchString)
         recordCount=0
         columnCount=0
-        configFileNames=[]
-        configFilePaths=[]
-        configServerNames=[]
         configReleaseVersions = []
-        configGroups = []      
-        
-        
+        configShipNames = []      
+        configServerNames=[]
+        configFileNames=[]
         serverNames = []
         fileNames = []
         releaseVersions = []
-        filePaths = []
 
         TAG_RE = re.compile(r'<[^>]+>')
         for x in subTable:
@@ -350,60 +346,30 @@ with open(logfile_path, 'w+') as logfile:
             columnValue=TAG_RE.sub('', x)
             columnValue = columnValue.strip()
 
-            if recordCount < 5:
+            if recordCount < 4:
                 recordCount= recordCount + 1
                 continue
-            if recordCount%5 == 0:  
-                configFileNames.append(columnValue)
-            elif recordCount%5== 1:
-                configFilePaths.append(columnValue)
-            elif recordCount%5== 2:
-                configServerNames.append(columnValue)
-            elif recordCount%5== 3:
+            if recordCount%4 == 0:  
                 configReleaseVersions.append(columnValue)
-            elif recordCount%5== 4:
-                configGroups.append(columnValue)
+            elif recordCount%4== 1:
+                configShipNames.append(columnValue)
+            elif recordCount%4== 2:
+                configServerNames.append(columnValue)
+            elif recordCount%4== 3:
+                configFileNames.append(columnValue)
 
             recordCount= recordCount + 1
                 
-        for i, configReleaseVersion in enumerate(configReleaseVersions):
-            if configReleaseVersion in releaseVersionScheduled:
+        for i, configShipName in enumerate(configShipNames):
+            if (configShipName in shipNamesScheduled) and (configReleaseVersions[i] in releaseVersionScheduled):
                 serverNames.append(configServerNames[i])
                 fileNames.append(configFileNames[i])
-                releaseVersions.append(configReleaseVersion)
-                filePaths.append(configFilePaths[i])
+                releaseVersions.append(configReleaseVersions[i])
 
-        return (releaseVersions,serverNames,fileNames,filePaths)
+        return (releaseVersions,serverNames,fileNames)
 
-    # end of function GetConfigChanges()
+    # end of function //GetConfigChanges
 
-    # def findIpAddress(env_dict, shipName):
-    #     for environment in env_dict.keys():
-    #         for group in env_dict[environment][0].keys():
-    #             if shipName in env_dict[environment][0][group].keys():
-    #                 ipaddr = env_dict[environment][0][group][shipName]
-    #                 serverPass = env_dict[environment][1]["pwd"]
-    #                 return (ipaddr, serverPass)
-    #             else:
-    #                 continue
-    #     return ("None","None")
-
-    # # end of function findIpAddress()
-
-    def findIpAddress(env_dict, shipName):
-        for environment, groupList in env_dict.items():
-            for group, ships in groupList[0].items():
-                if shipName in ships.keys():
-                    ipaddr = ships[shipName]
-                    serverPass = groupList[1]["pwd"]
-                    return (ipaddr, serverPass)
-                else:
-                    continue
-        return ("None","None")
-
-    # end of function findIpAddress()
-
-    
     #Main script
     log("Starting...\n")
 
@@ -497,12 +463,15 @@ with open(logfile_path, 'w+') as logfile:
                                 releasePageScheduled.append(releasePage[i])
                                 releaseVersionScheduled.append(releaseVersion[i])
 
-                                env_dict = config_json["jenkins"]["environments"]
-                                ipaddr, serverPass = findIpAddress(env_dict,shipName)
-                                if ipaddr == "None" and serverPass == "None":
-                                    log("ERROR : The server details were not found in the jenkinsconfig.json. Please add the details and try again.")
-                                    exit(1)
-                                    
+                                if shipName == "XS" or shipName == "HSC_Test":
+                                    ipaddr = config_json["jenkins"]["environments"]["QA"][0][shipName]
+                                    serverPass = config_json["jenkins"]["environments"]["QA"][1]["pwd"]
+                                elif shipName == "SUPPORT":
+                                    ipaddr = config_json["jenkins"]["environments"]["SUPPORT"][0][shipName]
+                                    serverPass = config_json["jenkins"]["environments"]["SUPPORT"][1]["pwd"]
+                                else:
+                                    ipaddr = config_json["jenkins"]["environments"]["PRODUCTION"][0][shipName]
+                                    serverPass = config_json["jenkins"]["environments"]["PRODUCTION"][1]["pwd"]
                                 log("\nShip " + shipName + " is ready for release deployment. Initiating transfer of artifacts to " + ipaddr)
                                 with open(scheduled_ships_path, 'a+') as f:
                                     f.write(shipName + ":" + ipaddr + ":" +  releaseVersion[i]+ ":" + transferAction[i] + ":" + serverPass + "\n")
@@ -511,13 +480,16 @@ with open(logfile_path, 'w+') as logfile:
                     confContentID,confErrorValue = CheckConfluencePage(pageNameConfig)
                     confVerificationResult = verifyConfluencePage(confContentID,headers,"Config")
                     log(confVerificationResult)
-                    releaseVersions, serverNames, fileNames, filePaths = GetConfigChanges(confContentID,headers,releaseVersionScheduled)                      
-                    log("releaseVersions :" + str(releaseVersions) + "\nserverNames :" + str(serverNames) + "\nfileNames :" + str(fileNames) +"\nfilePaths :" + str(filePaths))
+                    releaseVersions, serverNames, fileNames = GetConfigChanges(confContentID,headers,shipNamesScheduled,releaseVersionScheduled)                      
+                    log("releaseVersions :" + str(releaseVersions) + "\nserverNames :" + str(serverNames) + "\nfileNames :" + str(fileNames))
                     for i, release in enumerate(releaseVersions):
                         config_files_path = workspace + "/tmp/" + release + "/config_path_mapping.txt"
-                        log("Writing into config_path_mapping.txt")
-                        with open(config_files_path, 'a+') as f:
-                            f.write(serverNames[i] + ":" + fileNames[i].strip() + ":" + filePaths[i].strip() + "\n")                  
+                        file_list = fileNames[i].split(",")
+                        for fileName in file_list:
+                            server_file_path = config_json["jenkins"]["configurations"][str(serverNames[i])][str(fileName.strip())]
+                            log("Writing into config_path_mapping.txt")
+                            with open(config_files_path, 'a+') as f:
+                                f.write(serverNames[i] + ":" + fileName.strip() + ":" + server_file_path + "\n")                  
 
 
         scheduledReleaseDict={}
@@ -607,9 +579,9 @@ with open(logfile_path, 'w+') as logfile:
                     log("Following are the artifacts in: " + releaseName)
                     for key, value in finalArtifactoryUrl.items():
 
-                        if targetShipName in config_json["jenkins"]["environments"]["PRODUCTION"][0]["HAL"] and key == "EXM Notification plugin":
+                        if targetShipName in ["KODM","NADM","EUDM","WEDM","NSDM","NODM","VODM","ZUDM","OSDM","Ovation","Encore","Odyssey"] and key == "EXM Notification plugin":
                             continue
-                        elif targetShipName in config_json["jenkins"]["environments"]["PRODUCTION"][0]["PCL"] and key == "exm-v2-plugin-excursions":
+                        elif targetShipName not in ["KODM","NADM","EUDM","WEDM","NSDM","NODM","VODM","ZUDM","OSDM","Ovation","Encore","Odyssey"] and key == "exm-v2-plugin-excursions":
                             continue
                             
                         componentConfluence = str(key)
@@ -676,13 +648,7 @@ with open(logfile_path, 'w+') as logfile:
                             else:
                                 log("Couldn't reach the provided url with response : "+ str(response.status_code) + "\n")
                                 continue
-                        compServer_dict = config_json["jenkins"]["components"]
-                        for server, compList in compServer_dict.items():
-                            if component in compList:
-                                compServer = server
-                                break
-                            else:
-                                continue
+                        compServer = config_json["jenkins"]["components"][component]
                         with open(builds_file_path, 'a+') as f:
                             f.write(component + " : " + str(component_build_mapping[componentConfluence]) + " : " + str(component_md5sum_mapping[componentConfluence]) + ":" + str(compServer) + "\n")
         else:
