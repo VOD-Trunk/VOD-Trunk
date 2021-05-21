@@ -21,11 +21,6 @@ log(){
     echo "$@" >> $JenkinsWorkspace/logs/"${logfile}"
 }
 
-if [ -f  $JenkinsWorkspace/logs/"${logfile}" ]
-then
-    rm -f $JenkinsWorkspace/logs/"${logfile}"
-fi
-
 export DateTimeStamp=$(date +%Y%m%d-%H%M)
 
 UrlPart1="http://artifactory.tools.ocean.com/artifactory/api/storage"
@@ -52,15 +47,14 @@ do
 
     elif [ "$Deployment_Env" == "PRODUCTION" ] && [ "$Activity" == "Deploy" ]
     then
-        isProdDone=`curl -sS -u "$ArtifactoryUser":"$ArtifactoryPassword" -X GET ''${UrlPart1}/${UrlPart2}'?properties='${ship_name}'_DEPLOYMENT_TIME' | grep "${ship_name}_DEPLOYMENT_TIME" | wc -l`
-
-        if [ $isProdDone -eq 1 ]
-        then
-            log "ERROR : The release $ReleaseVersion has already been deployed on ship $ship_name. Aborting build !!"
-            exit 1
-        else
-             log "Deployment of ${ReleaseVersion} is pending on $ship_name. Moving ahead..."
-        fi
+        # isProdDone=`curl -sS -u "$ArtifactoryUser":"$ArtifactoryPassword" -X GET ''${UrlPart1}/${UrlPart2}'?properties='${ship_name}'_DEPLOYMENT_TIME' | grep "${ship_name}_DEPLOYMENT_TIME" | wc -l`
+        # if [ $isProdDone -eq 1 ]
+        # then
+        #     log "ERROR : The release $ReleaseVersion has already been deployed on ship $ship_name. Aborting build !!"
+        #     exit 1
+        # else
+        #      log "Deployment of ${ReleaseVersion} is pending on $ship_name. Moving ahead..."
+        # fi
 
         isSupportDone=`curl -sS -u "${ArtifactoryUser}":"${ArtifactoryPassword}" -X GET ''${UrlPart1}/${UrlPart2}'?properties=SUPPORT_PROMOTION_TIME' | grep "SUPPORT_PROMOTION_TIME" | wc -l`
         
@@ -97,12 +91,12 @@ do
     if [ "$Activity" == "Promote" ] && [ "$PromotingFrom" == "QA_TO_SUPPORT" ]
     then
         log "Promoting $Component of $ReleaseVersion to Support Setup ..."
-        curl -sS -u "${ArtifactoryUser}":"${ArtifactoryPassword}" -X PUT ''${UrlPart1}/${UrlPart2}'?properties=XS=Done;QA_PROMOTION_TIME='${DateTimeStamp}';QA_USER='${LoginUser}''
-        isQADone=`curl -sS -u "$ArtifactoryUser":"$ArtifactoryPassword" -X GET ''${UrlPart1}/${UrlPart2}'?properties=QA_PROMOTION_TIME' | grep "QA_PROMOTION_TIME" | wc -l`
-        log `curl -sS  -u "${ArtifactoryUser}":"${ArtifactoryPassword}" -X GET ''${UrlPart1}/${UrlPart2}'?properties=QA_PROMOTION_TIME'`
+        curl -sS -g -u "${ArtifactoryUser}":"${ArtifactoryPassword}" -X PUT ''${UrlPart1}/${UrlPart2}'?properties=XS=Done;QA_PROMOTION_TIME='${DateTimeStamp}';QA_USER='${LoginUser}''
+        isQADone=`curl -sS -g -u "$ArtifactoryUser":"$ArtifactoryPassword" -X GET ''${UrlPart1}/${UrlPart2}'?properties=QA_PROMOTION_TIME' | grep "QA_PROMOTION_TIME" | wc -l`
         if [ ${isQADone} -eq 1 ]
         then
             log "Successfully set property QA = Done on $Component of $ReleaseVersion"
+            echo "MESSAGE : Release $ReleaseVersion promoted from $PromotingFrom, ready to be deployed in support setup." > $JenkinsWorkspace/logs/email_body.txt
         else
             log "Error in setting Property for QA environment for $Component of $ReleaseVersion. Please try again."
             continue
@@ -111,20 +105,23 @@ do
     elif [ "$Activity" == "Promote" ] && [ "$PromotingFrom" == "SUPPORT_TO_PROD" ]
     then
         log "Promoting $Component of $ReleaseVersion to Production ..."
-        isQADone=`curl -sS -u "$ArtifactoryUser":"$ArtifactoryPassword" -X GET ''${UrlPart1}/${UrlPart2}'?properties=QA_PROMOTION_TIME' | grep "QA_PROMOTION_TIME" | wc -l`
+       
+        isQADone=`curl -sS -g -u "$ArtifactoryUser":"$ArtifactoryPassword" -X GET ''${UrlPart1}/${UrlPart2}'?properties=QA_PROMOTION_TIME' | grep "QA_PROMOTION_TIME" | wc -l`
+        
         if [ ${isQADone} -eq 1 ]
         then
-            curl -sS -u "${ArtifactoryUser}":"${ArtifactoryPassword}" -X PUT ''${UrlPart1}/${UrlPart2}'?properties=SUPPORT=Done;SUPPORT_PROMOTION_TIME='${DateTimeStamp}';SUPPORT_USER='${LoginUser}''
-            isSupportDone=`curl -sS -u "$ArtifactoryUser":"$ArtifactoryPassword" -X GET ''${UrlPart1}/${UrlPart2}'?properties=SUPPORT_PROMOTION_TIME' | grep "SUPPORT_PROMOTION_TIME" | wc -l`
+            curl -sS -g -u "${ArtifactoryUser}":"${ArtifactoryPassword}" -X PUT ''${UrlPart1}/${UrlPart2}'?properties=SUPPORT=Done;SUPPORT_PROMOTION_TIME='${DateTimeStamp}';SUPPORT_USER='${LoginUser}''
+            isSupportDone=`curl -sS -g -u "$ArtifactoryUser":"$ArtifactoryPassword" -X GET ''${UrlPart1}/${UrlPart2}'?properties=SUPPORT_PROMOTION_TIME' | grep "SUPPORT_PROMOTION_TIME" | wc -l`
             log `curl -sS -u "${ArtifactoryUser}":"${ArtifactoryPassword}" -X GET ''${UrlPart1}/${UrlPart2}'?properties=SUPPORT_PROMOTION_TIME'`
             if [ ${isSupportDone} -eq 1 ]
             then
                 log "Successfully set property SUPPORT = Done on $Component of $ReleaseVersion"
+                echo "MESSAGE : Release $ReleaseVersion promoted from $PromotingFrom, ready to be deployed in Production environment." > $JenkinsWorkspace/logs/email_body.txt
             else
                 log "ERROR : Error in setting Property SUPPORT=Done on $Component of $ReleaseVersion. Please try again."
                 exit 1
             fi  
-        else
+         else
             log "ERROR : $Component of $ReleaseVersion is not promoted in QA environment, can't be promoted directly from Support Environment to Production"
             exit 1
         fi
