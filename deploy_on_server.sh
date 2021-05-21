@@ -11,6 +11,75 @@ transfer_flag=$6
 
 declare -A statusArray
 
+if [ "$component_choice" == "All" ]
+then
+	partial_flag=2
+else
+	partial_flag=1
+	IFS=',' read -r -a choice_list <<< "$component_choice"
+	for i in "${!choice_list[@]}"
+	do
+		choice_list[$i]=`echo ${choice_list[$i]} | sed "s/_/ /g"`
+		if [ "${choice_list[$i]}" == "EXM V2" ]
+		then
+			choice_list[$i]="v2"
+		elif [ "${choice_list[$i]}" == "LeftNav" ]
+		then
+			choice_list[$i]="exm-client-leftnav2"
+		elif [ "${choice_list[$i]}" == "Admin Tool" ]
+		then
+			choice_list[$i]="exm-admin-tool"
+		elif [ "${choice_list[$i]}" == "Cruise Client" ]
+		then
+			choice_list[$i]="exm-client-cruise"
+		elif [ "${choice_list[$i]}" == "EXM Lite Client" ]
+		then
+			choice_list[$i]="exm-client-lite"
+		elif [ "${choice_list[$i]}" == "Startup Client" ]
+		then
+			choice_list[$i]="exm-client-startup"
+		elif [ "${choice_list[$i]}" == "Precor Client" ]
+		then
+			choice_list[$i]="exm-precor-client"
+		elif [ "${choice_list[$i]}" == "NACOS Listener" ]
+		then
+			choice_list[$i]="nacos"
+		elif [ "${choice_list[$i]}" == "Mute Daemon" ]
+		then
+			choice_list[$i]="mutedaemon"
+		elif [ "${choice_list[$i]}" == "LeftNav Signage" ]
+		then
+			choice_list[$i]="exm-client-leftnav2-signage"
+		elif [ "${choice_list[$i]}" == "Exm-v2-plugin-location" ]
+		then
+			choice_list[$i]="location"
+		elif [ "${choice_list[$i]}" == "EXM Diagnostic Application" ]
+		then
+			choice_list[$i]="exm-diagnostic-app"
+		elif [ "${choice_list[$i]}" == "EXM Diagnostic plugin" ]
+		then
+			choice_list[$i]="diagnostics"
+		elif [ "${choice_list[$i]}" == "EXM Notification plugin" ]
+		then
+			choice_list[$i]="notification-service"
+		elif [ "${choice_list[$i]}" == "Mute Status Service" ]
+		then
+			choice_list[$i]="mute"
+		elif [ "${choice_list[$i]}" == "exm-db-upgrade" ]
+		then
+			choice_list[$i]="exm-db-upgrade"
+		elif [ "${choice_list[$i]}" == "exm-v2-plugin-excursions" ]
+		then
+			choice_list[$i]="excursions"
+		fi
+
+	done
+fi
+
+err() {
+    >&2 echo -e "$@"
+}
+
 log(){
     echo "$@" >&1 2>&1
     echo "$@" >> ${logfile}
@@ -145,9 +214,9 @@ get_current_build() {
 			releases_path='/var/lib/tomcat7/hosts/prod.uiexm.com/webapps'
 	fi
 
-	if [ "$component" == "exm-v2-plugin-excursions" ]
+	if [ "$component" == "excursions" ]
 	then
-			current_build='/var/lib/tomcat7/hosts/prod.uiexm.com/webapps/exm-v2-plugin-excursions.war'
+			current_build='/var/lib/tomcat7/hosts/prod.uiexm.com/webapps/excursions.war'
 			releases_path='/var/lib/tomcat7/hosts/prod.uiexm.com/webapps'
 	fi
 
@@ -183,15 +252,29 @@ restart_services() {
 	component=$1
 	start_stop=$2
 	
-	if  ([ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ] || [ "$component" == "exm-v2-plugin-excursions" ]) && [ "$start_stop" == "stop" ]
+	if  ([ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ] || [ "$component" == "excursions" ]) && [ "$start_stop" == "stop" ]
 	then
 		log "Stopping tomcat7 service for $component..."
-		pkill -9 -u tomcat java #Stop_Tomcat_Service
-		sleep 5
+        service tomcat7 stop
+        sleep 15
+        ps -elf | grep -v grep | grep -q tomcat7
+        if [ $? -eq 0 ]
+        then
+        	ps -elf | grep tomcat7 | grep -v grep | awk '{print $4}' | xargs kill -9
+        else
+        	log "Tomcat Service Stopped"
+        fi
+        PID_FILE=`ls /var/run/tomcat7.pid 2> /dev/null`
+        if [ $? -eq 0 ]
+        then
+        	rm /var/run/tomcat7.pid
+        else
+        log "PID File Removed After Service Stopped"
+		fi
 		log "================================================================================================================"
 	fi
 
-	if  ([ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ] || [ "$component" == "exm-v2-plugin-excursions" ]) && [ "$start_stop" == "start" ]
+	if  ([ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ] || [ "$component" == "excursions" ]) && [ "$start_stop" == "start" ]
 	then
 		log "Starting tomcat7 service for $component..."
 		service tomcat7 start #Start_Tomcat_Service
@@ -205,23 +288,22 @@ restart_services() {
 		
 		if [ $tomcat_status == 1 ]
 		then
-			echo "tomcat7 started successfully."
+			log "tomcat7 started successfully."
 		else
-			echo "tomcat7 failed to start"
-		fi
+			log "tomcat7 failed to start"
+		fi	
 		
-		log "Starting httpd service"
+        log "Starting httpd service"
 		service httpd restart
-
+        sleep 10
 		httpd_status=`service httpd status | grep running | wc -l`
 		
 		if [ $httpd_status == 1 ]
 		then
-			echo "httpd started successfully."
+			log "httpd started successfully."
 		else
-			echo "httpd failed to start"
+			log "httpd failed to start"
 		fi
-
 		log "================================================================================================================"	
 	fi
 	
@@ -273,12 +355,12 @@ restart_services() {
 deploy_new_build() {
 
 	### This function contains all the deployment steps for each type of component. All tar files are deployed in one way and similarly all jar files in one way and all war files in one way.
-
 	new_release=$1
 	component=$2
 	releases_path=$3
 	current_build=$4
-
+	log "Inside deploy_new_build() : component :$component  release path :$releases_path   current build:$current_build"
+	
 	#####Deployment of all clients have the same steps. So using the same code for both in below code block.
 
 	if [ "$component" == "exm-db-upgrade" ]
@@ -293,6 +375,7 @@ deploy_new_build() {
 		else
 			for i in `ls /root/Releases/$new_release/dbbackup`
 			do
+            	log "Removing file from /root/Releases/$new_release/dbbackup/$i"
 				rm -rf /root/Releases/$new_release/dbbackup/$i
 			done
 		fi
@@ -333,12 +416,27 @@ deploy_new_build() {
 		log "Unzipping $file_name ..."
 
 		tar -xzf /root/Releases/$new_release/$component/$file_name -C /root/Releases/$new_release/$component/
-
 		new_build=`cd /root/Releases/$new_release/$component/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
 
 		#chmod +x /root/Releases/$new_release/exm-db-upgrade/$new_build/db-script.sh
 		chmod +x /root/Releases/$new_release/exm-db-upgrade/db-script.sh
-		
+        #copy Liquibase Jar file in exm-db-upgrade folder
+		cp /root/Releases/$new_release/EXM-V2-Liquibase/*.jar /root/Releases/$new_release/exm-db-upgrade/
+       
+       	#rm -rf /var/lib/tomcat7/hosts/prod.uiexm.com/webapps/v2.war
+        #rm -rf /var/lib/tomcat7/hosts/prod.uiexm.com/webapps/diagnostics.war
+        #rm -rf /var/lib/tomcat7/hosts/prod.uiexm.com/webapps/notification-service.war
+        
+        #cp /root/Releases/$new_release/v2/*.war /var/lib/tomcat7/hosts/prod.uiexm.com/webapps/v2.war
+        #cp /root/Releases/$new_release/diagnostics/*.war /var/lib/tomcat7/hosts/prod.uiexm.com/webapps/diagnostics.war 
+        #cp /root/Releases/$new_release/notification-service/*.war /var/lib/tomcat7/hosts/prod.uiexm.com/webapps/notification-service.war
+        
+        cp /root/Releases/$new_release/v2/*.war /root/Releases/$new_release/exm-db-upgrade/v2.war
+        cp /root/Releases/$new_release/diagnostics/*.war /root/Releases/$new_release/exm-db-upgrade/diagnostics.war 
+        cp /root/Releases/$new_release/notification-service/*.war /root/Releases/$new_release/exm-db-upgrade/notification-service.war
+        cp /root/Releases/$new_release/location/*.war /root/Releases/$new_release/exm-db-upgrade/location.war
+        cp /root/Releases/$new_release/excursions/*.war /root/Releases/$new_release/exm-db-upgrade/excursions.war
+        
 		cd /root/Releases/$new_release/exm-db-upgrade/$new_build
 		
 		printf 'uie123\n' | ./db-script.sh --upgrade &>/dev/null
@@ -358,7 +456,7 @@ deploy_new_build() {
 
 		if [ $? -eq 0 ]
 		then
-			log "Upgrade Finished."
+			log "DB Upgrade Finished."
 		else
 			log "ERROR : DB upgrade was unsuccessful. Please check logs at /root/update/$new_release/exm-db-upgrade/$new_build"
 			exit 1
@@ -382,7 +480,8 @@ deploy_new_build() {
 		then
 			for i in `ls $releases_path/Backup`
 			do
-				rm -rf $releases_path/Backup/$i
+				log "removing file from $releases_path/Backup/$i"
+                rm -rf $releases_path/Backup/$i
 			done
 		fi
 		cp -r $current_build $releases_path/Backup
@@ -424,7 +523,7 @@ deploy_new_build() {
 
 	#####Deployment of all .war files have the same steps. So using the same code for all in below code block.
 
-	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursion" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ] || [ "$component" == "exm-v2-plugin-excursions" ]
+	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursions" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]
 	then
 		log "Starting deployment of $component"
 		log "Copying $releases_path/$component.war and $releases_path/$component to /root/War_Backup/ for backup."
@@ -438,12 +537,14 @@ deploy_new_build() {
 		then
 			for i in `ls /root/War_Backup/$component`
 			do
-				rm -rf /root/War_Backup/$component/$i
+				log "removing file from /root/War_Backup/$component/$i"
+                rm -rf /root/War_Backup/$component/$i
 			done
 		fi
 		cp -r $releases_path/$component $releases_path/$component.war /root/War_Backup/$component
 		#cp $releases_path/$component.war /tmp/
-		rm -rf $releases_path/$component $releases_path/$component.war
+        log "removing file $releases_path/$component $releases_path/$component.war"
+        rm -rf $releases_path/$component $releases_path/$component.war
 
 		log "Copying new war file to $releases_path/$component.war"
 
@@ -464,6 +565,7 @@ deploy_new_build() {
 		then
 			for i in `ls $releases_path/Backup`
 			do
+            	log "Removing file from $releases_path/Backup/$i"
 				rm -rf $releases_path/Backup/$i
 			done
 		fi
@@ -476,7 +578,6 @@ deploy_new_build() {
 		then
 			log "Taking backup of the current build."	
 			cp -r $releases_path/releases/$current_build $releases_path/Backup/
-
 			for i in `ls $releases_path/releases/$new_release`
 			do
 				rm -rf $releases_path/releases/$new_release/$i
@@ -553,6 +654,7 @@ deploy_new_build() {
 		then
 			for i in `ls $releases_path/Backup`
 			do
+            	log "Removing file from $releases_path/Backup/$i"
 				rm -rf $releases_path/Backup/$i
 			done
 		fi
@@ -606,6 +708,7 @@ deploy_new_build() {
 		then
 			for i in `ls $releases_path/Backup`
 			do
+            	log "Removing file from $releases_path/Backup/$i"
 				rm -rf $releases_path/Backup/$i
 			done
 		fi
@@ -711,12 +814,12 @@ rollback() {
 
 
 
-	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursion" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ] || [ "$component" == "exm-v2-plugin-excursions" ]
+	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursions" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ] 
 	then
 
 		log "Starting rollback of $component"
 		log "Removing current build"
-
+        log "Removing file from $releases_path/$component*"
 		rm -rf $releases_path/$component*
 
 		log "Copying rollbcak build to $releases_path"
@@ -802,13 +905,17 @@ verify() {
 	abort_on_fail=$4
 	activity=$5
 	services_status=1
-
+	log "inside verify function"
 	if  [ "$component" == "exm-admin-tool" ] || [ "$component" == "exm-client-cruise" ] || [ "$component" == "exm-client-startup" ] || [ "$component" == "exm-client-leftnav2" ] || [ "$component" == "exm-client-leftnav2-signage" ] || [ "$component" == "exm-client-lite" ] || [ "$component" == "exm-diagnostic-app" ] || [ "$component" == "exm-precor-client" ]
 	then
 		timestamp_build=`cat $current_build/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
+        log "$component timestamp_build::$timestamp_build"
+        log "activity:: $activity"
 		if [ "$activity" == "deploy" ]
 		then
 			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep -w "$component " | cut -d ":" -f 2 | sed 's/ //g'`
+            log "$component release_build::$release_build"
+            
 		else
 			rollback_build=`cd $releases_path/Backup/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
 			release_build=`cat $releases_path/Backup/$rollback_build/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
@@ -816,12 +923,14 @@ verify() {
 
 	fi
 
-	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursion" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ] || [ "$component" == "exm-v2-plugin-excursions" ]
+	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursions" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]
 	then
 		timestamp_build=`cat $releases_path/$component/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
+        log "$component timestamp_build::$timestamp_build"
 		if [ "$activity" == "deploy" ]
 		then
 			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep -w "$component " | cut -d ":" -f 2 | sed 's/ //g'`
+            log "$component release_build::$release_build"
 		else
 			release_build=`cat /root/War_Backup/$component/$component/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
 		fi
@@ -830,9 +939,11 @@ verify() {
 	if [ "$component" == "mute" ]
 	then
 		timestamp_build=`cat $current_build/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
+        log "$component timestamp_build::$timestamp_build"
 		if [ "$activity" == "deploy" ]
 		then
 			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep -w "$component " | cut -d ":" -f 2 | sed 's/ //g'`
+            log "$component release_build::$release_build"
 		else
 			rollback_build=`cd $releases_path/Backup/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
 			release_build=`cat $releases_path/Backup/$rollback_build/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
@@ -842,16 +953,18 @@ verify() {
 	if [ "$component" == "nacos" ] || [ "$component"  == "mutedaemon" ]
 	then
 		timestamp_build=`cat $releases_path/releases/$new_release/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
+        log "$component timestamp_build::$timestamp_build"
 		if [ "$activity" == "deploy" ]
 		then
 			release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep -w "$component " | cut -d ":" -f 2 | sed 's/ //g'`
+            log "$component release_build::$release_build"
 		else
 			rollback_build=`cd $releases_path/Backup/ && find . -mindepth 1 -maxdepth 1 -type d -printf '%f\n'`
 			release_build=`cat $releases_path/Backup/$rollback_build/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
 		fi
 	fi
 
-	if ([ "$server" == "app01" ] || [ "$server" == "app02" ]) && [ "$component" == "UIEWowzaLib" ]
+	if ([ "$server" == "app01" ] || [ "$server" == "app02" ]) && [ "$component" == "UIEWowzaLib" ] || [ "$component" == "EXM-V2-Liquibase" ]
 	then
 		timestamp_status=1
         services_status=1
@@ -862,9 +975,11 @@ verify() {
 	then
 		timestamp_build=`cat /root/Releases/$new_release/$component/timestamp.txt | grep "Build Number" | cut -d ":" -f 2 | sed 's/ //g'`
 		release_build=`cat /root/Releases/tmp/component_build_mapping.txt | grep -w "$component " | cut -d ":" -f 2 | sed 's/ //g'`
+        log "$component release_build::$release_build"
+        log "$component timestamp_build::$timestamp_build"
 	fi
 
-	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursion" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ] || [ "$component" == "exm-v2-plugin-excursions" ]
+	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "excursions" ] || [ "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]
 	then
 		PID_FILE_SIZE=`stat -c%s /var/run/tomcat7.pid`
 		SIZE=0
@@ -873,6 +988,10 @@ verify() {
 		if (( PID_FILE_SIZE > SIZE ));
 		then
 			log "tomcat7 service has a PID."
+        elif (( PID_FILE_SIZE = SIZE ));
+        then
+            rm -f /var/run/tomcat7.pid
+            service tomcat7 restart
 		else
 			services_status=2
 			if [ $abort_on_fail == "Abort" ]
@@ -934,7 +1053,8 @@ verify() {
 	fi
 
 	
-
+	log "timestamp_build: $timestamp_build"
+    log "release_build: $release_build"
 	if [ "$timestamp_build" == "$release_build" ]
 	then
 		timestamp_status=1
@@ -947,7 +1067,7 @@ verify() {
 		fi
 	fi
 
-	if ([ "$server" == "app01" ] || [ "$server" == "app02" ]) && [ "$component" == "UIEWowzaLib" ]
+	if ([ "$server" == "app01" ] || [ "$server" == "app02" ]) && [ "$component" == "UIEWowzaLib" ] || [ "$component" == "EXM-V2-Liquibase" ]
 	then
 		:
 	else
@@ -974,25 +1094,32 @@ verify() {
 			#echo "Failed( Version : $timestamp_release )"
 		fi
 	fi
-	#echo $timestamp_status
+	echo "timestamp_status:: $timestamp_status"
 }
 
 deploy_master() {
 
 	### This is the main function which calls all the other functions according to the script arguments like 1) Component to be deployed. 2) To abort mission on failure or proceed 3) To deploy or rollabck  etc etc...
-
+	
 	component=$1
 	abort_on_fail=$2
 	activity=$3
+	log "Inside deploy_master for component :$1  and actvity:$activity"
 
-	if [ "$component" != "exm-db-upgrade" ]
+	if [ "$component" == "EXM-V2-Liquibase" ]
+	then
+		log "no need to deploy exm-Liquibase component,move forward"
+		return 1
+	fi
+    
+    if [ "$component" != "exm-db-upgrade" ]
 	then
 		releases_path=$(get_current_build $component | cut -d ":" -f 2)
 		current_build=$(get_current_build $component | cut -d ":" -f 1)
 	fi
     
 
-	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "nacos" ] || [ "$component"  == "excursion" ] || [  "$component" == "diagnostics" ] || [ "$component" == "notification-service" ] || [ "$component" == "exm-v2-plugin-excursions" ]
+	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "nacos" ] || [ "$component"  == "excursions" ] || [  "$component" == "diagnostics" ] || [ "$component" == "notification-service" ]
 	then
 		restart_services $component stop
 	fi
@@ -1003,8 +1130,9 @@ deploy_master() {
 		rollback $new_release $component $releases_path $current_build
 	fi
 
-	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "nacos" ] || [ "$component"  == "excursion" ] || [  "$component" == "diagnostics" ] || [ "$component" == "notification-service" ] || [ "$component" == "exm-v2-plugin-excursions" ]
+	if  [ "$component" == "v2" ] || [ "$component"  == "location" ] || [ "$component"  == "nacos" ] || [ "$component"  == "excursions" ] || [  "$component" == "diagnostics" ] || [ "$component" == "notification-service" ] 
 	then
+    	log "Calling restart_services"
 		restart_services $component start
 	fi
 
@@ -1024,7 +1152,7 @@ checkComponent() {
     then
         :
     else
-        log "ERROR : $component has not been transferred. Please transfer it from artifactory and then deploy."
+        log "ERROR : /root/Releases/$new_release/$component has not been transferred. Please transfer it from artifactory and then deploy."
         exit 1
     fi
 }
@@ -1036,54 +1164,8 @@ if [[ $# -eq 0 ]]; then
 	err "Usage: ${0} {option}"
 	err "\t--deploy|-d"
 	err "\t--rollback|-r"
-	err "\t--transfer|-t"
 	err
 			exit 1
-fi
-
-if [ -f /root/Releases/tmp/config_path_mapping.txt ] && [ "$action" == "-d" ]
-then
-	log "Starting config changes on $server..."
-
-	if [ ! -d /root/config/$new_release/Config_backup ]
-	then
-		mkdir -p /root/config/$new_release/Config_backup
-	fi
-
-	configs=`cat /root/Releases/tmp/config_path_mapping.txt`
-	IFS=$'\n'
-	for config in $configs
-	do
-		configServer=`echo $config | cut -d: -f1`
-		configFile=`echo $config | cut -d: -f2`
-		configFilePath=`echo $config | cut -d: -f3`        
-		server_check=`echo $server | grep $configServer | wc -l`
-		if [ $server_check -eq 1 ]
-		then
-			log "Taking backup of $configFile on $server"
-			mv $configFilePath /root/config/$new_release/Config_backup
-			log "Updating $configFile by /root/Releases/Config_Files/$configServer/$configFile"
-			cp /root/Releases/Config_Files/$configServer/$configFile $configFilePath
-			
-			if [ "$configServer" == "media" ]
-			then
-				service httpd restart
-				service nginx restart
-			fi
-
-			if [ "$configServer" == "lb" ]
-			then
-				vip_check=`ifconfig | grep $(grep haproxy /etc/ha.d/haresources | cut -d ':' -f3 | cut -d ' ' -f1) | wc -l`
-				if [ $vip_check -eq 1 ]
-				then
-					service haproxy restart
-				fi
-			fi
-		else
-			continue
-		fi
-
-	done
 fi
 
 if [ "$server" == "app01" ] && [ "$action" == "-d" ]
@@ -1095,8 +1177,10 @@ then
 		component="exm-db-upgrade"
 		log "Starting DB upgrade of release $new_release"
 		confluence_md5sum=`grep "exm-db-upgrade" /root/Releases/tmp/component_build_mapping.txt | cut -d ':' -f 3 | awk '{$1=$1};1'`
-	    comp_md5sum=`cd /root/Releases/$new_release/$component && find -type f -exec md5sum "{}" + | cut -d' ' -f1`
-
+	    #comp_md5sum=`cd /root/Releases/$new_release/$component && find -type f -exec md5sum "{}" + | cut -d' ' -f1`
+        comp_md5sum=`cd /root/Releases/$new_release/$component && ls  *.gz | xargs  md5sum | cut -d' ' -f1`
+		log "comp_md5sum:$comp_md5sum"
+        log "confluence_md5sum: $confluence_md5sum"
 	    if [ "$confluence_md5sum" == "$comp_md5sum" ]
 	    then
 	      	log "md5sum is same on confluence and server. $component has been transferred to app01 successfully."
@@ -1116,148 +1200,195 @@ fi
 
 case "${1}" in
 	-d|--deploy)
-		rows=`cat /root/Releases/tmp/component_build_mapping.txt`
-		IFS=$'\n'
-		for row in $rows
-		do
-			component=`echo $row | cut -d ':' -f 1 | awk '{$1=$1};1'`
-			confluence_md5sum=`echo $row | cut -d ':' -f 3 | awk '{$1=$1};1'`
-			compServer=`echo $row | cut -d ':' -f 4`
+	  if [ "$server" == "app01" ] && [ "$transfer_flag" == "true" ]
+	  then
+	  	  rows=`cat /root/Releases/tmp/component_build_mapping.txt`
+	      IFS=$'\n'
+	      for row in $rows
+	      do
+	        component=`echo $row | cut -d ':' -f 1 | awk '{$1=$1};1'`
+	        confluence_md5sum=`echo $row | cut -d ':' -f 3 | awk '{$1=$1};1'`
+	        comp_md5sum=`cd /root/Releases/$new_release/$component && find -type f -exec md5sum "{}" + | cut -d' ' -f1`
+			log "comp_md5sum:$comp_md5sum"
+       		log "confluence_md5sum: $confluence_md5sum"
+	        if [ "$confluence_md5sum" == "$comp_md5sum" ]
+	        then
+	          	log "md5sum is same on confluence and server. $component has been transferred to app01 successfully."
+	        else
+	        	log "ERROR : $component could not be transferred successfully. md5sum is not matching between confluence and server. Aborting Build !!"
+	            exit 1
+	        fi
+	      done
+	  fi
 
-			if [ `echo $server | grep $compServer | wc -l` -eq 1 ]
+	  if [ $partial_flag == 2 ]
+	  then
+		  log "Checking if components are present..."
+	  	  iter=1
+          components=`cat /root/Releases/tmp/component_build_mapping.txt`
+          IFS=$'\n'
+          for row in $components
+		  do
+          	component=`echo $row | cut -d' ' -f1`
+          	checkComponent $component
+          done
+
+	  	  for row in $components
+		  do
+          	component=`echo $row | cut -d' ' -f1`
+		  	if [ $iter == 1 ]
 			then
-				comp_md5sum=`cd /root/Releases/$new_release/$component && find -type f -exec md5sum "{}" + | cut -d' ' -f1`
-
-				if [ "$confluence_md5sum" == "$comp_md5sum" ]
-				then
-					log "md5sum is same on confluence and server. $component has been transferred to app01 successfully."
-				else
-					log "ERROR : $component could not be transferred successfully. md5sum is not matching between confluence and server. Aborting Build !!"
-					exit 1
-				fi
-			else
-				continue
+			log "================================================================================================================"
+			log "Starting deployment of $new_release all components"
 			fi
-		done
-
-		log "Checking if components are present..."
-		iter=1
-		components=`cat /root/Releases/tmp/component_build_mapping.txt`
-		IFS=$'\n'
-		for row in $components
-		do
-			component=`echo $row | cut -d' ' -f1`
-			compServer=`echo $row | cut -d ':' -f 4`
-
-			if [ `echo $server | grep $compServer | wc -l` -eq 1 ]
-			then
-				checkComponent $component
-			else
-				continue
-			fi
-		done
-
-		for row in $components
-		do
-			component=`echo $row | cut -d' ' -f1`
-			compServer=`echo $row | cut -d ':' -f 4`
-			if [ `echo $server | grep $compServer | wc -l` -eq 1 ]
-			then
-				if [ $iter == 1 ]
-				then
-					log "================================================================================================================"
-					log "Starting deployment of $new_release all components"
-				fi
-				deploy_master $component $abort_on_fail deploy
-				iter=$((iter+1))
-			else
-				continue
-			fi
-		done
-		if [ ${#statusArray[@]} == 0 ]
-		then
-			:
-		else
-			log "===============FINAL DEPLOYMENT STATUS( $server )==============="
-		fi
-	  ;;
-	-r|--rollback)
-		log "Checking which components to rollback..."
-		iter=1
-		components=`cat /root/Releases/tmp/component_build_mapping.txt`
-		IFS=$'\n'
-		for row in $components
-		do
+		  	deploy_master $component $abort_on_fail deploy
+			iter=$((iter+1))
+		  done
+		  log "===============FINAL DEPLOYMENT STATUS( $server )==============="
+	  else
+	  	  log "Checking if components are present..."
+          for component in "${choice_list[@]}"
+	  	  do
+          	if [ "$component" == "All" ]
+            then
+            	continue
+            fi
+          	checkComponent $component
+          done
+	  	  iter=1
+	  	  for component in "${choice_list[@]}"
+		  do
 			if [ $iter == 1 ]
 			then
-				log "================================================================================================================"
-				log "Starting rollback of $new_release : All components"
+            if [ "$component" == "All" ]
+            then
+            	continue
+            fi
+			log "================================================================================================================"
+			log "Starting deployment of $new_release selected components"
 			fi
-			component=`echo $row | cut -d' ' -f1`
-			verify $component
-			
-			comp_status=`grep 'Successful' "${statusArray[${component}]}" | wc -l`
-			
-			if [ "$comp_status" == "1" ]
-			then
-			
-			deploy_master $component $abort_on_fail rollback
-			else
-			log "$component does not need to be rolled back."
-				continue
-			fi
+			deploy_master $component $abort_on_fail deploy
 			iter=$((iter+1))
-			
-		done
-		if [ ${#statusArray[@]} == 0 ]
-		then
-		:
-		else
-		log "===============FINAL ROLLBACK STATUS( $server )==============="
-		fi
+		  done
+		  if [ ${#statusArray[@]} == 0 ]
+		  then
+		  	:
+		  else
+		  	log "===============FINAL DEPLOYMENT STATUS( $server )==============="
+		  fi
+	  fi
+	  ;;
+	-r|--rollback)
+	  if [ $partial_flag == 2 ]
+	  then
+	  	  log "Checking which components to rollback..."
+	  	  iter=1
+          components=`cat /root/Releases/tmp/component_build_mapping.txt`
+          IFS=$'\n'
+          for row in $components
+		  do
+		  	 if [ $iter == 1 ]
+				then
+					log "================================================================================================================"
+					log "Starting rollback of $new_release : All components"
+				fi
+          	 component=`echo $row | cut -d' ' -f1`
+          	 verify $component
+			  
+			 comp_status=`grep 'Successful' "${statusArray[${component}]}" | wc -l`
+			 
+			 if [ "$comp_status" == "1" ]
+			 then
+				
+				deploy_master $component $abort_on_fail rollback
+			 else
+			 	log "$component does not need to be rolled back."
+				 continue
+			 fi
+			 iter=$((iter+1))
+			 
+		  done
+		  if [ ${#statusArray[@]} == 0 ]
+		  then
+		  	:
+		  else
+		  	log "===============FINAL ROLLBACK STATUS( $server )==============="
+		  fi
+	  else
+	  	  iter=1
+	  	  for component in "${choice_list[@]}"
+	  	  do
+	  	  	  if [ $iter == 1 ]
+			  then
+              	if [ "$component" == "All" ]
+                then
+                    continue
+                fi
+				log "================================================================================================================"
+				log "Starting rollback of $new_release : Selected components"
+			  fi
+			  
+			  verify $component
+			  
+			  comp_status=`grep 'Successful' "${statusArray[${component}]}" | wc -l`
+			 
+			  if [ "$comp_status" == "1" ]
+			  then
+			    deploy_master $component $abort_on_fail rollback
+			  else
+			 	log "$component does not need to be rolled back."
+				continue
+			  fi
+			  iter=$((iter+1))
+		  done
+		  if [ ${#statusArray[@]} == 0 ]
+		  then
+		  	:
+		  else
+		  	log "===============FINAL ROLLBACK STATUS( $server )==============="
+		  fi
+	  fi
 	  ;;
 	-t|--transfer)
-		if [ "$server" == "app01" ] && [ "$transfer_flag" == "true" ]
-		then
-			if [ -f /root/Releases/tmp/component_build_mapping.txt ]
-			then
-				rows=`cat /root/Releases/tmp/component_build_mapping.txt`
-				IFS=$'\n'
-				for row in $rows
-				do
-				component=`echo $row | cut -d ':' -f 1 | awk '{$1=$1};1'`
-				confluence_md5sum=`echo $row | cut -d ':' -f 3 | awk '{$1=$1};1'`
-				comp_md5sum=`cd /root/Releases/$new_release/$component && find -type f -exec md5sum "{}" + | cut -d' ' -f1`
+	  if [ "$server" == "app01" ] && [ "$transfer_flag" == "true" ]
+	  then
+	  	  if [ -f /root/Releases/tmp/component_build_mapping.txt ]
+	  	  then
+			  rows=`cat /root/Releases/tmp/component_build_mapping.txt`
+		      IFS=$'\n'
+		      for row in $rows
+		      do
+		        component=`echo $row | cut -d ':' -f 1 | awk '{$1=$1};1'`
+		        confluence_md5sum=`echo $row | cut -d ':' -f 3 | awk '{$1=$1};1'`
+		        comp_md5sum=`cd /root/Releases/$new_release/$component && find -type f -exec md5sum "{}" + | cut -d' ' -f1`
 
-				if [ "$confluence_md5sum" == "$comp_md5sum" ]
-				then
-					log "md5sum is same on confluence and server. $component has been transferred to app01 successfully."
-					
-				else
-					log "ERROR : $component could not be transferred properly. md5sum is not matching between confluence and server. Aborting Build !!"
-					exit 1
-				fi
-				done
+		        if [ "$confluence_md5sum" == "$comp_md5sum" ]
+		        then
+		          	log "md5sum is same on confluence and server. $component has been transferred to app01 successfully."
+		          	
+			    else
+		        	log "ERROR : $component could not be transferred properly. md5sum is not matching between confluence and server. Aborting Build !!"
+		            exit 1
+		        fi
+		      done
 
-				log "Transferring artifacts to app, media and lb servers..."
-				{ #try
-				servers="app02 media01 media02 lb01 lb02"
-				IFS=$' '
-				for targetServer in $servers
-				do
-					ssh $targetServer 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
-					ssh $targetServer 'if [ ! -d /root/Releases/Config_Files ]; then mkdir -p /root/Releases/Config_Files; else rm -rf /root/Releases/Config_Files/*; fi'
-					scp -r /root/Releases/$new_release /root/Releases/tmp /root/Releases/Config_Files $targetServer:/root/Releases
-				done
-				} || { # catch
-						log "Could not connect to app02 server."
-				}
-			else
-				log "ERROR : Aborting build. Files have not been transferred."
-				exit 1
-			fi	
-			
-		fi
+		      log "Transferring artifacts to app02 and media servers..."
+		      { #try
+		      	ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
+		      	ssh media01 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
+				ssh media02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
+				scp -r /root/Releases/$new_release /root/Releases/tmp  app02:/root/Releases
+				scp -r /root/Releases/$new_release /root/Releases/tmp media01:/root/Releases
+				scp -r /root/Releases/$new_release /root/Releases/tmp media02:/root/Releases
+			  } || { # catch
+					    log "Could not connect to app02 server."
+			  }
+		  else
+		  	  log "ERROR : Aborting build. Files have not been transferred."
+		  	  exit 1
+		  fi	
+	  	  
+	  fi
 	  ;;
 	  *)
 	  echo "ERROR : Unknown option ${1}"
@@ -1278,32 +1409,29 @@ fi
 
 if [ "$server" == "app01" ] && [ "$transfer_flag" == "true" ] && [ "$action" == "-d" ]
 then
-	log "Transferring artifacts to app, media and lb servers..."
+	log "Transferring artifacts to app02 and media servers..."
 	{ #try
-
-	servers="app02 media01 media02 lb01 lb02"
-	IFS=$' '
-	for targetServer in $servers
-	do
-		ssh $targetServer 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
-		ssh $targetServer 'if [ ! -d /root/Releases/Config_Files ]; then mkdir -p /root/Releases/Config_Files; else rm -rf /root/Releases/Config_Files/*; fi'
-		scp -r /root/Releases/$new_release /root/Releases/tmp /root/Releases/Config_Files  $targetServer:/root/Releases
-	done
+	ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
+	ssh media01 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
+	ssh media02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else for folder in `ls /root/Releases`; do if [ `echo ${folder} | grep "_" | wc -l` -eq 0 ]; then mv /root/Releases/${folder} /root/Releases/${folder}_`date +%Y_%m_%d__%H_%M_%S`; fi; done; fi'
+		
+	scp -r /root/Releases/$new_release /root/Releases/tmp  app02:/root/Releases
+	scp -r /root/Releases/$new_release /root/Releases/tmp media01:/root/Releases
+	scp -r /root/Releases/$new_release /root/Releases/tmp media02:/root/Releases
 	} || { # catch
 		    log "Could not connect to app02 server."
 	}
 	
 elif [ "$server" == "app01" ] && [ "$transfer_flag" == "false" ] && [ "$action" == "-d" ]
 then
-	log "Transferring tmp folder to app, media and lb servers..."
+	log "Transferring tmp folder to app02 and media servers..."
 	{ #try
-	servers="app02 media01 media02 lb01 lb02"
-	IFS=$' '
-	for targetServer in $servers
-	do
-		ssh $targetServer 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else mv /root/Releases/tmp /root/Releases/tmp_`date +%Y_%m_%d__%H_%M_%S`; fi'
-		scp -r /root/Releases/tmp  $targetServer:/root/Releases/
-	done
+	ssh app02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else mv /root/Releases/tmp /root/Releases/tmp_`date +%Y_%m_%d__%H_%M_%S`; fi'
+	ssh media01 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else mv /root/Releases/tmp /root/Releases/tmp_`date +%Y_%m_%d__%H_%M_%S`; fi'
+	ssh media02 'if [ ! -d /root/Releases ]; then mkdir -p /root/Releases; else mv /root/Releases/tmp /root/Releases/tmp_`date +%Y_%m_%d__%H_%M_%S`; fi'
+	scp -r /root/Releases/tmp  app02:/root/Releases/
+	scp -r /root/Releases/tmp  media01:/root/Releases/
+	scp -r /root/Releases/tmp  media02:/root/Releases/
 	} || { # catch
 		log "Could not connect to app02 server."
 	}
