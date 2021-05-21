@@ -25,7 +25,6 @@ promotingFrom = sys.argv[14]
 userAccessEnv = sys.argv[15]
 userAllowedOperation = sys.argv[16]
 task = sys.argv[17]
-pageNameConfig = sys.argv[18]
 
 path = os.path.join(workspace,'logs')
 if os.path.isdir(path) != True:
@@ -176,20 +175,6 @@ with open(logfile_path, 'w+') as logfile:
                     exit(1)
                 else:
                     continue
-        elif pageType == "Config":
-
-            if len(firstRowColumnNames) != 4:    #count of columns headers on MW page should be 5 fixed.
-                log("ERROR : The table structure on MW confluence page is not correct. There should be exactly four column headers and in this order : Release-Version, Ship-Name, Server, File-name")
-                exit(1)
-
-            tableHeaders=["Release-Version", "Ship-Name", "Server", "File-name"]
-            #The column headers should only be the ones present in tableHeaders list and in that specific order.
-            for i in range(4):
-                if firstRowColumnNames[i] != tableHeaders[i]:
-                    log("ERROR : The table structure on MW confluence page is not correct. The four column headers should have names and order as : Release-Version, Ship-Name, Server, File-name")
-                    exit(1)
-                else:
-                    continue
         else:
             log("ERROR : Wrong input for pageType.")
 
@@ -229,6 +214,7 @@ with open(logfile_path, 'w+') as logfile:
         yesNo=[]
         test=[]
         TAG_RE = re.compile(r'<[^>]+>')
+        liquibaseFlag=0
         for x in subTable:
 
             columnValue=TAG_RE.sub('', x)
@@ -240,6 +226,8 @@ with open(logfile_path, 'w+') as logfile:
                 continue
             elif recordCount%7 == 0:  #Ignore first record
                 applicationName.append(columnValue)
+                if columnValue == "EXM V2 Liquibase":
+                  liquibaseFlag=1
             elif recordCount%7== 1:
                 applicationVersion.append(columnValue)
             elif recordCount%7== 2:
@@ -249,6 +237,9 @@ with open(logfile_path, 'w+') as logfile:
             elif recordCount%7== 5:
                 confluence_md5sum.append(columnValue[:32])
             elif recordCount%7== 6:
+                if liquibaseFlag == 1 :
+                  columnValue="Y"
+                  liquibaseFlag=0
                 yesNo.append(columnValue)
 
 
@@ -310,66 +301,6 @@ with open(logfile_path, 'w+') as logfile:
 
     # end of function //GetScheduleContentInformation
 
-
-    def GetConfigChanges(ContentId,headers,shipNamesScheduled,releaseVersionScheduled):
-
-        url = "https://carnival.atlassian.net/wiki/rest/api/content/" +str(ContentId) + "?expand=body.storage"
-
-        response = requests.request(
-           "GET",
-           url,
-           headers=headers
-        )
-
-        if response.status_code == 200:
-            log ("Query successful:Confluence page exists")
-        else:
-            log(response)
-            log ("ERROR : Confluence page does not exist or other error::" + url)
-            exit(1)
-
-        searchString = response.text
-        subTable = re.findall(r'<td>(.+?)</td>',searchString)
-        recordCount=0
-        columnCount=0
-        configReleaseVersions = []
-        configShipNames = []      
-        configServerNames=[]
-        configFileNames=[]
-        serverNames = []
-        fileNames = []
-        releaseVersions = []
-
-        TAG_RE = re.compile(r'<[^>]+>')
-        for x in subTable:
-
-            columnValue=TAG_RE.sub('', x)
-            columnValue = columnValue.strip()
-
-            if recordCount < 4:
-                recordCount= recordCount + 1
-                continue
-            if recordCount%4 == 0:  
-                configReleaseVersions.append(columnValue)
-            elif recordCount%4== 1:
-                configShipNames.append(columnValue)
-            elif recordCount%4== 2:
-                configServerNames.append(columnValue)
-            elif recordCount%4== 3:
-                configFileNames.append(columnValue)
-
-            recordCount= recordCount + 1
-                
-        for i, configShipName in enumerate(configShipNames):
-            if (configShipName in shipNamesScheduled) and (configReleaseVersions[i] in releaseVersionScheduled):
-                serverNames.append(configServerNames[i])
-                fileNames.append(configFileNames[i])
-                releaseVersions.append(configReleaseVersions[i])
-
-        return (releaseVersions,serverNames,fileNames)
-
-    # end of function //GetConfigChanges
-
     #Main script
     log("Starting...\n")
 
@@ -393,16 +324,15 @@ with open(logfile_path, 'w+') as logfile:
         deploymentType = "DEPLOY_ALL"
 
         scheduled_ships_path = workspace + "/tmp/scheduled_ships.txt"
+        scheduled_ships_dir_path = workspace + "/tmp/"
+        if os.path.isdir(scheduled_ships_dir_path) != True:
+          os.makedirs(scheduled_ships_dir_path)
+            
         if os.path.exists(scheduled_ships_path):
             with open(scheduled_ships_path, 'w') as f:
                 f.truncate()
-        
-        jenkinsconfig_path = workspace + "/jenkinsconfig.json"
-        with open(jenkinsconfig_path) as f:
-            r = json.load(f)
-            config_json = ast.literal_eval(json.dumps(r))
 
-        if action == "ScheduleDeploy" or action == "Deploy":
+        if action == "ScheduleDeploy" or action == "Deploy" or action == "Promote":
             #Page ID to get the page details
             contentID=0
             pageName = pageNameMW
@@ -415,9 +345,6 @@ with open(logfile_path, 'w+') as logfile:
             shipNamesScheduled=[]
             releasePageScheduled=[]
             releaseVersionScheduled=[]
-            serverNames = []
-            fileNames = []
-            
             if contentID == 0:
                 log(errorValue)
             else:
@@ -425,72 +352,84 @@ with open(logfile_path, 'w+') as logfile:
                 log(verificationResult)
                 shipNames,releasePage,releaseVersion,deploymentDate,transferAction =GetScheduleContentInformation(contentID,headers)
                 
-                for rls in releaseVersion:
+                #for rls in releaseVersion:
 
-                    tmp_abs_path = os.path.join(workspace,'tmp')
-                    if os.path.isdir(path) != True:
-                        os.makedirs(tmp_abs_path)
+                #    tmp_abs_path = os.path.join(workspace,'tmp')
+                    
+                #    if os.path.isdir(path) != True:
+                 #       os.makedirs(tmp_abs_path)
 
-                    tmp_rls_path = os.path.join(tmp_abs_path,rls)
-                    if os.path.isdir(tmp_rls_path) != True:
-                        os.makedirs(tmp_rls_path)
+                  #  tmp_rls_path = os.path.join(tmp_abs_path,rls)
+                   # if os.path.isdir(tmp_rls_path) != True:
+                    #    os.makedirs(tmp_rls_path)
 
-                    builds_file_hist = workspace + "/tmp/" + rls + "/component_build_mapping.txt"
-                    if os.path.exists(builds_file_hist):
-                        with open(builds_file_hist, 'w') as f:
-                            f.truncate()
-                    url_file_hist = workspace + "/tmp/" + rls + "/urls.txt"
-                    if os.path.exists(url_file_hist):
-                        with open(url_file_hist, 'w') as f:
-                            f.truncate()
-                    config_files_hist = workspace + "/tmp/" + rls + "/config_path_mapping.txt"
-                    if os.path.exists(config_files_hist):
-                        with open(config_files_hist, 'w') as f:
-                            f.truncate()
+                    #builds_file_hist = workspace + "/tmp/" + rls + "/component_build_mapping.txt"
+                    #log ("creating build mapping file" + builds_file_hist)
+                    #if os.path.exists(builds_file_hist):
+                     #   log ("component_build_mapping file exist::"+ builds_file_hist)
+                      #  os.remove(builds_file_hist)
+                       # with open(builds_file_hist, 'w') as f:
+                        #    f.truncate(0)
+                         #   log ("builds_file_hist File truncated")
+                    #url_file_hist = workspace + "/tmp/" + rls + "/urls.txt"
+                    #log ("creating urls file:" + url_file_hist)
+                    #if os.path.exists(url_file_hist):
+                     #   log ("url_file_hist file exist::" + url_file_hist)
+                      #  os.remove(url_file_hist)
+                       # with open(url_file_hist, 'w') as f:
+                        #    f.truncate(0)
+                         #   log ("url_file_hist File truncated")
 
                 for i, shipName in enumerate(shipNames):
 
+                    if targetShipName == shipName:
+                      tmp_abs_path = os.path.join(workspace,'tmp')
+                      if os.path.isdir(path) != True:
+                        os.makedirs(tmp_abs_path)
+                      tmp_rls_path = os.path.join(tmp_abs_path,releaseVersion[i])
+                      if os.path.isdir(tmp_rls_path) != True:
+                        os.makedirs(tmp_rls_path)
+                      builds_file_hist = workspace + "/tmp/" + releaseVersion[i] + "/component_build_mapping.txt"
+                      if os.path.exists(builds_file_hist):
+                        log ("component_build_mapping file exist::"+ builds_file_hist)
+                        with open(builds_file_hist, 'w') as f:
+                            f.truncate(0)
+                      url_file_hist = workspace + "/tmp/" + releaseVersion[i] + "/urls.txt"
+                      if os.path.exists(url_file_hist):
+                        log ("url_file_hist file exist::" + url_file_hist)
+                        with open(url_file_hist, 'w') as f:
+                            f.truncate(0)
+                            
                     if len(deploymentDate[i]) != 0:
                         if action == "Deploy":
                             date_obj = datetime.datetime.strptime(deploymentDate[i], '%m/%d/%Y').strftime('%Y-%m-%d')
                             if date_obj == now.strftime('%Y-%m-%d'):
                                 shipNamesScheduled.append(shipName)
-                                releaseVersionScheduled.append(releaseVersion[i])
                         elif action == "ScheduleDeploy":
                             date_time_obj = datetime.datetime.strptime(deploymentDate[i], '%m/%d/%Y')
                             if date_time_obj >= now:
-                                shipNamesScheduled.append(shipName)
-                                releasePageScheduled.append(releasePage[i])
-                                releaseVersionScheduled.append(releaseVersion[i])
-
+                              shipNamesScheduled.append(shipName)
+                              releasePageScheduled.append(releasePage[i])
+                              releaseVersionScheduled.append(releaseVersion[i])
+                              jenkinsconfig_path = workspace + "/jenkinsconfig.json"
+                              with open(jenkinsconfig_path) as f:
+                                r = json.load(f)
+                                ipaddr_json = ast.literal_eval(json.dumps(r))
                                 if shipName == "XS" or shipName == "HSC_Test":
-                                    ipaddr = config_json["jenkins"]["environments"]["QA"][0][shipName]
-                                    serverPass = config_json["jenkins"]["environments"]["QA"][1]["pwd"]
+                                  ipDict = ipaddr_json["jenkins"]["environments"]["QA"][0]
                                 elif shipName == "SUPPORT":
-                                    ipaddr = config_json["jenkins"]["environments"]["SUPPORT"][0][shipName]
-                                    serverPass = config_json["jenkins"]["environments"]["SUPPORT"][1]["pwd"]
+                                  ipDict = ipaddr_json["jenkins"]["environments"]["SUPPORT"][0]
                                 else:
-                                    ipaddr = config_json["jenkins"]["environments"]["PRODUCTION"][0][shipName]
-                                    serverPass = config_json["jenkins"]["environments"]["PRODUCTION"][1]["pwd"]
+                                  ipDict = ipaddr_json["jenkins"]["environments"]["PRODUCTION"][0]
+                                for group, ships in ipDict.items():
+                                  for ship, ip in ships.items():
+                                    if shipName == ship:
+                                      ipaddr=ip
+                                    #ipaddr = ipaddr_json["jenkins"]["environments"]["PRODUCTION"][0]["HAL"][shipName]
+                                print(ipaddr)
                                 log("\nShip " + shipName + " is ready for release deployment. Initiating transfer of artifacts to " + ipaddr)
-                                with open(scheduled_ships_path, 'a+') as f:
-                                    f.write(shipName + ":" + ipaddr + ":" +  releaseVersion[i]+ ":" + transferAction[i] + ":" + serverPass + "\n")
-                
-                if len(shipNamesScheduled) != 0:               
-                    confContentID,confErrorValue = CheckConfluencePage(pageNameConfig)
-                    confVerificationResult = verifyConfluencePage(confContentID,headers,"Config")
-                    log(confVerificationResult)
-                    releaseVersions, serverNames, fileNames = GetConfigChanges(confContentID,headers,shipNamesScheduled,releaseVersionScheduled)                      
-                    log("releaseVersions :" + str(releaseVersions) + "\nserverNames :" + str(serverNames) + "\nfileNames :" + str(fileNames))
-                    for i, release in enumerate(releaseVersions):
-                        config_files_path = workspace + "/tmp/" + release + "/config_path_mapping.txt"
-                        file_list = fileNames[i].split(",")
-                        for fileName in file_list:
-                            server_file_path = config_json["jenkins"]["configurations"][str(serverNames[i])][str(fileName.strip())]
-                            log("Writing into config_path_mapping.txt")
-                            with open(config_files_path, 'a+') as f:
-                                f.write(serverNames[i] + ":" + fileName.strip() + ":" + server_file_path + "\n")                  
-
+                              with open(scheduled_ships_path, 'a+') as f:
+                                f.write(shipName + ":" + ipaddr + ":" +  releaseVersion[i]+ ":" + transferAction[i] + "\n")
 
         scheduledReleaseDict={}
         if action == "ScheduleDeploy":
@@ -502,7 +441,7 @@ with open(logfile_path, 'w+') as logfile:
         if action == "Deploy" or action == "Promote" or action == "Rollback" or (action == "ScheduleDeploy" and len(shipNamesScheduled) != 0):
 
             if action == "Deploy" and deploymentEnv == "PRODUCTION" and targetShipName not in shipNamesScheduled:
-                log("ERROR : The MW for deployment of " + relName + " on " + targetShipName + " is not scheduled for today.")
+                log("ERROR : The MW for deployment of " + relName + " on " + targetShipName + " is not scheduled for today. \n Please check the below given MW confluence page link and try again :\n https://carnival.atlassian.net/wiki/spaces/MGLN/pages/1282114805/XICMS+MW-Schedule" )
                 exit(1)
             else:
                 #Page ID to get the page details
@@ -529,6 +468,11 @@ with open(logfile_path, 'w+') as logfile:
                     if os.path.isdir(newReleaseDir) == True:
                         shutil.rmtree(newReleaseDir)
 
+                    tmpRelease = workspace + '/tmp/'
+                    tmpReleaseDir = tmpRelease + releaseName
+                    if os.path.isdir(tmpReleaseDir) == True:
+                        shutil.rmtree(tmpReleaseDir)
+                        
                     builds_file_path = workspace + "/tmp/" + releaseName + "/component_build_mapping.txt"
                     url_file_path = workspace + "/tmp/" + releaseName + "/urls.txt"
 
@@ -579,9 +523,7 @@ with open(logfile_path, 'w+') as logfile:
                     log("Following are the artifacts in: " + releaseName)
                     for key, value in finalArtifactoryUrl.items():
 
-                        if targetShipName in ["KODM","NADM","EUDM","WEDM","NSDM","NODM","VODM","ZUDM","OSDM","Ovation","Encore","Odyssey"] and key == "EXM Notification plugin":
-                            continue
-                        elif targetShipName not in ["KODM","NADM","EUDM","WEDM","NSDM","NODM","VODM","ZUDM","OSDM","Ovation","Encore","Odyssey"] and key == "exm-v2-plugin-excursions":
+                        if targetShipName in ["KODM","NADM","EUDM","WEDM","NSDM","NODM","NTDM","VODM","ZUDM","OSDM","RTDM","Ovation","Encore","Odyssey"] and (key == "EXM Notification plugin" or key == "exm-v2-plugin-excursions"):
                             continue
                             
                         componentConfluence = str(key)
@@ -617,6 +559,8 @@ with open(logfile_path, 'w+') as logfile:
                             component = "mute"
                         elif componentConfluence == "exm-db-upgrade":
                             component = "exm-db-upgrade"
+                        elif componentConfluence == "EXM V2 Liquibase":
+                            component = "EXM-V2-Liquibase"  
                         elif componentConfluence == "UIEWowzaLib":
                             component = "UIEWowzaLib"
                         elif componentConfluence == "exm-v2-plugin-excursions":
@@ -628,11 +572,17 @@ with open(logfile_path, 'w+') as logfile:
                         log( componentConfluence + ' -> ' + url + '\n')
 
                         path = os.path.join(newReleaseDir,component)
+                        log("Path:" + path)
+                        log("url file path::" +url_file_path)
                         if os.path.isdir(path) != True:
                             os.makedirs(path)
-                                    
+                        tmp_path = workspace + "/tmp/" + releaseName
+                        if os.path.isdir(tmp_path) != True: 
+                          os.makedirs(tmp_path)
                         with open(url_file_path, 'a+') as f:
                             f.write(componentConfluence + " > " + url + "\n")
+                            
+                            
 
                         target_path = releasesPath + releaseName + '/' + component + '/' + url.split("/")[-1]
 
@@ -648,8 +598,8 @@ with open(logfile_path, 'w+') as logfile:
                             else:
                                 log("Couldn't reach the provided url with response : "+ str(response.status_code) + "\n")
                                 continue
-                        compServer = config_json["jenkins"]["components"][component]
+                        
                         with open(builds_file_path, 'a+') as f:
-                            f.write(component + " : " + str(component_build_mapping[componentConfluence]) + " : " + str(component_md5sum_mapping[componentConfluence]) + ":" + str(compServer) + "\n")
+                            f.write(component + " : " + str(component_build_mapping[componentConfluence]) + " : " + str(component_md5sum_mapping[componentConfluence]) + "\n")
         else:
             log("There is no ship currently scheduled for deployment.")
