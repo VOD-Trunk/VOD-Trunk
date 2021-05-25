@@ -1,0 +1,5 @@
+git_path='/home/vod/Config_Files/VOD-Trunk'
+temp='/home/vod/tmp/temp.txt'
+#diff_path='/home/vod/Config_Files/VOD-Trunk/ship_git_diff.csv'
+logs='/home/vod/logs/config_comparison.log'
+ip='/home/vod/properties/ips.txt'
