@@ -2,20 +2,22 @@
 <service>
 <!-- US TVs -->
    <setup>
-      <versionNumber>1</versionNumber>
+      <versionNumber>9</versionNumber>
       <modelName>43UV770H-UA</modelName>
       <priority>NORMAL</priority>
       <content>
          <type>EPK_FIRMWARE</type>
-         <subversionNumber>1</subversionNumber>
-         <data>starfish-atsc-secured-m16photel-drd4id-69-03.06.80-prodkey_nsu_V3_SECURED.epk</data>
+         <subversionNumber>9</subversionNumber>
+<!--	<data>starfish-atsc-secured-m16photel-drd4id-1729-08.17.29-prodkey_nsu_V3_SECURED.epk</data> -->
+   	 <data>starfish-atsc-secured-m16photel-drd4id-1291-08.12.91-prodkey_usb_V3_SECURED.epk</data>
+ <!--        <data>starfish-atsc-secured-m16photel-drd4id-55-03.05.40-prodkey_nsu_V3_SECURED.epk</data>-->
          <frequency>0</frequency>
          <programNum>0</programNum>
          <cTag>0</cTag>
       </content>
       <content>
           <type>PTC_FIRMWARE</type>
-          <subversionNumber>1</subversionNumber>
+          <subversionNumber>4</subversionNumber>
           <data>xxUV770H_v1.00.013.txt</data>
           <frequency>0</frequency>
           <programNum>0</programNum>
@@ -23,8 +25,8 @@
       </content>
       <content>
           <type>CH_MAP</type>
-          <subversionNumber>1</subversionNumber>
-          <data>AP_43UV770H.tlx</data>
+          <subversionNumber>5</subversionNumber>
+          <data>43UV770H_UA.tlx</data>
           <frequency>0</frequency>
           <programNum>0</programNum>
           <cTag>0</cTag>

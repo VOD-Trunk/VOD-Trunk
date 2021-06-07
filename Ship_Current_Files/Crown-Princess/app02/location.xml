@@ -26,6 +26,7 @@
                 	DATABASE_SERVICE="DB"
                 	TIME_URL="http://client.kp.ocean.com:8000/v2/public/time?tz=onprem"
                 	SHIP_TIME_REFRESH_DELAY="300"
+			TRANSITION_DAYS_FOR_ERROR_POSSIBILITY="3"
                 />
 
     	<!-- UPLOAD SETTINGS -->

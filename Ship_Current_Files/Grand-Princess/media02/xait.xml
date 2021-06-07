@@ -1,5 +1,5 @@
 <XAIT>
-    <versionNumber>1</versionNumber>
+    <versionNumber>3</versionNumber>
     <AbstractService>
         <svcName>Pro:Centric Application</svcName>
         <svcId>0x1204</svcId>
@@ -16,10 +16,10 @@
                     <controlCode>AUTOSTART</controlCode>
                     <visibility>NOT_VISIBLE_USERS</visibility>
                     <priority>255</priority>
-                    <version>1</version>
+                    <version>2</version>
                 </applicationDescriptor>
                 <HcapDescriptor>
-                   <url>http://procentric.local/procentric/application/app-eu-bso-grand.zip</url>
+                   <url>http://procentric.local/procentric/application/app.zip</url>
                 	<applicationStructure>
                         	<baseDirectory>/</baseDirectory>
                         	<classpathExtension>/</classpathExtension>

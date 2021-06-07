@@ -44,7 +44,7 @@
                 concat="true"
                 encode="true"
                 multicast_channels="20"
-                multicast_channel_backgrounds="true"
+                multicast_channel_backgrounds="false"
                 multicast_port="10000"
                 multicast_subnet="239.100.99.0"
                 multicast_running_json="/nfs/uploads/v2/wowza/running.json"
@@ -72,6 +72,7 @@
         <Environment name="CALLBACK_SERVER" value="http://admin.kp.ocean.com/v2/" type="java.lang.String" override="false" />
         <Environment name="IS_XICONNECT_HANDLER_DEFAULT" value="true" type="java.lang.Boolean" override="false" />
 	<Environment name="MIRROR_APP_SERVER_LIST" value="http://app01/v2" type="java.lang.String" override="false" />
+	<Environment name="DISABLE_REPORTING_DATA_STORAGE" value="true" type="java.lang.String" override="false" />
 
         <!-- SETTINGS FOR BACKGROUND TASKS                                                              -->
         <Environment name="com.uievolution.exm.tasks.Enabled" value="true" type="java.lang.Boolean" override="false" />
@@ -122,6 +123,6 @@ auth="Container"
 
  	<!--XOS-->
         <Environment name="XOS_URL" value="https://xiorchestrate-xos-svc.kp.ocean.com:8443/xos" type="java.lang.String" override="false" />
-
+        <Environment name="NOTIFICATION_TEMPLATE_CONTENT_TYPE_ID" value="928155E38E7FD865B8ACE80EE39400E6" type="java.lang.String" override="false" />
 
 </Context>

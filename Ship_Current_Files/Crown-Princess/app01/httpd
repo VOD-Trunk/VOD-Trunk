@@ -1,4 +1,4 @@
-/var/log/httpd/*log {
+/var/log/httpd/access_log.log {
     daily
     rotate 30
     dateext

@@ -16,3 +16,4 @@ APIKEY=`curl -i -H "Content-Type: application/x-www-form-urlencoded" \
 echo >>/root/weatherupdate/refreshforecast.log
 date >>/root/weatherupdate/refreshforecast.log
 /usr/bin/curl -s -H "Authorization:${APIKEY}" "http://admin.kp.ocean.com/location/private/refreshforecast" >>/root/weatherupdate/refreshforecast.log 2>&1
+
