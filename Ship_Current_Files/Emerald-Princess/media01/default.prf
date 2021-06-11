@@ -14,3 +14,5 @@ path = *
 ignore = Path tmp
 ignore = Path maptiles
 ignore = Path mod_proxy
+ignore = Path v2/tmp
+ignore = Path nginx/cache

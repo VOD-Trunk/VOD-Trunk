@@ -1,4 +1,12 @@
 root
+# CRONTAB FOR LB01 & LB02
+# USER: root
+
+# TMP FOLDER CLEAN
+# ================
+# Executes @ 5:05: # Command to clean temporay files on /tmp
+5 * * * * /root/bin/cron_validator/cron_validator.sh tmp_clean
+
  
 bin
  

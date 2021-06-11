@@ -1,8 +1,9 @@
-/var/log/ha-debug {
+/var/log/ha.log {
+    weekly
+    rotate 8
+    dateext
+    compress
     missingok
+    notifempty
+    copytruncate
 }
-
-/var/log/ha-log {
-    missingok
-}
-

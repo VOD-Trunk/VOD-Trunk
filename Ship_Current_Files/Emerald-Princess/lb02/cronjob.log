@@ -1,6 +1,12 @@
 root
-#Tmpwatch
-5 5 * * * /usr/sbin/tmpwatch -mM --fuser --exclude-pattern=/tmp/hsperfdata* --exclude-pattern=/tmp/*.sock 720 /tmp /var/tmp
+# CRONTAB FOR LB01 & LB02
+# USER: root
+
+# TMP FOLDER CLEAN
+# ================
+# Executes @ 5:05: # Command to clean temporay files on /tmp
+5 * * * * /root/bin/cron_validator/cron_validator.sh tmp_clean
+
  
 bin
  

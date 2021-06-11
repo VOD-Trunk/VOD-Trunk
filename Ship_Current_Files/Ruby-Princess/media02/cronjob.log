@@ -1,6 +1,26 @@
 root
-30 3 * * *  /usr/bin/find /usr/local/WowzaStreamingEngine/logs/ \( -type f -mtime +1 -name "*20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]*" -o -name "debug.log.[1-9]*" ! -name "*.gz" \) -exec gzip -vf > /dev/null 2>&1 {} \;
-0 3 * * *  /usr/bin/find /usr/local/WowzaStreamingEngine/logs/ -type f -mtime +30 -delete
+# CRONTAB FOR MEDIA01 & MEDIA02
+# USER: root
+
+# WOWZA LOG ROTATION
+# ==================
+# Executes @ 3:00: # Command to remove files older then 30 days
+0 * * * *  /root/bin/cron_validator/cron_validator.sh wowza_log_clean
+
+# Executes @ 3:30: # Command to GZIP all log files 1 day old or older
+30 * * * *  /root/bin/cron_validator/cron_validator.sh wowza_log_zip
+
+
+# TMP FOLDER CLEAN
+# ================
+# Executes @ 5:05: # Command to clean temporay files on /tmp
+5 * * * * /root/bin/cron_validator/cron_validator.sh tmp_clean
+
+
+# STB RESTART -> ONLY FOR VESSELS USING LG STB
+# ============================================
+# Executes @ 2:00: # Restarts all the STB endpoints to prevent issues
+# 0 * * * * /root/bin/cron_validator/cron_validator.sh stb_restart
  
 bin
  

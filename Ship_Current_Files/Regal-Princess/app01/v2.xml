@@ -13,7 +13,7 @@
                 maxWait="10000"
                 validationInterval="20000"
                 testOnBorrow="true"
-                validationQuery="SELECT 1" />
+                validationQuery="SELECT 1"/>
 
         <Resource name="services/KafkaProducerService"
                   auth="Container"
@@ -87,7 +87,7 @@
         <Environment name="com.uievolution.exm.tasks.analytics.JobSize" value="200" type="java.lang.Integer" override="false" />
         <Environment name="com.uievolution.exm.tasks.analytics.ThreadDelay" value="30000" type="java.lang.Integer" override="false" />
         <Environment name="event.subscriber.definition" value="/etc/tomcat7/subscribers.xml" type="java.lang.String" override="false" />
-        <Environment name="com.uievolution.exm.tasks.EndpointSessionsPingTaskPeriodMilliseconds" value="600000" type="java.lang.Long" override="false" />
+        <Environment name="com.uievolution.exm.tasks.EndpointSessionsPingTaskPeriodMilliseconds" value="300000" type="java.lang.Long" override="false" />
 
         <!-- SETTINGS TO CONFIGURE CONTENT DELETION TASK SCHEDULES  -->
         <!-- After how long should we start the UploadMaintenenceTask after service restart.  Default is 1 hour .  Configured time frame is 10 minutes  -->
@@ -130,7 +130,8 @@ auth="Container"
         <!-- Environment log settings. -->
         <Environment name="log4j" value="${catalina.base}/conf/v2-log4j.xml" type="java.lang.String" override="false" />
 
-<!-- Pro:Centric (SoftAP) use -->
-<Environment name="ProCentricURL" value="http://procentric.local:9999" type="java.lang.String" override="false"/>
+	<!-- Pro:Centric (SoftAP) use -->
+	<Environment name="ProCentricURL" value="http://procentric.local:9999" type="java.lang.String" override="false"/>
 
+	<Environment name="NOTIFICATION_TEMPLATE_CONTENT_TYPE_ID" value="928155E38E7FD865B8ACE80EE39400E6" type="java.lang.String" />
 </Context>

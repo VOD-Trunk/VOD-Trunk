@@ -1,8 +1,7 @@
-/var/log/ha.log
-/var/log/ha.debug {
+/var/log/ha.log {
     weekly
-    dateext
     rotate 8
+    dateext
     compress
     missingok
     notifempty

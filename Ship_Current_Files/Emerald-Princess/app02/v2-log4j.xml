@@ -7,16 +7,17 @@
                 <param name="Append" value="true"/>
                 <param name="File" value="${catalina.home}/logs/exm-v2.log"/>
                 <param name="DatePattern" value="'.'yyyy-MM-dd'.txt'"/>
+		<param name="Threshold" value="INFO"/>
                 <param name="Encoding" value="UTF-8"/>
                 <layout class="org.apache.log4j.PatternLayout">
                         <param name="ConversionPattern" value="%d{HH:mm:ss} ~ %5p [%t @ %c{1}] %m%n"/>
                 </layout>
         </appender>
- <!--       <appender name="log-verbose" class="org.apache.log4j.RollingFileAppender">
+        <appender name="log-verbose" class="org.apache.log4j.RollingFileAppender">
                 <param name="Append" value="true"/>
                 <param name="File" value="${catalina.home}/logs/exm-v2-verbose.log"/>
                 <param name="MaxBackupIndex" value="10"/>
-                <param name="MaxFileSize" value="100MB"/>
+                <param name="MaxFileSize" value="2000MB"/>
                 <param name="Encoding" value="UTF-8"/>
                 <layout class="org.apache.log4j.PatternLayout">
                         <param name="ConversionPattern" value="%d{HH:mm:ss} ~ %5p [%t @ %c{1}] %m%n"/>
@@ -31,9 +32,9 @@
         </logger>
 
         <root>
-                <priority value="warn"/>
+                <priority value="info"/>
                 <appender-ref ref="log"/>
-                <!-- <appender-ref ref="log-verbose"/> -->
+                <!--appender-ref ref="log-verbose"/-->
         </root>
 
 </log4j:configuration>

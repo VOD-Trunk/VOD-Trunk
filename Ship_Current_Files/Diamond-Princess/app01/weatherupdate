@@ -1,0 +1,26 @@
+/root/weatherupdate/refreshcurrent.log {
+  rotate 2
+  monthly
+  compress
+  missingok
+  notifempty
+}
+
+/root/weatherupdate/setuserkey.log {
+  rotate 2
+  monthly
+  compress
+  missingok
+  notifempty
+}
+
+/root/weatherupdate/refreshforecast.log {
+  rotate 2
+  dateext
+  copytruncate
+  monthly
+  compress
+  missingok
+  notifempty
+}
+

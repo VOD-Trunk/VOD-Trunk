@@ -1,5 +1,5 @@
 <XAIT>
-    <versionNumber>12</versionNumber>
+    <versionNumber>13</versionNumber>
     <AbstractService>
         <svcName>Pro:Centric Application</svcName>
         <svcId>0x1204</svcId>
@@ -24,7 +24,7 @@
                 </HcapDescriptor>
 -->
                 <HcapDescriptor>
-                    <url>http://procentric.local/procentric/application/app-eu-bso.zip</url>
+                    <url>http://procentric.local/procentric/application/app.zip</url>
                     <applicationStructure>
                             <baseDirectory>/</baseDirectory>
                             <classpathExtension>/</classpathExtension>

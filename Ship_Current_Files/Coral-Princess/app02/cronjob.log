@@ -1,12 +1,51 @@
 root
-# Tomcat log rotation
-30 3 * * *  /usr/bin/find /var/log/tomcat7/ -type f -mtime +1 -name "*20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]*" ! -name "*.gz" -exec gzip -vf > /dev/null 2>&1 {} \;
-0 3 * * *  /usr/bin/find /var/log/tomcat7/ -type f -mtime +30 -delete
-# Mysql binary log rotation
-12 2 * * * /usr/bin/mysqladmin flush-logs
-13 2 * * * /usr/bin/mysql -e "PURGE BINARY LOGS BEFORE '$(date --date="2 days ago" "+%F %T")'"
+# CRONTAB FOR APP01 & APP02
+# USER: root
 
+# DATABASE CLEAN (ARCHIVES OLD EP INFO)
+# =====================================
+# Executes @ 0:00: # Command to archive endpoing information older then 60 days
+0 * * * * /root/bin/cron_validator/cron_validator.sh db_clean
+
+
+# DATABASE BACKUP
+# ===============
+# Executes @ 1:00 & 13:00: # Command to archive endpoing information older then 60 days
+0 * * * * /root/bin/cron_validator/cron_validator.sh db_backup
+
+
+# TOMCAT LOG ROTATION
+# ===================
+# Executes @ 3:00: # Command to remove files older then 30 days
+0 * * * *  /root/bin/cron_validator/cron_validator.sh tomcat_log_clean
+
+# Executes @ 3:30: # Command to GZIP all log files 1 day old or older
+30 * * * * /root/bin/cron_validator/cron_validator.sh tomcat_log_zip
+
+
+# MYSQL BINARY LOG ROTATION
+# =========================
+# Executes @ 4:30: # Command to flush the binary logs
+30 * * * * /root/bin/cron_validator/cron_validator.sh mysql_log_flush
+# Executes @ 4:35: # Command to flush the binary logs 2 days old or older
+35 * * * * /root/bin/cron_validator/cron_validator.sh mysql_log_purge 
+
+
+# TMP FOLDER CLEAN
+# ================
+# Executes @ 5:05: # Command to clean temporay files on /tmp
+5 * * * * /root/bin/cron_validator/cron_validator.sh tmp_clean
+
+
+# CLEAR CHACHE
+# ============
+# Executes @ every 10 min: # Command to clean EMX Cache
 */10 * * * * /root/bin/clearsysprop.sh
+
+
+# LOCATION & WEATHER UPDATE
+# =========================
+# Executes @ every 30 min: # Command to update location and weather information
 20,50 * * * * /bin/bash -c /root/weatherupdate/currentupdate.sh
 25,55 * * * * /bin/bash -c /root/weatherupdate/forecastupdate.sh
  

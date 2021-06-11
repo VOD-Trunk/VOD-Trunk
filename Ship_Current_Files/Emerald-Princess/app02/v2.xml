@@ -59,9 +59,9 @@
                  buffer_memory="100000000"
                  timeout_ms="10000"
        />
-	
+ 	<Environment name="XOS_URL" value="https://xiorchestrate-xos-svc.ep.ocean.com:8443/xos" type="java.lang.String" override="false" />	
 	<Environment name="IS_XICONNECT_HANDLER_DEFAULT" value="true" type="java.lang.Boolean" override="false" />
-
+	<Environment name="CLICKSTREAM_EVENTING_ENABLED" value="true" type="java.lang.Boolean" override="false"/>
 
         <!-- UPLOAD SETTINGS                                                                                    -->
         <Environment name="UPLOAD_DIR" value="/nfs/uploads/v2" type="java.lang.String" override="false" />
@@ -116,9 +116,9 @@ auth="Container"
         <Environment name="FidelioUserID" value="webservice" type="java.lang.String" override="false" />
         <Environment name="FidelioPassword" value="b029417187add71e0d975291d6bf2fa8" type="java.lang.String" override="false" />
 
-        <Environment name="NOTIFICATION_FULL_URL" value="ws://client.ep.ocean.com:8003/v2/pushnotifications/socket" type="java.lang.String" override="false" />
+        <Environment name="NOTIFICATION_FULL_URL" value="ws://xicms-exm-svc.ep.ocean.com:8003/v2/pushnotifications/socket" type="java.lang.String" override="false" />
 
         <!-- Environment log settings. -->
         <Environment name="log4j" value="${catalina.base}/conf/v2-log4j.xml" type="java.lang.String" override="false" />
-
+	<Environment name="NOTIFICATION_TEMPLATE_CONTENT_TYPE_ID" value="928155E38E7FD865B8ACE80EE39400E6" type="java.lang.String" override="false" />
 </Context>
