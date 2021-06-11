@@ -1,4 +1,9 @@
-check process node-mute with pidfile /var/lock/subsys/node-mute
-start program = "/etc/init.d/node-mute start" with timeout 60 seconds
-stop program = "/etc/init.d/node-mute stop"
-mode manual
+/var/log/mute-node/*log {
+    daily
+    dateext
+    rotate 30
+    copytruncate
+    compress
+    missingok
+    notifempty
+}

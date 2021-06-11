@@ -16,3 +16,4 @@ date >>/root/weatherupdate/refreshcurrent.log
 #echo >>/root/weatherupdate/refreshforecast.log
 #date >>/root/weatherupdate/refreshforecast.log
 #/usr/bin/curl -s -H "Authorization:${APIKEY}" "http://admin.kp.ocean.com/location/private/refreshforecast" >>/root/weatherupdate/refreshforecast.log 2>&1
+

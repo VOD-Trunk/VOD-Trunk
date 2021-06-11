@@ -108,4 +108,6 @@ auth="Container"
         <!-- Environment log settings. -->
         <Environment name="log4j" value="${catalina.base}/conf/v2-log4j.xml" type="java.lang.String" override="false" />
 
+	<Environment name="NOTIFICATION_TEMPLATE_CONTENT_TYPE_ID" value="928155E38E7FD865B8ACE80EE39400E6" type="java.lang.String"/>
+
 </Context>

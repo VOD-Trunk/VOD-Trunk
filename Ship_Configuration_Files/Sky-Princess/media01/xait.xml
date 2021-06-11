@@ -1,5 +1,5 @@
 <XAIT>
-    <versionNumber>2</versionNumber>
+    <versionNumber>3</versionNumber>
     <AbstractService>
         <svcName>Pro:Centric Application</svcName>
         <svcId>0x1204</svcId>
@@ -19,7 +19,7 @@
                     <version>2</version>
                 </applicationDescriptor>
                 <HcapDescriptor>
-                   <url>http://10.25.224.12/procentric/application/app-sky.zip</url>
+                   <url>http://10.25.224.12/procentric/application/app.zip</url>
                 	<applicationStructure>
                         	<baseDirectory>/</baseDirectory>
                         	<classpathExtension>/</classpathExtension>

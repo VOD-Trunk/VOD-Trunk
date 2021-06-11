@@ -120,5 +120,7 @@ auth="Container"
        	<Environment name="IS_XICONNECT_HANDLER_DEFAULT" value="true" type="java.lang.Boolean" override="false" />
 
 	<Environment name="NOTIFICATION_FULL_URL" value="ws://xicms-exm-svc.rp.ocean.com:8003/v2/pushnotifications/socket" type="java.lang.String" override="false" />
+	
+	<Environment name="NOTIFICATION_TEMPLATE_CONTENT_TYPE_ID" value="928155E38E7FD865B8ACE80EE39400E6" type="java.lang.String" />
 
 </Context>

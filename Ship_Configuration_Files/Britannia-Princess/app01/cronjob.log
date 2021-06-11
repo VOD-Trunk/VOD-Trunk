@@ -1,0 +1,85 @@
+root
+30 3 * * *  /usr/bin/find /var/log/tomcat7 -type f -mtime +1 -name "*20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]*" ! -name "*.gz" -exec gzip -v9 > /dev/null 2>&1 {} \;
+0 3 * * *  /usr/bin/find /var/log/tomcat7 -type f -mtime +30 -delete
+0 */4 * * * /root/bin/clearsysprop.sh
+# MySQL binary log rotation
+12 2 * * * /usr/bin/mysqladmin flush-logs
+13 2 * * * /usr/bin/mysql -e "PURGE BINARY LOGS BEFORE '$(date "+%F %T")'"
+15 7 * * * /bin/bash -c /root/bin/auto-report.sh
+
+#Britannia reporting cleanup
+35 6 1 * * /root/bin/report_table_cleanup.sh
+ 
+bin
+ 
+daemon
+ 
+adm
+ 
+lp
+ 
+sync
+ 
+shutdown
+ 
+halt
+ 
+mail
+ 
+uucp
+ 
+operator
+ 
+games
+ 
+gopher
+ 
+ftp
+ 
+nobody
+ 
+vcsa
+ 
+rpc
+ 
+rpcuser
+ 
+nfsnobody
+ 
+sshd
+ 
+mysql
+ 
+dbus
+ 
+saslauth
+ 
+apache
+ 
+exim
+ 
+tomcat
+ 
+hacluster
+ 
+tcpdump
+ 
+zabbix
+ 
+ntp
+ 
+deploy
+ 
+netsvcs
+0 */12 * * * /home/netsvcs/bin/backupdb
+ 
+hms
+ 
+carnivaluk
+ 
+monit
+ 
+hpsmh
+ 
+shipshutdown
+ 

@@ -1,0 +1,86 @@
+root
+# Tomcat log rotation
+30 3 * * *  /usr/bin/find /var/log/tomcat7/ -type f -mtime +1 -name "*20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]*" ! -name "*.gz" -exec gzip -vf > /dev/null 2>&1 {} \;
+0 3 * * *  /usr/bin/find /var/log/tomcat7/ -type f -mtime +30 -delete
+# Mysql binary log rotation
+12 2 * * * /usr/bin/mysqladmin flush-logs
+13 2 * * * /usr/bin/mysql -e "PURGE BINARY LOGS BEFORE '$(date --date="2 days ago" "+%F %T")'"
+
+*/10 * * * * /root/bin/clearsysprop.sh
+20,50 * * * * /bin/bash -c /root/weatherupdate/currentupdate.sh
+25,55 * * * * /bin/bash -c /root/weatherupdate/forecastupdate.sh
+
+# Collect IPS from DMPs
+57 * * * * /bin/bash /root/bin/dmp/stb_ip_finder.sh >>/var/log/stb_ip_finder.log
+ 
+bin
+ 
+daemon
+ 
+adm
+ 
+lp
+ 
+sync
+ 
+shutdown
+ 
+halt
+ 
+mail
+ 
+uucp
+ 
+operator
+ 
+games
+ 
+gopher
+ 
+ftp
+ 
+nobody
+ 
+vcsa
+ 
+saslauth
+ 
+postfix
+ 
+sshd
+ 
+mysql
+ 
+tomcat
+ 
+dbus
+ 
+apache
+ 
+netsvcs
+0 */12 * * * /home/netsvcs/bin/backupdb
+ 
+deploy
+ 
+rpc
+ 
+hacluster
+ 
+rpcuser
+ 
+nfsnobody
+ 
+tcpdump
+ 
+rtkit
+ 
+pulse
+ 
+wowza
+ 
+ntp
+ 
+monit
+ 
+nsdmshutdown
+ 

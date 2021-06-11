@@ -1,7 +1,7 @@
 /var/log/tomcat7/catalina.out {
     weekly
     dateext
-    rotate 52
+    rotate 8
     compress
     missingok
     notifempty

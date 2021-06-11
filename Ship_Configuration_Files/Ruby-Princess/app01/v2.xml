@@ -129,4 +129,5 @@ auth="Container"
         <!-- Pro:Centric (SoftAP) use -->
         <Environment name="ProCentricURL" value="http://procentric.local:9999" type="java.lang.String" override="false"/>
 
+       <Environment name="NOTIFICATION_TEMPLATE_CONTENT_TYPE_ID" value="928155E38E7FD865B8ACE80EE39400E6" type="java.lang.String" override="false" />
 </Context>
