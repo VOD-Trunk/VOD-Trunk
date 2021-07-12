@@ -88,7 +88,7 @@ with open(logfile_path, 'w+') as logfile:
            "GET",
            url,
            params=PARAMS,
-           headers=headers,
+           headers=headers
         )
         log(response.request.body)
         log(response.request.headers)
