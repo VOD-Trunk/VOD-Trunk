@@ -90,6 +90,8 @@ with open(logfile_path, 'w+') as logfile:
            params=PARAMS,
            headers=headers,
         )
+        log(response.request.body)
+        log(response.request.headers)
         log(response.request.url)
 
         if response.status_code == 200:
