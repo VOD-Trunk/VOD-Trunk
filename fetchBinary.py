@@ -84,6 +84,11 @@ with open(logfile_path, 'w+') as logfile:
         url = "https://carnival.atlassian.net/wiki/rest/api/content"
         contentID=0;
         errorValue=""
+        headers = {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "Authorization": "Basic ZGVlcGFrLnJvaGlsbGFAaHNjLmNvbTpkMnl0NWJ4TGdmcFA4cG93S3VsOUQyNTE="
+                }
         response = requests.request(
            "GET",
            url,
