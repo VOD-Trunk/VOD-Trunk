@@ -336,6 +336,8 @@ with open(logfile_path, 'w+') as logfile:
             #Page ID to get the page details
             contentID=0
             pageName = pageNameMW
+            print (pageName)
+            print (pageNameMW)
             contentID,errorValue = CheckConfluencePage(pageName)
             shipNames=[]
             releasePage=[]
